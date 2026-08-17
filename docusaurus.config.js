@@ -1,18 +1,18 @@
 // @ts-check
-// Docs for a fork of Tegola. Tegola itself is created and maintained by the
-// Go Spatial team (https://github.com/go-spatial/tegola), MIT licensed; this
-// site documents github.com/NivGreenstein/tegola.
+// Docs for Shigola, a fork of Tegola. Tegola itself is created and maintained
+// by the Go Spatial team (https://github.com/go-spatial/tegola), MIT licensed;
+// this site documents github.com/MapColonies/shigola.
 
 import {themes as prismThemes} from 'prism-react-renderer';
 
 const UPSTREAM_REPO = 'https://github.com/go-spatial/tegola';
 const UPSTREAM_DOCS = 'https://tegola.io';
-const FORK_REPO = 'https://github.com/NivGreenstein/tegola';
-const DOCS_REPO = 'https://github.com/NivGreenstein/tegola-docs';
+const FORK_REPO = 'https://github.com/MapColonies/shigola';
+const DOCS_REPO = 'https://github.com/MapColonies/shigola-docs';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Tegola (fork)',
+  title: 'Shigola',
   tagline: 'Vector tiles with OGC API - Tiles, tile matrix sets and a layered cache',
   favicon: 'images/logo.png',
 
@@ -85,9 +85,9 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'Tegola (fork)',
+        title: 'Shigola',
         logo: {
-          alt: 'Tegola',
+          alt: 'Shigola',
           src: 'images/logo.png',
         },
         items: [
@@ -107,7 +107,7 @@ const config = {
           {to: '/support', label: 'Support', position: 'left'},
           {
             to: '/documentation/about-this-fork',
-            label: 'About this fork',
+            label: 'About Shigola',
             position: 'right',
           },
           {to: '/download', label: 'Download', position: 'right'},
@@ -124,14 +124,14 @@ const config = {
           {
             title: 'Docs',
             items: [
-              {label: 'About this fork', to: '/documentation/about-this-fork'},
+              {label: 'About Shigola', to: '/documentation/about-this-fork'},
               {label: 'Getting Started', to: '/documentation/getting-started'},
               {label: 'Configuration', to: '/documentation/configuration'},
               {label: 'OGC API - Tiles', to: '/documentation/ogc-api-tiles'},
             ],
           },
           {
-            title: 'This fork',
+            title: 'Shigola',
             items: [
               {label: 'Source', href: FORK_REPO},
               {label: 'Download', to: '/download'},
@@ -150,9 +150,9 @@ const config = {
           },
         ],
         copyright: [
-          'These docs describe a <strong>fork</strong> of Tegola.',
+          'Shigola is a <strong>fork</strong> of Tegola, maintained by <a href="https://github.com/MapColonies">MapColonies</a>.',
           `Tegola is created and maintained by the <a href="https://github.com/go-spatial">Go Spatial</a> team and documented at <a href="${UPSTREAM_DOCS}">tegola.io</a>, under the liberal <a href="${UPSTREAM_REPO}/blob/master/LICENSE.md">MIT</a> license.`,
-          'This fork is MIT licensed too, and all credit for Tegola belongs upstream.',
+          'Shigola is MIT licensed too, and all credit for Tegola belongs upstream.',
         ].join(' '),
       },
       prism: {

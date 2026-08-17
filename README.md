@@ -2,7 +2,7 @@
 
 This repo hosts the docs for a **fork** of [Tegola](https://github.com/go-spatial/tegola), the open
 source vector tile server created and maintained by the [Go Spatial](https://github.com/go-spatial)
-team. The fork lives at [NivGreenstein/tegola](https://github.com/NivGreenstein/tegola) and adds
+team. The fork lives at [MapColonies/shigola](https://github.com/MapColonies/shigola) and adds
 OGC API - Tiles, multiple tile matrix sets, and a layered cache.
 
 **This is not the official Tegola documentation.** That is at [tegola.io](https://tegola.io), built
@@ -67,7 +67,7 @@ these.
 
 Deployment is automatic: **[`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml)** builds
 the site and publishes it to GitHub Pages on every push to `master`, and on demand from the Actions
-tab. The published site is <https://nivgreenstein.github.io/tegola-docs/>.
+tab. The published site is <https://mapcolonies.github.io/shigola-docs/>.
 
 **One-time setup:** in the repository's *Settings → Pages*, set **Source** to **GitHub Actions**. The
 workflow deploys the build artifact directly — there is no `gh-pages` branch and nothing built is
@@ -86,7 +86,7 @@ changing them there.
 The pages describing fork-specific behaviour are derived from documentation kept in the code repo,
 which is the source of truth:
 
-| Docs page | Source in `NivGreenstein/tegola` (branch `feat/ogc-tiles`) |
+| Docs page | Source in `MapColonies/shigola` (branch `feat/ogc-tiles`) |
 |:---|:---|
 | `docs/ogc-api-tiles.md` | `docs/ogc-api-tiles.md` |
 | `docs/tile-matrix-sets.md` | `docs/ogc-api-tiles.md`, `tms/doc.go`, `tms/registry.go` |

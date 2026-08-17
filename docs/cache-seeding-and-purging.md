@@ -36,7 +36,7 @@ The cache command manually manipulates Tegola's cache
 
 Global Flags are valid for all subcommands
 
-Running `./tegola cache -h` will give a lost of flags with descriptions:
+Running `./shigola cache -h` will give a lost of flags with descriptions:
 
 ```
 Available Commands:
@@ -97,10 +97,10 @@ once. Seed each scheme you serve.
 
 ```shell
 # defaults to the map's own default scheme
-$ ./tegola cache seed --map=parks --bounds="-117.25,32.5,-117.0,32.75"
+$ ./shigola cache seed --map=parks --bounds="-117.25,32.5,-117.0,32.75"
 
 # or name one explicitly
-$ ./tegola cache seed --map=parks --tile-matrix-set=WorldCRS84Quad --bounds="-117.25,32.5,-117.0,32.75"
+$ ./shigola cache seed --map=parks --tile-matrix-set=WorldCRS84Quad --bounds="-117.25,32.5,-117.0,32.75"
 ```
 
 Without `--map`, a run defaults to `WebMercatorQuad`. If any targeted map does not support the run's
@@ -115,10 +115,10 @@ pyramid writes tiles no request will ever ask for, and would otherwise report su
 For a [layered cache](./layered-cache.md), which tiers a run may write.
 
 ```shell
-$ ./tegola cache seed --map=osm                          # writes the LAST tier only (default)
-$ ./tegola cache seed --map=osm --cache-tiers=all        # pre-warm: write every tier
-$ ./tegola cache seed --map=osm --cache-tiers=hot,s3     # an explicit list
-$ ./tegola cache seed --map=osm --overwrite              # write, then purge the rest
+$ ./shigola cache seed --map=osm                          # writes the LAST tier only (default)
+$ ./shigola cache seed --map=osm --cache-tiers=all        # pre-warm: write every tier
+$ ./shigola cache seed --map=osm --cache-tiers=hot,s3     # an explicit list
+$ ./shigola cache seed --map=osm --overwrite              # write, then purge the rest
 ```
 
 **`seed` writes only the last tier by default.** Seeding every tier would flood the hot tier with cold
@@ -149,7 +149,7 @@ Note: the Tegola server does not need to be running for this command to execute.
 
 <a id="seed1">Example: Simple seed</a>
 ```shell
-$ ./tegola cache seed --bounds "-117.25,32.5,-117.0,32.75"
+$ ./shigola cache seed --bounds "-117.25,32.5,-117.0,32.75"
 ```
 This command will seed the only tile at zoom 0, based on the layers specified in the `bonn.toml` configuration file. The `--overwrite` ensures the previously cached tile gets overwritten.
 
@@ -161,7 +161,7 @@ The `purge` command is used to remove tiles from the cache. This can be used to 
 
 <a id="purge1">Example: Simple purge</a>
 ```shell
-$ ./tegola cache purge --bounds "-117.25,32.5,-117.0,32.75"
+$ ./shigola cache purge --bounds "-117.25,32.5,-117.0,32.75"
 ```
 This command will purge the only tile at zoom 0, based on the layers specified in the `bonn.toml` configuration file.
 
@@ -191,7 +191,7 @@ Flags:
 ##### Example
 <a id="seed_tile_name">Example: Simple seed tile-name</a>
 ```shell
-$ ./tegola cache seed tile-name 0/0/0
+$ ./shigola cache seed tile-name 0/0/0
 ```
 
 
@@ -226,7 +226,7 @@ Flags:
 ```
 
 ```shell
-$ ./tegola cache seed tile-list expired_tiles.txt
+$ ./shigola cache seed tile-list expired_tiles.txt
 ```
 This will read the `expired_tiles.txt` and seed the cache with the exact tiles as listed in the file.
 
@@ -239,7 +239,7 @@ This will read the `expired_tiles.txt` and seed the cache with the exact tiles a
 ```
 
 ```shell
-$ ./tegola cache seed --tile-name-format="-xyz" --tile-list="expired_tiles.txt" --overwrite
+$ ./shigola cache seed --tile-name-format="-xyz" --tile-list="expired_tiles.txt" --overwrite
 ```
 This will do the same as the [above example](#tile-list1) but using a different format.
 
@@ -250,7 +250,7 @@ This will do the same as the [above example](#tile-list1) but using a different 
 ```
 
 ```shell
-$ ./tegola cache seed tile-list expired_tiles.txt --min-zoom=14
+$ ./shigola cache seed tile-list expired_tiles.txt --min-zoom=14
 ```
 This will read the `expired_tiles.txt` and seed the cache with tiles ranging from zoom level from 14-22 that are above and below the 15/0/0 tile.
 
@@ -261,13 +261,13 @@ The `format` allows the slippy tile format to be changed. The flag takes a strin
 
 <a id="tile-name-format1">Example: Tile name format</a>
 ```shell
-$ ./tegola cache seed tile-name "0-0-18" --format="-xyz"
+$ ./shigola cache seed tile-name "0-0-18" --format="-xyz"
 ```
 In this example the `0-0-18` will be interpreted as `(z:18, x:0, y:0)`
 
 <a id="tile-name-format2">Example: Tile name format</a>
 ```shell
-$ ./tegola cache seed tile-name "18 0 0" --format=" zxy"
+$ ./shigola cache seed tile-name "18 0 0" --format=" zxy"
 ```
 In this example the `18 0 0` will be interpreted as `(z:18, x:0, y:0)`
 

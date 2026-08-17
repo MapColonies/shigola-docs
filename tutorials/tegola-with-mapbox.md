@@ -1,6 +1,6 @@
 ---
 id: tegola-with-mapbox
-title: "Tegola With Mapbox GL JS"
+title: "Shigola With Mapbox GL JS"
 sidebar_label: "Tegola With Mapbox"
 sidebar_position: 2
 description: "Load Tegola-served content on a Mapbox GL Map!"

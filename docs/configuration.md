@@ -1,6 +1,6 @@
 ---
 id: configuration
-title: "Tegola Configuration"
+title: "Shigola Configuration"
 sidebar_label: "Configuration"
 sidebar_position: 4
 description: "Configure Tegola to process your geospatial data"
@@ -533,7 +533,7 @@ Cache tiles in a GCS bucket.
 Environmental variables can be used in any configuration option. However, they must be written within quotes as a string:
 
 ```toml
-tile_buffer = "${TEGOLA_TILE_BUFFER}"     # note that tile buffer expects an integer, tegola will handle the conversion
+tile_buffer = "${SHIGOLA_TILE_BUFFER}"     # note that tile buffer expects an integer, tegola will handle the conversion
 
 [cache]
 type = "redis"
@@ -566,7 +566,7 @@ port = ":9090"
 
 [cache]
 type="file"             # cache type
-basepath="/tmp/tegola"  # cache specific config
+basepath="/tmp/shigola"  # cache specific config
 
 # register data providers
 [[providers]]

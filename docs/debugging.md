@@ -1,6 +1,6 @@
 ---
 id: debugging
-title: "Debugging Tegola"
+title: "Debugging Shigola"
 sidebar_label: "Debugging"
 sidebar_position: 10
 description: "Fixing problems in Tegola"
@@ -10,7 +10,7 @@ description: "Fixing problems in Tegola"
 
 The following environment variables can be used for debugging the tegola server:
 
-`TEGOLA_SQL_DEBUG`: specify the type of SQL debug information to output. Supports the following values:
+`SHIGOLA_SQL_DEBUG`: specify the type of SQL debug information to output. Supports the following values:
 
 - `LAYER_SQL`: print layer SQL as they're parsed from the config file.
 - `EXECUTE_SQL`: print SQL that is executed for each tile request and the number of items it returns or an error.
@@ -19,13 +19,13 @@ The following environment variables can be used for debugging the tegola server:
 **Example**
 
 ```bash
-$ TEGOLA_SQL_DEBUG=LAYER_SQL tegola --config=/path/to/conf.toml
+$ SHIGOLA_SQL_DEBUG=LAYER_SQL tegola --config=/path/to/conf.toml
 ```
 
-`TEGOLA_HTTP_PPROF_BIND`: bind a [pprof](https://pkg.go.dev/net/http/pprof) endpoint, e.g.
+`SHIGOLA_HTTP_PPROF_BIND`: bind a [pprof](https://pkg.go.dev/net/http/pprof) endpoint, e.g.
 `localhost:6060`. Requires a binary built with `-tags pprof`.
 
-`TEGOLA_OPTIONS`: a comma-separated list of `Key=Value` entries and bare flags.
+`SHIGOLA_OPTIONS`: a comma-separated list of `Key=Value` entries and bare flags.
 
 | Option | Default | Effect |
 |:---|:---|:---|
@@ -61,7 +61,7 @@ it is unreachable, because nothing reads the old keys. Purge and re-seed.
 
 With a [layered cache](./layered-cache.md), a **failing tier is invisible in
 the response**: a read failure degrades to a miss, so there is no error, no status-code change and no
-latency change. Check `tegola_cache_tier_errors_total`.
+latency change. Check `shigola_cache_tier_errors_total`.
 
 ## Client side
 

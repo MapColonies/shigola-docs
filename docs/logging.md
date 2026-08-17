@@ -1,6 +1,6 @@
 ---
 id: logging
-title: "Logging in Tegola"
+title: "Logging in Shigola"
 sidebar_label: "Logging"
 sidebar_position: 11
 description: "Managing logging output in Tegola"

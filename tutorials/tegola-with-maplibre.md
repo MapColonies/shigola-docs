@@ -1,6 +1,6 @@
 ---
 id: tegola-with-maplibre
-title: "Tegola With MapLibre"
+title: "Shigola With MapLibre"
 sidebar_label: "Tegola With MapLibre"
 sidebar_position: 2
 description: "Load Tegola-served content on a MapLibre Map!"

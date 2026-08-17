@@ -1,7 +1,7 @@
 ---
 id: about-this-fork
-title: "About this fork"
-sidebar_label: "About this fork"
+title: "About Shigola"
+sidebar_label: "About Shigola"
 sidebar_position: 2
 description: "What this is, what it adds, and who made Tegola"
 ---
@@ -14,7 +14,7 @@ licensed, its documentation lives at [tegola.io](https://tegola.io), and everyth
 software described on this site comes from that project.
 
 **These docs are not the official Tegola documentation.** They describe
-[NivGreenstein/tegola](https://github.com/NivGreenstein/tegola), a fork that adds three things
+[MapColonies/shigola](https://github.com/MapColonies/shigola), a fork that adds three things
 upstream Tegola does not have. For anything not listed on this page, upstream behaviour and
 [the official docs](https://tegola.io) apply — this fork is additive by design, and the native
 `/maps/...` routes serve the same tiles they always did.

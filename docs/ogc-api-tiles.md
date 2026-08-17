@@ -45,8 +45,8 @@ Existing entries are not wrong, just unreachable — nothing reads the old keys.
 re-seed:
 
 ```sh
-tegola cache purge --config=config.toml --bounds=-180,-85.0511,180,85.0511 --max-zoom=…
-tegola cache seed  --config=config.toml --bounds=-180,-85.0511,180,85.0511 --max-zoom=…
+shigola cache purge --config=config.toml --bounds=-180,-85.0511,180,85.0511 --max-zoom=…
+shigola cache seed  --config=config.toml --bounds=-180,-85.0511,180,85.0511 --max-zoom=…
 ```
 
 For a file or S3 cache, deleting the old directory tree is faster than purging tile by tile.
@@ -120,7 +120,7 @@ resource is still a 400.
 ## Caching
 
 OGC tile requests use the same cache keys as the native routes, so a tile seeded through
-`tegola cache seed` is served by both and neither generates it twice. The key is
+`shigola cache seed` is served by both and neither generates it twice. The key is
 `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}` — it does not include the query string, so every
 spelling of `?f=` shares one entry rather than storing the same bytes twice.
 
@@ -169,8 +169,8 @@ from the server and a passing implementation can start failing without a commit.
 locally, from the repository root:
 
 ```sh
-go build -o /tmp/tegola ./cmd/tegola      # CGO_ENABLED=1: the fixture data is a GeoPackage
-/tmp/tegola serve --config .github/cite/config.toml --port ":8081" &
+go build -o /tmp/shigola ./cmd/shigola      # CGO_ENABLED=1: the fixture data is a GeoPackage
+/tmp/shigola serve --config .github/cite/config.toml --port ":8081" &
 .github/cite/run.sh WebMercatorQuad 14 6324 9271
 ```
 
@@ -193,19 +193,19 @@ The manual equivalent, with TeamEngine and the server as containers on one Docke
 docker network create cite-net
 
 # 1. the tile server, serving a map with data
-docker run -d --name cite-tegola --network cite-net \
+docker run -d --name cite-shigola --network cite-net \
   -v "$PWD/citedata:/data" -w /data --entrypoint /data/tegola \
-  tegola-dev:latest serve --config /data/config.toml
+  shigola-dev:latest serve --config /data/config.toml
 
 # 2. TeamEngine with the OGC API - Tiles suite
 docker run -d --name cite-te --network cite-net -p 8888:8080 ogccite/ets-ogcapi-tiles10
 
 # 3. run the suite. Credentials are ogctest/ogctest.
 curl -u ogctest:ogctest -G \
-  --data-urlencode "iut=http://cite-tegola:8080/" \
+  --data-urlencode "iut=http://cite-shigola:8080/" \
   --data-urlencode "noofcollections=-1" \
   --data-urlencode "tilematrixsetdefinitionuri=http://www.opengis.net/def/tilematrixset/OGC/1.0/WebMercatorQuad" \
-  --data-urlencode "urltemplatefortiles=http://cite-tegola:8080/collections/athens/tiles/WebMercatorQuad/{tileMatrix}/{tileRow}/{tileCol}" \
+  --data-urlencode "urltemplatefortiles=http://cite-shigola:8080/collections/athens/tiles/WebMercatorQuad/{tileMatrix}/{tileRow}/{tileCol}" \
   --data-urlencode "tilematrix=14" \
   --data-urlencode "mintilerow=6324" --data-urlencode "maxtilerow=6324" \
   --data-urlencode "mintilecol=9271" --data-urlencode "maxtilecol=9271" \

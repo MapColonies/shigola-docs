@@ -41,8 +41,8 @@ function ForkNotice() {
           <a href="https://github.com/go-spatial">Go Spatial</a> team and
           documented at <a href="https://tegola.io">tegola.io</a>. This site
           documents{' '}
-          <a href="https://github.com/NivGreenstein/tegola">
-            NivGreenstein/tegola
+          <a href="https://github.com/MapColonies/shigola">
+            MapColonies/shigola
           </a>{' '}
           — everything upstream Tegola does, plus three additions.{' '}
           <Link to="/documentation/about-this-fork">Read more</Link>.

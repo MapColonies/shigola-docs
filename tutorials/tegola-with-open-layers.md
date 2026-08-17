@@ -1,6 +1,6 @@
 ---
 id: tegola-with-open-layers
-title: "Tegola With OpenLayers"
+title: "Shigola With OpenLayers"
 sidebar_label: "Tegola With OpenLayers"
 sidebar_position: 3
 description: "An open source mapping solution for web and mobile"

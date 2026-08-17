@@ -7,18 +7,18 @@ description: Get a build of this fork, or of upstream Tegola
 
 ## This fork
 
-Builds of [NivGreenstein/tegola](https://github.com/NivGreenstein/tegola) — Tegola plus
+Builds of [MapColonies/shigola](https://github.com/MapColonies/shigola) — Tegola plus
 [OGC API - Tiles](/documentation/ogc-api-tiles), [tile matrix
 sets](/documentation/tile-matrix-sets) and a [layered cache](/documentation/layered-cache):
 
-- **[Releases](https://github.com/NivGreenstein/tegola/releases)**
+- **[Releases](https://github.com/MapColonies/shigola/releases)**
 
 Or build from source. The GeoPackage provider needs CGO; everything else builds without it:
 
 ```sh
-git clone https://github.com/NivGreenstein/tegola.git
-cd tegola
-go build -mod vendor ./cmd/tegola
+git clone https://github.com/MapColonies/shigola.git
+cd shigola
+go build -mod vendor ./cmd/shigola
 ```
 
 Dependencies are vendored, so `-mod vendor` builds offline and pins exactly what CI used.

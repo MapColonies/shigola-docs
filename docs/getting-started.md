@@ -1,6 +1,6 @@
 ---
 id: getting-started
-title: "Getting Started with Tegola"
+title: "Getting Started with Shigola"
 sidebar_label: "Getting Started"
 sidebar_position: 3
 description: "Run your own open source vector tile server"

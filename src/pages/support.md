@@ -14,7 +14,7 @@ behaviour is upstream Tegola's and most questions belong upstream.
 anything this fork did not change: providers, layer SQL, geometry processing, the native
 `/maps/...` routes, the viewer, TileJSON, Lambda, observability, build flags.
 
-**Ask here** — [NivGreenstein/tegola issues](https://github.com/NivGreenstein/tegola/issues) — about
+**Ask here** — [MapColonies/shigola issues](https://github.com/MapColonies/shigola/issues) — about
 the three things the fork adds:
 
 - [OGC API - Tiles](/documentation/ogc-api-tiles) — the `/collections`, `/tiles` and
@@ -28,7 +28,7 @@ If you are not sure, upstream is the better first guess — and if it turns out 
 regression, that is useful information to arrive with.
 
 Issues with **these docs** go to
-[NivGreenstein/tegola-docs](https://github.com/NivGreenstein/tegola-docs/issues).
+[MapColonies/shigola-docs](https://github.com/MapColonies/shigola-docs/issues).
 
 ## Community
 

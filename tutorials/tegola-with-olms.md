@@ -1,6 +1,6 @@
 ---
 id: tegola-with-olms
-title: "Tegola With OL Mapbox Style (OLMS)"
+title: "Shigola With OL Mapbox Style (OLMS)"
 sidebar_label: "Tegola With OLMS"
 sidebar_position: 4
 description: "An easy way to use Mapbox styles with OpenLayers"

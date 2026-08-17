@@ -92,14 +92,14 @@ lose writes at process exit or execution freeze.
 
 ## Operational switches
 
-These three live in `TEGOLA_OPTIONS` rather than in `[cache]`, because they are process resourcing and
+These three live in `SHIGOLA_OPTIONS` rather than in `[cache]`, because they are process resourcing and
 lifecycle rather than cache configuration — and each has to be changeable during the incident that
 reveals the need for it.
 
 ```
-TEGOLA_OPTIONS=DetachedWriteSlots=1024        # pool capacity;    default 256
-TEGOLA_OPTIONS=DetachedWriteTimeoutMs=10000   # bound on writes;  default 10000, 0 disables
-TEGOLA_OPTIONS=DetachedWriteDrainMs=5000      # shutdown drain;   default 5000,  0 disables
+SHIGOLA_OPTIONS=DetachedWriteSlots=1024        # pool capacity;    default 256
+SHIGOLA_OPTIONS=DetachedWriteTimeoutMs=10000   # bound on writes;  default 10000, 0 disables
+SHIGOLA_OPTIONS=DetachedWriteDrainMs=5000      # shutdown drain;   default 5000,  0 disables
 ```
 
 `DetachedWriteSlots` is the one knob that can exhaust process memory: worst-case live write buffers
@@ -117,10 +117,10 @@ Values are integers, and the parser does not accept duration strings — write
 ## Seeding a layered cache
 
 ```
-tegola cache seed --map=osm                          # writes the LAST tier only
-tegola cache seed --map=osm --cache-tiers=all        # pre-warm: write every tier
-tegola cache seed --map=osm --cache-tiers=hot,s3     # an explicit list
-tegola cache seed --map=osm --overwrite              # write, then purge the rest
+shigola cache seed --map=osm                          # writes the LAST tier only
+shigola cache seed --map=osm --cache-tiers=all        # pre-warm: write every tier
+shigola cache seed --map=osm --cache-tiers=hot,s3     # an explicit list
+shigola cache seed --map=osm --overwrite              # write, then purge the rest
 ```
 
 **`seed` writes only the last tier by default.** Seeding every tier would flood the hot tier with cold
@@ -157,25 +157,25 @@ With an observer configured there are **two families, and they must not be summe
 
 | Family | Scope | `tier` label |
 |:---|:---|:---|
-| `tegola_cache_*` | the whole cache — one hit means "served from somewhere" | no |
-| `tegola_cache_tier_*` | one tier — several lookups per request | yes |
+| `shigola_cache_*` | the whole cache — one hit means "served from somewhere" | no |
+| `shigola_cache_tier_*` | one tier — several lookups per request | yes |
 
-`sum(tegola_cache_tier_hits_total)` is **not** the chain hit count; use `tegola_cache_hits_total`.
+`sum(shigola_cache_tier_hits_total)` is **not** the chain hit count; use `shigola_cache_hits_total`.
 
 The pool and the chain publish their own counters:
 
 | Metric | Means |
 |:---|:---|
-| `tegola_cache_write_slots_in_flight` / `_write_slots_capacity` | pool saturation — the leading indicator |
-| `tegola_cache_writes_dropped_total` | the pool was full at admission; nothing was attempted |
-| `tegola_cache_writes_abandoned_total` | still running when the shutdown drain expired |
-| `tegola_cache_writes_timed_out_total` | killed by `DetachedWriteTimeoutMs`; also counted in `_writes_failed_total` |
-| `tegola_cache_writes_failed_total`, `_writes_completed_total`, `_write_duration_seconds_total` | attempted writes |
-| `tegola_cache_promotions_total`, `_promotions_dropped_total` | read-through promotion |
-| `tegola_cache_tier_read_timeouts_total` | reads abandoned by their `timeout_ms`; also counted in `_errors_total` |
+| `shigola_cache_write_slots_in_flight` / `_write_slots_capacity` | pool saturation — the leading indicator |
+| `shigola_cache_writes_dropped_total` | the pool was full at admission; nothing was attempted |
+| `shigola_cache_writes_abandoned_total` | still running when the shutdown drain expired |
+| `shigola_cache_writes_timed_out_total` | killed by `DetachedWriteTimeoutMs`; also counted in `_writes_failed_total` |
+| `shigola_cache_writes_failed_total`, `_writes_completed_total`, `_write_duration_seconds_total` | attempted writes |
+| `shigola_cache_promotions_total`, `_promotions_dropped_total` | read-through promotion |
+| `shigola_cache_tier_read_timeouts_total` | reads abandoned by their `timeout_ms`; also counted in `_errors_total` |
 
 > **Renamed metric.** The cache error counter was registered as the unprefixed `errors`. It is now
-> `tegola_cache_errors_total` (and `tegola_cache_tier_errors_total` per tier). Dashboards and alerts
+> `shigola_cache_errors_total` (and `shigola_cache_tier_errors_total` per tier). Dashboards and alerts
 > referring to `errors` need updating.
 
 ## Operating a layered cache
@@ -187,12 +187,12 @@ decoration.
 
 | # | Signal | Means | Do |
 |:---|:---|:---|:---|
-| 1 | `rate(tegola_cache_writes_timed_out_total) > 0` | writes are hitting the bound; the durable tier is degrading | investigate now — this is the earliest warning |
+| 1 | `rate(shigola_cache_writes_timed_out_total) > 0` | writes are hitting the bound; the durable tier is degrading | investigate now — this is the earliest warning |
 | 2 | `in_flight / capacity > 0.7` for 5m | the pool is filling | raise `DetachedWriteSlots`, or fix what is slowing writes |
-| 3 | `rate(tegola_cache_writes_dropped_total) > 0` | the pool is exhausted and writes are being lost | both of the above, urgently |
+| 3 | `rate(shigola_cache_writes_dropped_total) > 0` | the pool is exhausted and writes are being lost | both of the above, urgently |
 
 **The read path has one alert that is not optional.**
-`rate(tegola_cache_tier_errors_total) > 0` should page, at least for the durable tier. Read failures
+`rate(shigola_cache_tier_errors_total) > 0` should page, at least for the durable tier. Read failures
 degrade to a miss, so a broken tier produces no error, no status-code change and no latency change —
 tiles keep serving, regenerated from the database. This counter is the only evidence.
 

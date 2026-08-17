@@ -1,8 +1,8 @@
 {
-  "name": "tegola-docs",
+  "name": "shigola-docs",
   "version": "0.0.0",
   "private": true,
-  "description": "Documentation for a fork of Tegola — OGC API - Tiles, tile matrix sets, layered cache",
+  "description": "Documentation for Shigola, a fork of Tegola — OGC API - Tiles, tile matrix sets, layered cache",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
