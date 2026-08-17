@@ -52,15 +52,22 @@ See [Layered cache]({{< ref "/documentation/layered-cache" >}}).
 
 ## Breaking changes from upstream
 
-Three. Each is here because there was no additive way to do it.
+Two. Each is here because there was no additive way to do it.
 
 | Change | What breaks |
 |:---|:---|
 | The embedded viewer moved from `/` to `/viewer` | OGC API - Tiles requires a landing page at the service root. Bookmarks, reverse-proxy rules and health checks pointing at `/` now get JSON. An unknown path now returns 404, where the viewer's catch-all used to answer everything. |
 | Cache keys gained a leading `{tileMatrixSetId}` | Existing cache entries are unreachable. **Purge and re-seed.** |
-| `tile_srid` was replaced by `tile_matrix_sets` | A map now names tiling schemes, not an SRID — an SRID is ambiguous, since `WorldCRS84Quad` and `WGS1984Quad` are both EPSG:4326 with different matrix shapes. |
 
-Details and migration steps are on the pages linked above.
+Everything else is additive. `tile_matrix_sets` is a **new optional key**, not a replacement for
+anything you have: an upstream config that never set it keeps serving WebMercatorQuad exactly as
+before.
+
+There is also one behaviour change that breaks nothing but is worth knowing: cache writes no longer
+block the response, in single-backend deployments as well as chained ones. See
+[Layered cache]({{< ref "/documentation/layered-cache#writes-do-not-block-the-response" >}}).
+
+Details are on the pages linked above.
 
 ## Attribution and licensing
 

@@ -20,10 +20,10 @@ The Tegola config file uses [TOML](https://github.com/toml-lang/toml) syntax wit
 - [Maps](#maps): map configuration including map names, layers and zoom levels.
 - [Cache](#cache): cache configurations.
 
-> **Fork differences.** [This fork]({{< ref "/documentation/about-this-fork" >}}) changes two things
-> in this file:
+> **Fork additions.** [This fork]({{< ref "/documentation/about-this-fork" >}}) adds two things to
+> this file, both optional — a config written for upstream Tegola works unchanged:
 >
-> - A map's `tile_srid` is replaced by [`tile_matrix_sets`](#tile-matrix-sets).
+> - A map may name the tiling schemes it serves with [`tile_matrix_sets`](#tile-matrix-sets).
 > - `[cache]` gains `type = "multi"` for a [layered cache](#layered-cache), and `timeout_ms` on any
 >   cache.
 
@@ -264,7 +264,7 @@ Tegola is responsible for serving vector map tiles, which are made up of numerou
 | bounds             | No       | The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: `[-180.0, -85.0511, 180.0, 85.0511]`|
 | center             | No       | The center of the map to be displayed in the preview. (`[lon, lat, zoom]`).                                                      |
 | tile_buffer        | No       | The number of pixels to extend a tile's clipping area, defaults to `64` or the [global](#global) value                           |
-| tile_matrix_sets   | No       | The [tiling schemes](#tile-matrix-sets) this map may be requested in. **Fork only** — replaces upstream's `tile_srid`.           |
+| tile_matrix_sets   | No       | **Fork only.** The [tiling schemes](#tile-matrix-sets) this map may be requested in. Omitted, every scheme the build serves.     |
 
 
 ```toml
@@ -276,7 +276,8 @@ center = [-76.275329586789, 39.153492567373, 5.0]
 
 ### Tile matrix sets
 
-> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}), replacing `tile_srid`.**
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}).** Optional — omit it and the
+> map behaves as it does on upstream Tegola.
 
 `tile_matrix_sets` names the tiling schemes a map may be requested in. It is configured per map, not
 per layer or per provider.
@@ -301,9 +302,7 @@ Naming a scheme this build cannot serve is a startup error that lists the availa
 schemes in the OGC register ship with the build but are not servable; `/tileMatrixSets` lists only
 what can be served.
 
-**Migrating:** `tile_srid = 3857` (or unset) becomes `tile_matrix_sets = ["WebMercatorQuad"]` (or
-unset); `tile_srid = 4326` becomes `tile_matrix_sets = ["WorldCRS84Quad"]`. Changing a map's schemes
-changes its cache keys — purge and re-seed.
+**Changing a map's schemes changes its cache keys** — purge and re-seed that map.
 
 Full detail: [Tile Matrix Sets]({{< ref "/documentation/tile-matrix-sets" >}}).
 

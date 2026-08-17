@@ -11,7 +11,7 @@ menu:
 ---
 
 > Added by [this fork]({{< ref "/documentation/about-this-fork" >}}). Upstream Tegola serves one
-> implicit tiling scheme, WebMercatorQuad, and configures it as `tile_srid`.
+> tiling scheme, WebMercatorQuad, and has no way to name it or ask for another.
 
 ## What a tile matrix set is
 
@@ -19,9 +19,9 @@ A **tile matrix set** — OGC's name for a tiling scheme — defines, for every 
 coordinate reference system, how many columns and rows the world is cut into, and where the origin
 sits. Two servers agree on what `10/511/340` means only if they agree on the scheme.
 
-Upstream Tegola has one scheme baked in and calls it by its SRID. This fork carries the OGC register
-of tile matrix sets as data, resolves grids through a registry, and lets each map declare which
-schemes it may be requested in.
+Upstream Tegola has one scheme baked in, with the Web Mercator grid hardcoded in the tile pipeline.
+This fork carries the OGC register of tile matrix sets as data, resolves grids through a registry, and
+lets each map declare which schemes it may be requested in.
 
 ## The schemes this build serves
 
@@ -64,8 +64,8 @@ silent fallback.
 
 ## Configuring a map's schemes
 
-`tile_matrix_sets` replaces upstream's `tile_srid`. It is set **per map**, not per layer or per
-provider:
+`tile_matrix_sets` is set **per map**, not per layer or per provider. It is optional: a config that
+never mentions it behaves exactly as it did on upstream Tegola.
 
 ```toml
 [[maps]]
@@ -80,17 +80,14 @@ tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 - The first entry is the default, and is what `/maps/{map}/{z}/{x}/{y}` returns.
 - A map's layer-collections offer exactly the schemes their map does.
 
-### Migrating from `tile_srid`
+### Why a scheme id and not an SRID
 
-| Was | Becomes |
-|:---|:---|
-| `tile_srid = 3857`, or unset | `tile_matrix_sets = ["WebMercatorQuad"]`, or unset |
-| `tile_srid = 4326` | `tile_matrix_sets = ["WorldCRS84Quad"]` |
+A tiling scheme is named by its `tileMatrixSetId`, not by the SRID of its CRS, because an SRID cannot
+identify one: `WorldCRS84Quad` and `WGS1984Quad` are both EPSG:4326, so "4326" names two schemes. The
+id is what OGC uses, and it is what appears in tile URLs, cache keys and `/tileMatrixSets`.
 
-An SRID cannot express the distinction the fork now makes: `WorldCRS84Quad` and `WGS1984Quad` are
-both EPSG:4326 with different axis orders, so "4326" names two different schemes. Where an SRID still
-has to be interpreted — an older API path, an internal caller — 3857 resolves to `WebMercatorQuad`
-and 4326 to `WorldCRS84Quad`, preserving what upstream meant by it.
+Where an SRID still has to be interpreted — an internal caller that only knows a projection — 3857
+resolves to `WebMercatorQuad` and 4326 to `WorldCRS84Quad`.
 
 **Changing a map's schemes changes its cache keys.** Purge and re-seed the affected maps; see
 [Cache Seeding and Purging]({{< ref "/documentation/cache-seeding-and-purging" >}}).
