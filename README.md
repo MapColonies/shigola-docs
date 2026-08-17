@@ -50,6 +50,12 @@ shipping.
 `{z}/{x}/{y}` and `{tileMatrixSetId}`; under MDX every one of those is a JSX expression referencing
 an undefined identifier, and the build fails. If you need MDX in a page, name it `.mdx`.
 
+One consequence: **admonitions cannot carry a custom title in a `.md` file.** Neither
+`:::warning Title` nor `:::warning[Title]` works — the title is emitted as an `<mdxadmonitiontitle>`
+element that the theme never lifts into the heading, so it renders as a stray first line and the
+heading stays the generic "warning". This fails silently, with no build error. Use a plain
+`:::warning` and lead the body with a bold sentence instead.
+
 **There are no live maps on this site.** The Hugo site had a `/demo` page and a map behind the
 homepage hero, both driven by standalone documents in `static/` with vendored 2017-era copies of
 OpenLayers and Mapbox GL. They pointed at **upstream's** demo tile servers (`demo.tegola.io`,

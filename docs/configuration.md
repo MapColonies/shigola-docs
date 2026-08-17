@@ -79,9 +79,10 @@ The providers configuration tells Tegola where your data lives. Data providers e
 
 ### PostGIS & MVT_PostGIS
 
-:::warning `postgis` distorts polygons — known bug
+:::warning
 
-The native `postgis` provider returns **distorted polygon and multipolygon geometries**:
+**`postgis` distorts polygons — known bug.** The native `postgis` provider returns distorted
+polygon and multipolygon geometries:
 [go-spatial/tegola#1104](https://github.com/go-spatial/tegola/issues/1104#issuecomment-4671741621).
 Serving the same table through `mvt_postgis` renders it correctly, so the fault is in the native
 provider's geometry path, not in your data.
@@ -541,9 +542,10 @@ password = "${SECRET_REDIS_PASSWORD}"
 
 ## Full Config Example
 
-:::warning Prefer `mvt_postgis` over `postgis` for polygon data
+:::warning
 
-The native `postgis` provider produces **distorted polygon and multipolygon geometries** —
+**Prefer `mvt_postgis` over `postgis` for polygon data.** The native `postgis` provider produces
+distorted polygon and multipolygon geometries —
 [go-spatial/tegola#1104](https://github.com/go-spatial/tegola/issues/1104#issuecomment-4671741621).
 The same table served through `mvt_postgis` renders correctly, which places the fault in the native
 provider's geometry handling rather than in the source data.
@@ -573,9 +575,10 @@ type = "mvt_postgis"    # PostGIS does the MVT encoding, via ST_AsMVT
 uri = "postgres://tegola:supersecret@localhost:5432/tegola?sslmode=prefer" # PostGIS connection string (required)
 srid = 3857             # The default srid for this provider. If not provided it will be WebMercator (3857)
 
-    # Every mvt_postgis layer needs `sql`, and the geometry must be wrapped in
-    # ST_AsMVTGeom. `tablename` is not available on this provider: there is no
-    # query for tegola to generate, because the encoding happens in the database.
+    # `sql` is required on this provider, and the geometry must be wrapped in
+    # ST_AsMVTGeom — which tegola cannot generate from a `tablename`. The key is
+    # parsed rather than rejected, so a layer using it fails by serving wrong
+    # geometry rather than by refusing to start.
     [[providers.layers]]
     name = "landuse"                       # will be encoded as the layer name in the tile
     geometry_fieldname = "geom"             # geom field. default is geom
