@@ -5,13 +5,17 @@ publishDir = "docs"
 relativeURLs = true
 
 languageCode = "en-us"
-title = "Tegola: An open source vector tile server"
+title = "Tegola (fork): vector tiles with OGC API - Tiles"
 theme = "hugo-theme-bootstrap4-blog"
 # number of posts to show on home/category/tag pages (Default: 10)
 paginate = 5
 # optionally override the site's footer with custom copyright text
 # copyright = "Except where otherwise noted, content on this site is licensed under a [Creative Commons Attribution 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/)."
-googleAnalytics = "UA-83708580-1"
+
+# Upstream's Google Analytics property (UA-83708580-1) is deliberately not set
+# here: this is a fork, and its traffic is not go-spatial's to measure. Set your
+# own property id if you want analytics.
+# googleAnalytics = ""
 
 #[permalinks]
 [[menu.main]]
@@ -43,7 +47,13 @@ googleAnalytics = "UA-83708580-1"
   author = "Go Spatial"
 
   # Description/subtitle for homepage (can be Markdown)
-  description = "Tegola Docs"
+  description = "Docs for a fork of Tegola — OGC API - Tiles, tile matrix sets, layered cache"
+
+  # Upstream Tegola, which this is a fork of. Referenced from templates and the
+  # attribution footer.
+  upstream_repo = "https://github.com/go-spatial/tegola"
+  upstream_docs = "https://tegola.io"
+  fork_repo = "https://github.com/NivGreenstein/tegola"
 
   # Format dates with Go's time formatting
   date_format = "Mon Jan 02, 2006"
@@ -94,7 +104,11 @@ googleAnalytics = "UA-83708580-1"
     # Optional, used for attribution in Twitter cards (ideally not a person
     # for example: nytimes, flickr, NatGeo, etc).
     # See: https://dev.twitter.com/cards/types/summary-large-image
-    twitter = "TegolaGis"
+    #
+    # Upstream's account (@TegolaGis) is deliberately unset: a Twitter card
+    # attributes the page to the account it names, and this fork's pages are not
+    # the Tegola project's to speak for.
+    # twitter = ""
 
 # Default content language for Hugo 0.17's multilingual support (default is "en")
 # See: https://github.com/spf13/hugo/blob/master/docs/content/content/multilingual.md
