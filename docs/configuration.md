@@ -79,6 +79,18 @@ The providers configuration tells Tegola where your data lives. Data providers e
 
 ### PostGIS & MVT_PostGIS
 
+:::warning `postgis` distorts polygons — known bug
+
+The native `postgis` provider returns **distorted polygon and multipolygon geometries**:
+[go-spatial/tegola#1104](https://github.com/go-spatial/tegola/issues/1104#issuecomment-4671741621).
+Serving the same table through `mvt_postgis` renders it correctly, so the fault is in the native
+provider's geometry path, not in your data.
+
+**If your layers include polygons, use [`mvt_postgis`](#mvt_postgis).** It is the workaround, and it
+is what the [full config example](#full-config-example) below uses.
+
+:::
+
 Load data from a Postgres/PostGIS database. In addition to the required `name` and `type` parameters, a PostGIS data provider supports the following parameters:
 
 | Param               | Required |  Default | Description                                        |
@@ -529,6 +541,19 @@ password = "${SECRET_REDIS_PASSWORD}"
 
 ## Full Config Example
 
+:::warning Prefer `mvt_postgis` over `postgis` for polygon data
+
+The native `postgis` provider produces **distorted polygon and multipolygon geometries** —
+[go-spatial/tegola#1104](https://github.com/go-spatial/tegola/issues/1104#issuecomment-4671741621).
+The same table served through `mvt_postgis` renders correctly, which places the fault in the native
+provider's geometry handling rather than in the source data.
+
+The example below therefore uses `mvt_postgis`, where PostGIS does the MVT encoding via
+[`ST_AsMVT`](https://postgis.net/docs/ST_AsMVT.html). If you are serving polygons with
+`type = "postgis"`, switching is the workaround.
+
+:::
+
 The following config demonstrates the various concepts discussed above:
 
 ```toml
@@ -544,30 +569,30 @@ basepath="/tmp/tegola"  # cache specific config
 # register data providers
 [[providers]]
 name = "test_postgis"   # provider name is referenced from map layers
-type = "postgis"        # the type of data provider. currently only supports postgis
+type = "mvt_postgis"    # PostGIS does the MVT encoding, via ST_AsMVT
 uri = "postgres://tegola:supersecret@localhost:5432/tegola?sslmode=prefer" # PostGIS connection string (required)
 srid = 3857             # The default srid for this provider. If not provided it will be WebMercator (3857)
 
-    # Example data
+    # Every mvt_postgis layer needs `sql`, and the geometry must be wrapped in
+    # ST_AsMVTGeom. `tablename` is not available on this provider: there is no
+    # query for tegola to generate, because the encoding happens in the database.
     [[providers.layers]]
-    name = "landuse"                      # will be encoded as the layer name in the tile
-    tablename = "gis.zoning_base_3857"    # sql or table_name are required
-    geometry_fieldname = "geom"           # geom field. default is geom
-    id_fieldname = "gid"                  # geom id field. default is gid
-    srid = 4326                           # the SRID of the geometry field if different than
+    name = "landuse"                       # will be encoded as the layer name in the tile
+    geometry_fieldname = "geom"             # geom field. default is geom
+    id_fieldname = "gid"                    # geom id field. default is gid
+    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
-    name = "roads"                         # will be encoded as the layer name in the tile
-    tablename = "gis.zoning_base_3857"	   # sql or table_name are required
-    geometry_fieldname = "geom"            # geom field. default is geom
-    id_fieldname = "gid"                   # geom id field. default is gid
-    fields = [ "class", "name" ]           # Additional fields to include in the select statement.
+    name = "roads"                          # will be encoded as the layer name in the tile
+    geometry_fieldname = "geom"             # geom field. default is geom
+    id_fieldname = "gid"                    # geom id field. default is gid
+    # Extra columns in the SELECT become feature tags — the equivalent of the
+    # `fields` option on the native provider.
+    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid, class, name FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
-    name = "rivers"                        # will be encoded as the layer name in the tile
-    # Custom sql to be used for this layer.
-    # Note that the geometry field is wrapped in a ST_AsBinary()
-    sql = "SELECT gid, ST_AsBinary(geom) AS geom FROM gis.rivers WHERE geom && !BBOX!"
+    name = "rivers"                         # will be encoded as the layer name in the tile
+    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.rivers WHERE geom && !BBOX!"
 
 # maps are made up of layers
 [[maps]]
@@ -576,19 +601,28 @@ tile_buffer = 0                             # number of pixels to extend a tile'
 tile_matrix_sets = ["WebMercatorQuad"]      # tiling schemes this map may be requested in.
                                             # the first is the default. omit for all servable schemes.
 
+    # A map using an MVT provider may use ONLY that provider — every layer here
+    # has to come from test_postgis. Mixing in a second provider, MVT or not, is
+    # a startup error.
     [[maps.layers]]
     provider_layer = "test_postgis.landuse" # must match a data provider layer
     min_zoom = 12                           # minimum zoom level to include this layer
     max_zoom = 16                           # maximum zoom level to include this layer
-
-        [maps.layers.default_tags]          # table of default tags to encode in the tile. SQL statements will override
-        class = "park"
 
     [[maps.layers]]
     provider_layer = "test_postgis.rivers"  # must match a data provider layer
     min_zoom = 10                           # minimum zoom level to include this layer
     max_zoom = 18                           # maximum zoom level to include this layer
 ```
+
+Two things behave differently from the native `postgis` provider, and neither reports an error:
+
+- **`default_tags` is ignored.** Tegola adds default tags while encoding a tile, and an MVT provider
+  returns a tile that is already encoded, so there is nothing to add them to. Put the value in the
+  `SELECT` instead — `'park'::text AS class`.
+- **A map may contain exactly one MVT provider and nothing else.** This is enforced at startup, so a
+  map that mixes `mvt_postgis` with a `postgis` or `gpkg` layer fails to load rather than serving a
+  partial tile.
 
 ## Layered Cache Example
 
@@ -626,12 +660,12 @@ promote_on_hit = true       # default: a hit in s3 is written back into redis
 
 [[providers]]
 name = "osm"
-type = "postgis"
+type = "mvt_postgis"        # see the polygon bug in `postgis`, above
 uri  = "postgres://tegola:supersecret@localhost:5432/tegola?sslmode=prefer"
 
   [[providers.layers]]
-  name      = "landuse"
-  tablename = "gis.landuse"
+  name = "landuse"
+  sql  = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 
 [[maps]]
 name = "osm"
