@@ -1,44 +1,29 @@
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 
 import styles from './index.module.css';
 
-// The Hugo site put a live tegola map behind the hero. It is a standalone
-// document in static/, so it survives the move as an iframe rather than being
-// rebuilt as a component.
 function Hero() {
   const {siteConfig} = useDocusaurusContext();
-  const mapUrl = useBaseUrl('/homeMap.html');
 
   return (
     <header className={styles.hero}>
-      <iframe
-        src={mapUrl}
-        className={styles.heroMap}
-        title="A tegola-served vector map"
-        // Decorative: the page is fully usable without it.
-        tabIndex={-1}
-        aria-hidden="true"
-      />
-      <div className={styles.heroOverlay}>
-        <div className="container">
-          <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
-          <p className={styles.heroTagline}>{siteConfig.tagline}</p>
-          <div className={styles.heroButtons}>
-            <Link
-              className="button button--primary button--lg"
-              to="/documentation/getting-started">
-              Get Started
-            </Link>
-            <Link
-              className="button button--secondary button--lg"
-              to="/demo">
-              Try it
-            </Link>
-          </div>
+      <div className="container">
+        <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+        <p className={styles.heroTagline}>{siteConfig.tagline}</p>
+        <div className={styles.heroButtons}>
+          <Link
+            className="button button--primary button--lg"
+            to="/documentation/getting-started">
+            Get Started
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="/documentation/about-this-fork">
+            What this fork adds
+          </Link>
         </div>
       </div>
     </header>

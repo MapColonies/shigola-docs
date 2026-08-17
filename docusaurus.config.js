@@ -104,7 +104,6 @@ const config = {
             position: 'left',
             label: 'Tutorials',
           },
-          {to: '/demo', label: 'Demo', position: 'left'},
           {to: '/support', label: 'Support', position: 'left'},
           {
             to: '/documentation/about-this-fork',

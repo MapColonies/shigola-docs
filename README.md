@@ -24,6 +24,16 @@ npm run serve      # serve the production build
 all set to `throw`, so a link or heading anchor that does not resolve fails the build rather than
 shipping.
 
+> **After deleting a page, clear both caches.** A stale build cache surfaces as
+> `Cannot destructure property 'title' of 'metadata'` on pages you did not touch, which reads like a
+> content bug and is not one. `npm run clear` alone is not enough:
+>
+> ```bash
+> npm run clear && rm -rf build node_modules/.cache && npm run build
+> ```
+>
+> CI is unaffected — `npm ci` starts from a clean `node_modules`.
+
 ## Layout
 
 | Path | What |
@@ -40,12 +50,12 @@ shipping.
 `{z}/{x}/{y}` and `{tileMatrixSetId}`; under MDX every one of those is a JSX expression referencing
 an undefined identifier, and the build fails. If you need MDX in a page, name it `.mdx`.
 
-**The home and demo pages embed `static/homeMap.html` and `static/map.html` in an iframe.** Those are
-standalone documents carried over from the Hugo site, with their own copies of OpenLayers and
-Mapbox GL under `static/libs/`. They reference their assets relatively, so they work under the
-`/tegola-docs/` base path — but they point at **upstream's** demo tile servers (`demo.tegola.io`,
-`tegola-osm-demo.go-spatial.org`) via `static/config.json` and `static/homeConfig.json`. Point those
-at your own tegola if you want the maps to reflect this fork.
+**There are no live maps on this site.** The Hugo site had a `/demo` page and a map behind the
+homepage hero, both driven by standalone documents in `static/` with vendored 2017-era copies of
+OpenLayers and Mapbox GL. They pointed at **upstream's** demo tile servers (`demo.tegola.io`,
+`tegola-osm-demo.go-spatial.org`), so they showed upstream's data rather than anything this fork
+serves, and they are gone. If you want a demo, point one at your own tegola rather than restoring
+these.
 
 ## Deploying
 
