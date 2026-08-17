@@ -9,13 +9,45 @@ OGC API - Tiles, multiple tile matrix sets, and a layered cache.
 from [go-spatial/tegola-docs](https://github.com/go-spatial/tegola-docs), which this repo is forked
 from. Tegola and these docs are MIT licensed; all credit for Tegola belongs upstream.
 
-To build the docs you will need [Hugo](https://gohugo.io/) version v0.80.0 or newer.
+Built with [Docusaurus](https://docusaurus.io/) 3. Requires Node 18+.
 
-### Serving the docs locally
+## Running locally
 
-Navigate to the repository and then run `hugo server`.
+```bash
+npm ci
+npm start          # dev server with hot reload, at http://localhost:3000/tegola-docs/
+npm run build      # production build into build/
+npm run serve      # serve the production build
+```
 
-### Deploying the docs
+`npm run build` is the real check: `onBrokenLinks`, `onBrokenAnchors` and `onBrokenMarkdownLinks` are
+all set to `throw`, so a link or heading anchor that does not resolve fails the build rather than
+shipping.
+
+## Layout
+
+| Path | What |
+|:---|:---|
+| `docs/` | The documentation section, served at `/documentation/` |
+| `tutorials/` | The tutorials section, a second docs plugin instance |
+| `src/pages/` | Standalone pages: home, demo, support, download |
+| `static/` | Passed through verbatim — images, styles, and the two standalone map pages the home and demo pages embed |
+| `sidebars.js`, `sidebarsTutorials.js` | Sidebar order, written explicitly |
+
+### Two things worth knowing before editing
+
+**`markdown.format` is `detect`, so `.md` files are CommonMark, not MDX.** These docs are full of
+`{z}/{x}/{y}` and `{tileMatrixSetId}`; under MDX every one of those is a JSX expression referencing
+an undefined identifier, and the build fails. If you need MDX in a page, name it `.mdx`.
+
+**The home and demo pages embed `static/homeMap.html` and `static/map.html` in an iframe.** Those are
+standalone documents carried over from the Hugo site, with their own copies of OpenLayers and
+Mapbox GL under `static/libs/`. They reference their assets relatively, so they work under the
+`/tegola-docs/` base path — but they point at **upstream's** demo tile servers (`demo.tegola.io`,
+`tegola-osm-demo.go-spatial.org`) via `static/config.json` and `static/homeConfig.json`. Point those
+at your own tegola if you want the maps to reflect this fork.
+
+## Deploying
 
 Deployment is automatic: **[`.github/workflows/gh-pages.yml`](.github/workflows/gh-pages.yml)** builds
 the site and publishes it to GitHub Pages on every push to `master`, and on demand from the Actions
@@ -25,31 +57,22 @@ tab. The published site is <https://nivgreenstein.github.io/tegola-docs/>.
 workflow deploys the build artifact directly — there is no `gh-pages` branch and nothing built is
 committed.
 
-The workflow pins Hugo to the version this site is verified against (`0.101.0`, extended). Bumping it
-past 0.146 requires config changes first — `paginate` was removed in favour of
-`pagination.pagerSize`.
-
-`--baseURL` is supplied by the workflow from the Pages URL, so the site works under the
-`/tegola-docs/` subpath without the value being hard-coded here. To reproduce a deploy build locally:
-
-```bash
-hugo --minify --baseURL "https://nivgreenstein.github.io/tegola-docs/"
-```
-
-Plain `hugo` writes to `docs/`, which is ignored by .gitignore.
+`url` and `baseUrl` live in `docusaurus.config.js` rather than being injected by the workflow, so a
+local `npm run build` produces exactly what gets deployed. Moving the site to another host means
+changing them there.
 
 > **Note:** `static/CNAME` was removed from this fork. Upstream it contained `tegola.io`; a fork must
 > not deploy to the official domain. If you move this site to your own domain, add a `static/CNAME`
-> with that hostname and set it in *Settings → Pages*.
+> with that hostname, set it in *Settings → Pages*, and update `url`/`baseUrl` in the config.
 
-### Keeping in sync with the fork
+## Keeping in sync with the fork
 
 The pages describing fork-specific behaviour are derived from documentation kept in the code repo,
 which is the source of truth:
 
 | Docs page | Source in `NivGreenstein/tegola` (branch `feat/ogc-tiles`) |
 |:---|:---|
-| `documentation/ogc-api-tiles.md` | `docs/ogc-api-tiles.md` |
-| `documentation/tile-matrix-sets.md` | `docs/ogc-api-tiles.md`, `tms/doc.go`, `tms/registry.go` |
-| `documentation/layered-cache.md` | `README.md` § "Layered cache" |
-| `documentation/configuration.md` § Redis | `cache/redis/README.md` |
+| `docs/ogc-api-tiles.md` | `docs/ogc-api-tiles.md` |
+| `docs/tile-matrix-sets.md` | `docs/ogc-api-tiles.md`, `tms/doc.go`, `tms/registry.go` |
+| `docs/layered-cache.md` | `README.md` § "Layered cache" |
+| `docs/configuration.md` § Redis | `cache/redis/README.md` |

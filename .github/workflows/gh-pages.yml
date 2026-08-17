@@ -22,35 +22,30 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      # Pinned deliberately. The theme and config use APIs this site was verified
-      # against; `paginate` in config.toml, for one, is removed in Hugo 0.146+.
-      HUGO_VERSION: 0.101.0
     steps:
       - name: Check out
         uses: actions/checkout@v4
-        # The theme is vendored in-tree, not a submodule, so no recursive checkout.
 
-      - name: Install Hugo (extended)
-        run: |
-          wget -q -O "${{ runner.temp }}/hugo.deb" \
-            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb"
-          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
-          hugo version
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
+      - name: Install
+        # ci, not install: build from the committed lockfile so a deploy cannot
+        # pick up a dependency the build was never verified against.
+        run: npm ci
 
       - name: Build
-        # base_url has no trailing slash; Hugo wants one.
-        # publishDir = "docs" comes from config.toml.
-        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+        # url and baseUrl are in docusaurus.config.js rather than passed here,
+        # so a local `npm run build` produces exactly what gets deployed.
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs
+          path: ./build
 
   deploy:
     name: Deploy
