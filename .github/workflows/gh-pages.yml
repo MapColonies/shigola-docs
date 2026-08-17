@@ -1,0 +1,60 @@
+name: Deploy docs to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  # Allows a manual run from the Actions tab.
+  workflow_dispatch:
+
+# GITHUB_TOKEN permissions needed to deploy to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. In-progress runs are allowed to finish rather than
+# being cancelled, so a half-uploaded artifact is never what gets published.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        # ci, not install: build from the committed lockfile so a deploy cannot
+        # pick up a dependency the build was never verified against.
+        run: npm ci
+
+      - name: Build
+        # url and baseUrl are in docusaurus.config.js rather than passed here,
+        # so a local `npm run build` produces exactly what gets deployed.
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

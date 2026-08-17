@@ -1,0 +1,43 @@
+/**
+ * Site theme. Docusaurus's Infima defaults do most of the work; this only
+ * fixes the palette and the few things the docs actually need.
+ */
+
+:root {
+  --ifm-color-primary: #17a2b8;
+  --ifm-color-primary-dark: #1592a5;
+  --ifm-color-primary-darker: #148a9c;
+  --ifm-color-primary-darkest: #107181;
+  --ifm-color-primary-light: #1ab2cb;
+  --ifm-color-primary-lighter: #1cbad3;
+  --ifm-color-primary-lightest: #33c7de;
+  --ifm-code-font-size: 92%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4fd1e5;
+  --ifm-color-primary-dark: #31c8df;
+  --ifm-color-primary-darker: #22c3db;
+  --ifm-color-primary-darkest: #1ba1b5;
+  --ifm-color-primary-light: #6dd8eb;
+  --ifm-color-primary-lighter: #7cdcee;
+  --ifm-color-primary-lightest: #a9e8f4;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Several reference tables (cache metrics, redis special characters, the
+   endpoint list) are wider than the content column. Let them scroll rather
+   than forcing the page to. */
+.markdown table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Blockquotes carry the call-out notices, which are the single most important
+   thing on several pages. */
+.markdown blockquote {
+  border-left: 4px solid var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+}

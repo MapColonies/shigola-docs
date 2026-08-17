@@ -1,0 +1,74 @@
+.hero {
+  padding: 4rem 0;
+  background: linear-gradient(
+    135deg,
+    var(--ifm-color-primary-darkest) 0%,
+    var(--ifm-color-primary) 100%
+  );
+  color: #fff;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.heroTagline {
+  font-size: 1.25rem;
+  max-width: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+.forkNotice {
+  background: var(--ifm-color-warning-contrast-background);
+  color: var(--ifm-color-warning-contrast-foreground);
+  border-bottom: 1px solid var(--ifm-color-warning-dark);
+  padding: 1rem 0;
+}
+
+.forkNotice p {
+  margin: 0;
+}
+
+.section {
+  padding: 3rem 0;
+}
+
+.sectionAlt {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.cardCol {
+  margin-bottom: 1rem;
+}
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card .card__footer {
+  margin-top: auto;
+}
+
+.featureList {
+  columns: 2;
+  column-gap: 2rem;
+}
+
+@media (max-width: 996px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .featureList {
+    columns: 1;
+  }
+}
