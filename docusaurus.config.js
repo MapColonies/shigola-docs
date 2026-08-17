@@ -18,11 +18,11 @@ const config = {
 
   // GitHub Pages project site. The workflow does not override these, so a local
   // `npm run build` produces exactly what is deployed.
-  url: 'https://nivgreenstein.github.io',
-  baseUrl: '/tegola-docs/',
+  url: 'https://mapcolonies.github.io',
+  baseUrl: '/shigola-docs/',
 
-  organizationName: 'NivGreenstein',
-  projectName: 'tegola-docs',
+  organizationName: 'MapColonies',
+  projectName: 'shigola-docs',
 
   // A broken internal link should fail the build, not ship. This is what
   // replaces Hugo's ref shortcode, which errored on an unresolvable target.
