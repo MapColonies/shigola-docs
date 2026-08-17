@@ -3,7 +3,7 @@ author: "Jpalms"
 date: 2017-11-29
 linktitle: Debugging
 title: Debugging Tegola
-weight: 5
+weight: 10
 subtitle: Fixing problems in Tegola
 menu:
   main:
@@ -25,6 +25,47 @@ The following environment variables can be used for debugging the tegola server:
 ```bash
 $ TEGOLA_SQL_DEBUG=LAYER_SQL tegola --config=/path/to/conf.toml
 ```
+
+`TEGOLA_HTTP_PPROF_BIND`: bind a [pprof](https://pkg.go.dev/net/http/pprof) endpoint, e.g.
+`localhost:6060`. Requires a binary built with `-tags pprof`.
+
+`TEGOLA_OPTIONS`: a comma-separated list of `Key=Value` entries and bare flags.
+
+| Option | Default | Effect |
+|:---|:---|:---|
+| `DontSimplifyGeo` | off | Disable geometry simplification. |
+| `SimplifyMaxZoom=N` | 10 | The zoom above which simplification stops. |
+| `DetachedWriteSlots=N` | 256 | **Fork only.** Cache write-pool capacity. |
+| `DetachedWriteTimeoutMs=N` | 10000 | **Fork only.** Bound on a detached cache write. 0 disables. |
+| `DetachedWriteDrainMs=N` | 5000 | **Fork only.** How long shutdown waits for in-flight writes. 0 disables. |
+
+Values are integers; the parser does **not** accept duration strings — write
+`DetachedWriteTimeoutMs=10000`, not `10s`. An unparseable value logs an error and falls back to the
+default rather than failing startup.
+
+The three `DetachedWrite*` options are added by
+[this fork]({{< ref "/documentation/about-this-fork" >}}) and are documented in full, with the metrics
+that tell you when to change them, under
+[Layered cache]({{< ref "/documentation/layered-cache#operational-switches" >}}). They live here
+rather than in `[cache]` because each has to be changeable during the incident that reveals the need
+for it.
+
+## Cache is not being read
+
+[This fork]({{< ref "/documentation/about-this-fork" >}}) changed the cache key format to include the
+tiling scheme:
+
+```
+before   {map}/{layer}/{z}/{x}/{y}
+after    {tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}
+```
+
+A cache populated by upstream Tegola, or before a map's `tile_matrix_sets` changed, is not corrupt —
+it is unreachable, because nothing reads the old keys. Purge and re-seed.
+
+With a [layered cache]({{< ref "/documentation/layered-cache" >}}), a **failing tier is invisible in
+the response**: a read failure degrades to a miss, so there is no error, no status-code change and no
+latency change. Check `tegola_cache_tier_errors_total`.
 
 ## Client side
 

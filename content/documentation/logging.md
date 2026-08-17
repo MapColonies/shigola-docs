@@ -3,7 +3,7 @@ author: "iwpnd"
 date: 2022-04-25
 linktitle: Logging
 title: Logging in Tegola
-weight: 6
+weight: 11
 subtitle: Managing logging output in Tegola
 menu:
   main:

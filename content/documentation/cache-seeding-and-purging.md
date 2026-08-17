@@ -3,7 +3,7 @@ author: "ear7h"
 date: 2018-03-26
 linktitle: Cache Seeding and Purging
 title: Cache Seeding and Purging
-weight: 4
+weight: 9
 subtitle: Using the cache command to seed and purge the cache
 menu:
   main:
@@ -11,6 +11,19 @@ menu:
 ---
 # Overview
 The cache command manually manipulates Tegola's cache
+
+> **Fork differences.** [This fork]({{< ref "/documentation/about-this-fork" >}}) adds two flags and
+> changes one behaviour:
+>
+> - [`--tile-matrix-set`](#tile-matrix-set) — one run covers one
+>   [tiling scheme]({{< ref "/documentation/tile-matrix-sets" >}}).
+> - [`--cache-tiers`](#cache-tiers) — which tiers of a
+>   [layered cache]({{< ref "/documentation/layered-cache" >}}) a run may write.
+> - [`--overwrite`](#cache-tiers) now also **purges the tiers it does not write**.
+>
+> Also: cache keys gained a leading `{tileMatrixSetId}`, so a cache carried over from upstream Tegola
+> must be purged and re-seeded before it will be read again. And `--bounds` landing exactly on a tile
+> edge no longer includes the tile on the far side.
 
 **Examples**
 
@@ -52,21 +65,81 @@ Available Commands:
   tile-name   operate on a single tile formatted according to --format
 
 Flags:
-      --bounds string     lng/lat bounds to seed the cache with in the format: lng, lat, lng, lat (default "-180,-85.0511,180,85.0511")
-      --concurrency int   the amount of concurrency to use. defaults to the number of CPUs on the machine (default 8)
-  -h, --help              help for seed
-      --map string        map name as defined in the config
-      --max-zoom uint     max zoom to seed cache to (default 22)
-      --min-zoom uint     min zoom to seed cache from
-      --overwrite         overwrite the cache if a tile already exists (default false)
+      --bounds string           lng/lat bounds to seed the cache with in the format: minx, miny, maxx, maxy (default "-180,-85.0511,180,85.0511")
+      --bounds-srid int         the srid --bounds are given in. only 4326 (lng/lat) is supported (default 4326)
+      --cache-tiers string      for a layered cache, the comma-separated tier names this run may write
+      --concurrency int         the amount of concurrency to use. defaults to the number of CPUs on the machine (default 8)
+  -h, --help                    help for seed
+      --log-threshold int       during seeding, only log tiles that take this number of milliseconds or longer to render
+      --map string              map name as defined in the config
+      --max-zoom uint           max zoom to seed cache to (default 22)
+      --min-zoom uint           min zoom to seed cache from
+      --overwrite               overwrite the cache if a tile already exists (default false)
+      --tile-matrix-set string  the tiling scheme to seed or purge, by tileMatrixSetId
 ```
 
 * bounds -- The `bounds` flag is used to specify latitude and longitude bounds for seeding and purging. Using this command should be used along with the `max-zoom` and `min-zoom` flags.
+* bounds-srid -- the SRID `--bounds` are given in. Only 4326 (lng/lat) is supported. **This does not select the tiling scheme** — use `--tile-matrix-set` for that.
 * max-zoom -- max zoom to seed the cache, will default to 22. 
 * min-zoom -- min zoom to seed the cache, will default to 0.
+* log-threshold -- during seeding, only log tiles slower than this many milliseconds. Defaults to logging all tiles.
 
+> Bounds landing exactly on a tile edge **no longer include the tile on the far side**. A run whose
+> bounds were chosen to line up with tile boundaries will cover one fewer tile per edge than it did
+> upstream.
 
 [Global Flags](#global-flags)
+
+### `--tile-matrix-set`
+
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}).**
+
+Names the [tiling scheme]({{< ref "/documentation/tile-matrix-sets" >}}) to seed or purge.
+**One run covers one scheme** — it enumerates a single tile pyramid, so a run cannot cover two at
+once. Seed each scheme you serve.
+
+```shell
+# defaults to the map's own default scheme
+$ ./tegola cache seed --map=parks --bounds="-117.25,32.5,-117.0,32.75"
+
+# or name one explicitly
+$ ./tegola cache seed --map=parks --tile-matrix-set=WorldCRS84Quad --bounds="-117.25,32.5,-117.0,32.75"
+```
+
+Without `--map`, a run defaults to `WebMercatorQuad`. If any targeted map does not support the run's
+scheme, **the run fails and names those maps** rather than skipping them: seeding a map on the wrong
+pyramid writes tiles no request will ever ask for, and would otherwise report success.
+
+### `--cache-tiers`
+
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}).** No effect on a
+> single-backend cache.
+
+For a [layered cache]({{< ref "/documentation/layered-cache" >}}), which tiers a run may write.
+
+```shell
+$ ./tegola cache seed --map=osm                          # writes the LAST tier only (default)
+$ ./tegola cache seed --map=osm --cache-tiers=all        # pre-warm: write every tier
+$ ./tegola cache seed --map=osm --cache-tiers=hot,s3     # an explicit list
+$ ./tegola cache seed --map=osm --overwrite              # write, then purge the rest
+```
+
+**`seed` writes only the last tier by default.** Seeding every tier would flood the hot tier with cold
+tiles in seed order, evicting the live working set — the exact harm a chain exists to avoid. The last
+tier in read order is the durable one by construction.
+
+Two consequences: **adding a tier to an existing chain changes what `seed` writes**, and the default
+**assumes tiers are ordered hot → durable, which nothing enforces** — a chain of `s3` then `redis`
+makes `seed` write the hot tier and skip the durable one.
+
+Names are validated at startup; an unknown name is an error, not a silent no-op. A tier inside a
+nested chain is addressed by path (`nested/inner`). When set, `--cache-tiers` bounds promotion as well
+as writes, so `--cache-tiers=s3` cannot reach the hot tier by either route.
+
+**`--overwrite` purges the tiers it does not write, after writing them.** Without that, a re-seed with
+the durable-only default would leave the hot tier serving pre-update tiles until TTL expiry — so the
+command documented as the invalidation mechanism would not invalidate what users are served. Writing
+first closes the window in which a concurrent read could promote the old tile back.
 
 
 ### cache seed
@@ -208,4 +281,7 @@ Global Flags are valid for all subcommands
 * concurrency -- the amount of concurrency to use.
 * config -- path to config file (default “config.toml”)
 * map -- the name of the map to use from the config file 
-* overwrite -- if the tile already exists overwrite it.
+* overwrite -- if the tile already exists overwrite it. With a [layered cache]({{< ref "/documentation/layered-cache" >}}), also purges the tiers this run did not write.
+* cache-tiers -- for a layered cache, the tiers this run may write. See [`--cache-tiers`](#cache-tiers).
+* tile-matrix-set -- the tiling scheme to operate on. See [`--tile-matrix-set`](#tile-matrix-set).
+* log-threshold -- during seeding, only log tiles slower than this many milliseconds.

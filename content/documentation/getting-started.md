@@ -3,12 +3,16 @@ author: "Jpalms"
 date: 2017-11-29
 linktitle: Getting Started
 title: Getting Started with Tegola
-weight: 2
+weight: 3
 subtitle: Run your own open source vector tile server
 menu:
   main:
     parent: Documentation
 ---
+
+> These docs describe [a fork of Tegola]({{< ref "/documentation/about-this-fork" >}}). The example
+> below is upstream's and works unchanged, with one difference noted under
+> [Tegola viewer](#tegola-viewer): the viewer moved from `/` to `/viewer`.
 
 The quickest way to your first vector tile server is via using this
 example [repository](https://github.com/iwpnd/tegola-example-bonn).
@@ -46,7 +50,14 @@ wait until the migration step exits and you're done.
 ## Tegola viewer
 
 This example comes with the `mvt_postgis` provider. After you ran the prerequisites,
-you can access the tegola viewer via `http://localhost:8080`.
+you can access the tegola viewer via `http://localhost:8080/viewer/`.
+
+> **Changed in this fork.** Upstream Tegola serves the viewer at `http://localhost:8080`. Here `/` is
+> the [OGC API - Tiles]({{< ref "/documentation/ogc-api-tiles" >}}) landing page — a JSON document —
+> and the viewer moved to `/viewer`. Requesting `/viewer` redirects to `/viewer/`; the trailing slash
+> matters, because the viewer's assets are referenced relatively.
+
+While you are here, `http://localhost:8080/collections` lists the same data as OGC collections.
 
 (for more on the differences see
 [provider layers]({{< ref "/documentation/configuration#provider-layers" >}} "provider layers").
@@ -121,5 +132,9 @@ If everything was successful, you should see a map of Bonn in your browser.
   [config]({{< ref "/documentation/configuration" >}} "tutorials")
 - Check out our other [tutorials]({{< ref "/tutorials" >}} "tutorials") and start
   using your own data!
+- Explore what [this fork]({{< ref "/documentation/about-this-fork" >}}) adds:
+  [OGC API - Tiles]({{< ref "/documentation/ogc-api-tiles" >}}),
+  [tile matrix sets]({{< ref "/documentation/tile-matrix-sets" >}}) and the
+  [layered cache]({{< ref "/documentation/layered-cache" >}}).
 - Join [gophers#go-spatial on slack](https://app.slack.com/client/T029RQSE6/C029RQSEE/)
   and show us what you built with tegola!

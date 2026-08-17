@@ -3,7 +3,7 @@ author: "Jpalms"
 date: 2017-11-29
 linktitle: Configuration
 title: Tegola Configuration
-weight: 3
+weight: 4
 subtitle: Configure Tegola to process your geospatial data
 menu:
   main:
@@ -19,6 +19,13 @@ The Tegola config file uses [TOML](https://github.com/toml-lang/toml) syntax wit
 - [Providers](#providers): data provider configuration (i.e. PostGIS).
 - [Maps](#maps): map configuration including map names, layers and zoom levels.
 - [Cache](#cache): cache configurations.
+
+> **Fork differences.** [This fork]({{< ref "/documentation/about-this-fork" >}}) changes two things
+> in this file:
+>
+> - A map's `tile_srid` is replaced by [`tile_matrix_sets`](#tile-matrix-sets).
+> - `[cache]` gains `type = "multi"` for a [layered cache](#layered-cache), and `timeout_ms` on any
+>   cache.
 
 ## Global
 
@@ -257,6 +264,7 @@ Tegola is responsible for serving vector map tiles, which are made up of numerou
 | bounds             | No       | The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: `[-180.0, -85.0511, 180.0, 85.0511]`|
 | center             | No       | The center of the map to be displayed in the preview. (`[lon, lat, zoom]`).                                                      |
 | tile_buffer        | No       | The number of pixels to extend a tile's clipping area, defaults to `64` or the [global](#global) value                           |
+| tile_matrix_sets   | No       | The [tiling schemes](#tile-matrix-sets) this map may be requested in. **Fork only** — replaces upstream's `tile_srid`.           |
 
 
 ```toml
@@ -265,6 +273,39 @@ name = "zoning"		# used in the URL to reference this map (/maps/:map_name)
 attribution = "Natural Earth v4"
 center = [-76.275329586789, 39.153492567373, 5.0]
 ```
+
+### Tile matrix sets
+
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}), replacing `tile_srid`.**
+
+`tile_matrix_sets` names the tiling schemes a map may be requested in. It is configured per map, not
+per layer or per provider.
+
+```toml
+[[maps]]
+name = "parks"
+# Omit for every scheme this build serves. The first entry is the map's
+# default: the scheme its native /maps/... routes serve.
+tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
+```
+
+This build serves the schemes that need no coordinate transformation backend:
+
+| tileMatrixSetId | CRS | Matrix at zoom z |
+|:---|:---|:---|
+| `WebMercatorQuad` | EPSG:3857 | 2^z × 2^z |
+| `WorldCRS84Quad` | OGC:CRS84 | 2·2^z × 2^z |
+| `WGS1984Quad` | EPSG:4326 | 2·2^z × 2^z |
+
+Naming a scheme this build cannot serve is a startup error that lists the available ones. The other
+schemes in the OGC register ship with the build but are not servable; `/tileMatrixSets` lists only
+what can be served.
+
+**Migrating:** `tile_srid = 3857` (or unset) becomes `tile_matrix_sets = ["WebMercatorQuad"]` (or
+unset); `tile_srid = 4326` becomes `tile_matrix_sets = ["WorldCRS84Quad"]`. Changing a map's schemes
+changes its cache keys — purge and re-seed.
+
+Full detail: [Tile Matrix Sets]({{< ref "/documentation/tile-matrix-sets" >}}).
 
 ### Map Layers
 
@@ -305,20 +346,82 @@ class = "park"			# a default tag to encode into the feature
 
 ## Cache
 
-This section configures caches for generated tiles. All cache configs have the following parameters:
+This section configures caches for generated tiles. There is exactly **one** `[cache]` table for the
+whole process — per-map cache selection is not a feature. All cache configs have the following
+parameters:
 
-| Param    | Required | Description                                                  |
-|:---------|:---------|:-------------------------------------------------------------|
-| type     | Yes      | The type of cache to use (`file`, `redis`, or `s3`)          |
-| max_zoom | No       | The max zoom which should be cached.                         |
+| Param      | Required | Description                                                                                   |
+|:-----------|:---------|:----------------------------------------------------------------------------------------------|
+| type       | Yes      | The type of cache to use (`file`, `redis`, `s3`, `azblob`, `gcs`, or `multi`)                 |
+| max_zoom   | No       | The max zoom which should be cached.                                                           |
+| timeout_ms | No       | **Fork only.** A read deadline for this cache, in integer milliseconds. See [below](#timeout-ms). |
+
+> **Fork behaviour change.** Cache **writes no longer block the response** — every cache, chained or
+> not, hands its write to a bounded pool after the response is flushed. This affects single-backend
+> deployments too. See [Layered cache]({{< ref "/documentation/layered-cache#writes-do-not-block-the-response" >}}).
+>
+> Cache **keys** also gained a leading `{tileMatrixSetId}`, so caches carried over from upstream
+> Tegola must be purged and re-seeded.
+
+### `timeout_ms`
+
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}).**
+
+An optional per-cache read deadline, in **integer milliseconds**. It carries its unit where the
+adjacent `ttl` takes bare seconds. It applies to any cache at any nesting depth, including a plain
+non-chained `[cache]` table, and affects `Get` only.
+
+It is **enforced** by `redis`, `s3`, `azblob` and `gcs`, and only **advisory** for `file`, whose
+`os.Open`/`Stat` calls block before any cancellation check — on an NFS/EFS mount use the mount's own
+`soft` and `timeo=` options instead.
+
+A read that times out is a **miss, not an error**.
+
+### Layered cache
+
+> **Added by [this fork]({{< ref "/documentation/about-this-fork" >}}).**
+
+`type = "multi"` puts an ordered chain of cache backends behind the single `[cache]` table. Reads walk
+the tiers in declaration order and promote a hit into the earlier ones; writes fan out; purges run in
+reverse.
+
+| Param          | Required | Default | Description                                                            |
+|:---------------|:---------|:--------|:------------------------------------------------------------------------|
+| layers         | Yes      |         | The ordered list of tiers, as `[[cache.layers]]` tables. Declaration order is read order. |
+| promote_on_hit | No       | `true`  | Promote a later-tier hit into the earlier tiers. `false` gives a read-only fan-out. |
+
+Each `[[cache.layers]]` entry takes its backend's own parameters, plus `timeout_ms` and an optional
+`name` that pins the tier's metric label and `--cache-tiers` value.
+
+```toml
+[cache]
+type           = "multi"
+promote_on_hit = true
+
+  [[cache.layers]]
+  type       = "redis"
+  ttl        = 3600
+  timeout_ms = 35
+  name       = "hot"
+
+  [[cache.layers]]
+  type   = "s3"
+  bucket = "tiles"
+```
+
+Note that `[[cache.layers]]` headers are *siblings* however deeply they are indented — TOML
+indentation is cosmetic. Real nesting needs `[[cache.layers.layers]]`.
+
+Full detail, including metrics and operations: [Layered cache]({{< ref "/documentation/layered-cache" >}}).
 
 ### File
 
 Cache tiles in a directory on the local filesystem.
 
-| Param    | Required | Description                                                  |
-|:---------|:---------|:-------------------------------------------------------------|
-| basepath | Yes      | A directory on the file system to write the cached tiles to. |
+| Param    | Required | Default | Description                                                  |
+|:---------|:---------|:--------|:-------------------------------------------------------------|
+| basepath | Yes      |         | A directory on the file system to write the cached tiles to. |
+| ttl      | No       | 0       | Seconds after which a cached tile is treated as expired. 0 means no expiry. |
 
 ### Redis
 
@@ -327,25 +430,63 @@ Cache tiles in [Redis](https://redis.io/).
 When no parameters are supplied, this cache will try and connect to a local Redis
 instance with default configuration.
 
-| Param    | Required | Default        | Description                                                  |
-|:---------|:---------|:---------------|:-------------------------------------------------------------|
-| network  | No       | `tcp`          | The type of connection (`tcp` or `unix`)                     |
-| address  | No       | 127.0.0.1:6379 | The address of Redis in the form `ip:port`.                  |
-| password | No       |                | Password to use when connecting.                             |
-| db       | No       |                | Database to use (int).                                       |
-| ssl      | No       | false          | Encrypt connection to the Redis server.                      |
+| Param      | Required | Default        | Description                                                  |
+|:-----------|:---------|:---------------|:-------------------------------------------------------------|
+| uri        | No       |                | `redis://` or `rediss://` followed by `<user>:<password>@<host>:<port>/<database>`. The preferred form. |
+| network    | No       | `tcp`          | *Deprecated.* The type of connection (`tcp` or `unix`)       |
+| address    | No       | 127.0.0.1:6379 | *Deprecated.* The address of Redis in the form `ip:port`.    |
+| password   | No       |                | Password to use when connecting. **Takes precedence over a password in `uri`.** |
+| db         | No       |                | *Deprecated.* Database to use (int).                         |
+| ttl        | No       | 0              | Key TTL in seconds. 0 means the key has no expiration.       |
+| key_prefix | No       |                | **Fork only.** A string prepended to every cache key, so one Redis instance can be shared. |
+| ssl        | No       | false          | *Deprecated.* Encrypt connection to the Redis server.        |
+
+Connecting via `uri` is the default from v0.22.0 onwards; `network`, `address`, `db` and `ssl` are
+deprecated in its favour. `password` is **not** deprecated — when both are given the `password` key
+wins over the credential in the uri, including when it is present and empty, which asks for no
+password rather than falling back to the uri's.
+
+`key_prefix` is concatenated verbatim, so **supply your own separator**: `key_prefix = "tegola:"`
+gives keys like `tegola:WebMercatorQuad/mymap/mylayer/10/511/340`, whereas `key_prefix = "tegola"`
+gives `tegolaWebMercatorQuad/...`.
+
+#### Passwords with special characters
+
+A `uri` is parsed as a URL, so a password inside one must be percent-encoded. Unencoded, the outcome
+depends on the character:
+
+| In the uri | Result |
+|:---|:---|
+| `^` `[` `]` `{` `}` `\|` `<` `>` `\` `"` space | startup fails with `net/url: invalid userinfo` |
+| `%` | startup fails with `invalid URL escape` |
+| `/` `?` | startup fails — the authority ends there |
+| `#` | **truncates the uri at that point.** Usually a startup error, but when what remains still parses it silently yields the wrong password |
+| `$` `@` `&` `!` `*` `(` `)` `+` `=` `:` `~` `,` `;` `'` | works unencoded |
+
+Percent-encode, or use the separate `password` key, which is not subject to URL rules:
+
+```toml
+[cache]
+type     = "redis"
+uri      = "redis://user@localhost:6379/0"
+password = "${SECRET_REDIS_PASSWORD}"
+```
 
 ### S3
 
-Cache tiles in Amazon S3.
+Cache tiles in Amazon S3, or any S3-compatible store via `endpoint`.
 
 | Param    | Required | Default        | Description                                                         |
 |:---------|:---------|:---------------|:--------------------------------------------------------------------|
 | bucket   | Yes      |                | The name of the S3 bucket to use.                                   |
 | basepath | No       |                | A path prefix added to all cache operations inside the S3 bucket |
 | region   | No       | us-east-1      | The region the bucket is in.                                        |
+| endpoint | No       |                | A non-AWS S3-compatible endpoint.                                   |
 | aws_access_key_id | No |             | The AWS access key id to use.                                       |
 | aws_secret_access_key | No |         | The AWS secret access key to use.                                   |
+| access_control_list | No |           | The canned ACL to apply to written objects.                         |
+| cache_control | No |                  | The `Cache-Control` header to store with written objects.           |
+| content_type | No | application/vnd.mapbox-vector-tile | The `Content-Type` to store with written objects.      |
 
 If the `aws_access_key_id` and `aws_secret_access_key` are not set, then the
 [credential provider chain](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html)
@@ -357,6 +498,27 @@ $ export AWS_REGION=us-west-2
 $ export AWS_ACCESS_KEY_ID=YOUR_AKID
 $ export AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
 ```
+
+### Azure Blob Storage
+
+Cache tiles in an Azure Blob Storage container.
+
+| Param           | Required | Default | Description                                              |
+|:----------------|:---------|:--------|:----------------------------------------------------------|
+| container_url   | Yes      |         | The URL of the blob container to write to.               |
+| az_account_name | No       |         | The storage account name.                                |
+| az_shared_key   | No       |         | The storage account shared key.                          |
+| basepath        | No       |         | A path prefix added to all cache operations.             |
+| read_only       | No       | false   | Serve from the container without writing to it.          |
+
+### Google Cloud Storage
+
+Cache tiles in a GCS bucket.
+
+| Param    | Required | Default | Description                                  |
+|:---------|:---------|:--------|:----------------------------------------------|
+| bucket   | Yes      |         | The name of the GCS bucket to use.           |
+| basepath | No       |         | A path prefix added to all cache operations. |
 
 ## Env Var
 
@@ -416,6 +578,8 @@ srid = 3857             # The default srid for this provider. If not provided it
 [[maps]]
 name = "zoning"                             # used in the URL to reference this map (/maps/:map_name)
 tile_buffer = 0                             # number of pixels to extend a tile's clipping area
+tile_matrix_sets = ["WebMercatorQuad"]      # tiling schemes this map may be requested in.
+                                            # the first is the default. omit for all servable schemes.
 
     [[maps.layers]]
     provider_layer = "test_postgis.landuse" # must match a data provider layer
@@ -429,4 +593,58 @@ tile_buffer = 0                             # number of pixels to extend a tile'
     provider_layer = "test_postgis.rivers"  # must match a data provider layer
     min_zoom = 10                           # minimum zoom level to include this layer
     max_zoom = 18                           # maximum zoom level to include this layer
+```
+
+## Layered Cache Example
+
+A Redis hot tier in front of an S3 durable tier, serving two tiling schemes — both
+[fork-only]({{< ref "/documentation/about-this-fork" >}}) features:
+
+```toml
+tile_buffer = 64
+
+[webserver]
+port = ":8080"
+
+# Exactly one [cache] table for the process. `multi` makes it a chain.
+[cache]
+type           = "multi"
+promote_on_hit = true       # default: a hit in s3 is written back into redis
+
+  # Tier 0 — read first, promoted into. Fast, evicting, bounded.
+  [[cache.layers]]
+  type       = "redis"
+  name       = "hot"        # pins the metric label and --cache-tiers value
+  uri        = "redis://localhost:6379/0"
+  password   = "${SECRET_REDIS_PASSWORD}"
+  key_prefix = "tegola:"    # supply your own separator
+  ttl        = 3600         # seconds; bounds redis memory, not staleness
+  timeout_ms = 35           # abandon this tier's read after 35ms; a timeout is a miss
+
+  # Tier 1 — the durable one, and what `cache seed` writes by default.
+  [[cache.layers]]
+  type     = "s3"
+  bucket   = "${S3_BUCKET}"
+  region   = "us-east-2"
+  basepath = "tiles"
+  # timeout_ms omitted: the durable tier is allowed to be slow.
+
+[[providers]]
+name = "osm"
+type = "postgis"
+uri  = "postgres://tegola:supersecret@localhost:5432/tegola?sslmode=prefer"
+
+  [[providers.layers]]
+  name      = "landuse"
+  tablename = "gis.landuse"
+
+[[maps]]
+name = "osm"
+# First entry is the default — what /maps/osm/{z}/{x}/{y} serves.
+tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
+
+  [[maps.layers]]
+  provider_layer = "osm.landuse"
+  min_zoom = 10
+  max_zoom = 16
 ```
