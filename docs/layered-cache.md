@@ -175,6 +175,29 @@ The pool and the chain publish their own counters:
 > `shigola_cache_errors_total` (and `shigola_cache_tier_errors_total` per tier). Dashboards and alerts
 > referring to `errors` need updating.
 
+### Tier latency, and why it used to look identical everywhere
+
+`shigola_cache_tier_duration_seconds` buckets at **1-2-5 per decade from 100µs to 5 seconds**, and
+`shigola_cache_tier_response_size_bytes` at **1KB to 5MB**.
+
+Those boundaries are the point. A memory tier answers in roughly a microsecond, redis or a file tier
+in 0.1–2ms, an object store in 20–200ms — three to five orders of magnitude apart. Until this was
+fixed both histograms used the HTTP handler's buckets, whose smallest boundary is 250ms for duration
+and 500KB for size, so **every tier landed in the first bucket**. A quantile over a
+single-populated-bucket histogram interpolates on the observation count alone, which meant
+`histogram_quantile` returned the same latency for the hot tier and the durable one — around 237ms
+for a p95, an artifact of the bucket width rather than a measurement.
+
+If a tier latency panel has ever shown your tiers sitting on top of each other at a suspiciously
+round number, that was this.
+
+:::warning
+**This changes the shape of existing panels.** The bucket boundaries are part of a histogram's
+identity, so `le` series from before the change do not line up with the ones after. A panel spanning
+the upgrade shows a discontinuity, and any alert threshold tuned against the old artifact values
+needs re-deriving against real ones.
+:::
+
 ## Operating a layered cache
 
 This design degrades silently by construction, so these are part of the feature rather than
