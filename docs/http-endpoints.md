@@ -9,8 +9,7 @@ description: "Shigola API endpoints"
 Shigola serves two tile APIs side by side: the **native** routes below, and an
 **[OGC API - Tiles](./ogc-api-tiles.md)** surface documented separately.
 
-> **The service root is the OGC landing page.** `/` returns JSON; the embedded viewer is at
-> `/viewer`. An unknown path returns 404.
+> **The service root is the OGC landing page.** `/` returns JSON. An unknown path returns 404.
 
 ## Native routes
 
@@ -125,19 +124,12 @@ For the OGC equivalent — TileJSON 3.0, per collection and per tiling scheme �
 ### `GET` /maps/:map/style.json
 
 Returns an automatically generated [Mapbox GL style](https://docs.mapbox.com/style-spec/) for the
-map, used by the embedded viewer.
+map, for a client to load directly.
 
 ### `GET` /metrics
 
 Prometheus metrics, when a Prometheus observer is configured. Cache metrics are listed under
 [Layered cache](./layered-cache.md#metrics).
-
-### `GET` /viewer/
-
-The embedded viewer. `/viewer` redirects to `/viewer/` — the
-viewer's assets are referenced relatively and only resolve from a URL ending in a slash.
-
-Excluded from the build with `-tags noViewer`.
 
 ## OGC API - Tiles routes
 

@@ -14,10 +14,8 @@ the same bytes from the same cache entry.
 
 ### The service root is the landing page
 
-OGC API - Tiles requires a landing page at the service root, so `/` returns JSON and the embedded
-viewer is served from `/viewer`. `/viewer` redirects to `/viewer/` — the viewer's assets are
-referenced relatively and only resolve from a URL ending in a slash. Point bookmarks, reverse-proxy
-rules and health checks accordingly. An unknown path returns 404.
+OGC API - Tiles requires a landing page at the service root, so `/` returns JSON. Point bookmarks,
+reverse-proxy rules and health checks accordingly. An unknown path returns 404.
 
 ### Cache keys begin with the tiling scheme
 

@@ -39,21 +39,18 @@ This will take care of
 
 wait until the migration step exits and you're done.
 
-## Shigola viewer
+## Check it is serving
 
 This example comes with the `mvt_postgis` provider. After you ran the prerequisites,
-you can access the shigola viewer via `http://localhost:8080/viewer/`.
+`http://localhost:8080/` returns the [OGC API - Tiles](./ogc-api-tiles.md) landing page — a JSON
+document — and `http://localhost:8080/collections` lists your data as OGC collections.
 
-> **Note the path.** `/` is the [OGC API - Tiles](./ogc-api-tiles.md) landing page — a JSON
-> document — and the viewer lives at `/viewer`. Requesting `/viewer` redirects to `/viewer/`; the
-> trailing slash matters, because the viewer's assets are referenced relatively.
+The same data is reachable two ways — as OGC collections and through the native `/maps/...` routes
+(for more on the difference see
+[provider layers](./configuration.md#provider-layers "provider layers")).
 
-While you are here, `http://localhost:8080/collections` lists the same data as OGC collections.
-
-(for more on the differences see
-[provider layers](./configuration.md#provider-layers "provider layers").
-
-![Bonn, Germany](/images/bonn_internal_viewer.png)
+To see the tiles on a map, point a client at them: the [tutorials](/tutorials) do this with
+MapLibre, OpenLayers and Mapbox GL.
 
 ## Your first vector map
 

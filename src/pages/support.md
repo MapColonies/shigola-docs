@@ -25,8 +25,8 @@ Most problems fall into a handful of shapes the docs already cover:
 - **The cache is not being read.** See
   [Cache is not being read](/documentation/debugging#cache-is-not-being-read) — a key format change
   and a failing tier both present as a cache that never hits.
-- **`/` returns JSON instead of the viewer.** That is the
-  [OGC landing page](/documentation/ogc-api-tiles); the viewer is at `/viewer/`.
+- **`/` returns JSON.** That is the [OGC landing page](/documentation/ogc-api-tiles). To see the
+  tiles on a map, point a client at them, as the [tutorials](/tutorials) do.
 - **A config key seems to be ignored.** Unknown keys are not rejected, so a typo is silent — check
   the spelling against [Configuration](/documentation/configuration).
 
