@@ -133,15 +133,15 @@ http://www.opengis.net/spec/ogcapi-tiles-1/1.0/conf/oas30
 ```
 
 **Verified against the OGC CITE suite** (`ets-ogcapi-tiles10` 1.2, via TeamEngine), serving the
-Athens OSM GeoPackage from the repository's own test data:
+Athens OSM extract out of the repository's PostGIS fixture through `ST_AsMVT`:
 
 ```
-15 passed · 0 failed · 1 skipped     WebMercatorQuad
-15 passed · 0 failed · 1 skipped     WorldCRS84Quad
+15 passed · 0 failed · 1 untested     WebMercatorQuad
+15 passed · 0 failed · 1 untested     WorldCRS84Quad
 ```
 
-The skip is `.../conf/dataset-tilesets`, which this service does not implement and does not declare —
-tilesets are per collection, not for the dataset as a whole.
+The untested assertion is `.../conf/dataset-tilesets`, which this service does not implement and does
+not declare — tilesets are per collection, not for the dataset as a whole.
 
 Responses are also validated against the OGC schemas the standard points at, which CITE does not
 check exhaustively: tileset metadata against
@@ -151,14 +151,35 @@ list against the schema embedded in Requirement 10 C. Both validate with no erro
 ### Running CITE yourself
 
 CI runs the suite on both schemes — weekly and on demand, since the suite is versioned separately
-from the server and a passing implementation can start failing without a commit. To reproduce a run
-locally, from the repository root:
+from the server and a passing implementation can start failing without a commit.
+
+The fixture data is the Athens OSM extract in the PostGIS fixture, served through the `mvt_postgis`
+provider, so a run needs that fixture up first. To reproduce a run locally, from the repository root:
 
 ```sh
-go build -o /tmp/shigola ./cmd/shigola      # CGO_ENABLED=1: the fixture data is a GeoPackage
+docker compose up -d && docker wait migration       # the Athens fixture, in PostGIS
+CGO_ENABLED=0 go build -mod vendor -tags noGpkgProvider -o /tmp/shigola ./cmd/shigola
 /tmp/shigola serve --config .github/cite/config.toml --port ":8081" &
 .github/cite/run.sh WebMercatorQuad 14 6324 9271
+.github/cite/run.sh WorldCRS84Quad 14 4740 18542
 ```
+
+Each run prints `<scheme>: 15 passed, 1 untested`, then `<scheme>: OK`. The runner enforces a floor
+of 15 passed assertions, because the EARL report carries no summary line and a run that reached
+nothing at all reports no failures either.
+
+The build flags say something the config cannot. This fixture used to be a GeoPackage, which made
+the server's only external conformance evidence an invisible dependency of one provider; building
+without that provider is what turns "conformance passes with no GeoPackage present" into a fact
+about the binary. `CGO_ENABLED=0` is already enough on its own — the `init()` that registers the
+GeoPackage provider is behind `//go:build cgo`, so without cgo the `gpkg` type is simply unknown and
+the config is rejected at startup. `-tags noGpkgProvider` is belt and braces, and it is the half
+that keeps holding if cgo is ever needed back for an unrelated reason.
+
+The fixture's layers declare a narrow zoom window (13–15). That is about accuracy, not data volume:
+`ST_AsMVTGeom` maps the bounding box onto the tile grid affinely, and one SQL statement cannot be
+affine-correct for a mercator grid and a geographic one at the same time. The comments in
+`.github/cite/config.toml` carry the arithmetic.
 
 Two things about this suite are worth knowing before you blame the server:
 
@@ -171,12 +192,25 @@ Two things about this suite are worth knowing before you blame the server:
    minimum pass count for exactly this reason.
 
 Pick a row and column inside the tileset's own `tileMatrixSetLimits`, so the run exercises the
-content checks against a tile that actually holds data.
+content checks against a tile that actually holds data. The arguments are
+`<tileMatrixSetId> <tileMatrix> <tileRow> <tileCol>`, row before column, and they do not carry over
+between schemes: a WorldCRS84Quad tile is half the width and a bit over half the height of a
+WebMercatorQuad tile at the same zoom, so the same ground has a different index in each. It matters
+more than it looks — `ST_AsMVT` emits nothing at all for a layer with no rows, and the suite reports
+no failure for a tile that came back empty.
 
-The manual equivalent, with TeamEngine and the server as containers on one Docker network:
+The manual equivalent, with TeamEngine and the server as containers on one Docker network. The
+server now needs to reach PostGIS as well, so the fixture joins that network too, and the config
+copy the server reads has to name the database by a hostname a container can resolve rather than
+`localhost`:
 
 ```sh
 docker network create cite-net
+
+# 0. the fixture, reachable from the network the server runs on. `uri` in the
+#    config under citedata/ must point at postgis:5432, not localhost.
+docker compose up -d && docker wait migration
+docker network connect cite-net postgis
 
 # 1. the tile server, serving a map with data
 docker run -d --name cite-shigola --network cite-net \
