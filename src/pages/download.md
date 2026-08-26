@@ -21,9 +21,6 @@ go build -mod vendor ./cmd/shigola
 
 Dependencies are vendored, so `-mod vendor` builds offline and pins exactly what CI used.
 
-To build with the embedded viewer regenerated, run `go generate ./...` first — it shells out to
-`npm` to build the viewer, and no-ops without it.
-
 ## Docker
 
 ```sh

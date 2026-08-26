@@ -43,7 +43,7 @@ Three things commonly surprise people setting Shigola up for the first time:
 
 | | |
 |:---|:---|
-| **The service root is the OGC landing page.** | `/` returns JSON. The embedded viewer is at `/viewer` — `/viewer` redirects to `/viewer/`, and the trailing slash matters because the viewer's assets are referenced relatively. An unknown path returns 404. |
+| **The service root is the OGC landing page.** | `/` returns JSON. An unknown path returns 404. |
 | **Cache keys begin with the tiling scheme.** | The key is `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`. Without the scheme, tiles cut in two different schemes would collide at the same `z/x/y`. |
 | **Cache writes do not block the response.** | Every cache, chained or not, hands its write to a bounded pool after the response is flushed. See [Layered cache](./layered-cache.md#writes-do-not-block-the-response). |
 
@@ -53,7 +53,7 @@ Three things commonly surprise people setting Shigola up for the first time:
   [go-spatial/tegola](https://github.com/go-spatial/tegola), an open source vector tile server
   created and maintained by the **[Go Spatial](https://github.com/go-spatial) team** and documented
   at [tegola.io](https://tegola.io). Effectively all of this codebase is their work: the providers,
-  the geometry processing, the MVT encoder, the tile pipeline and the viewer all originate there.
+  the geometry processing, the MVT encoder and the tile pipeline all originate there.
   Tegola is MIT licensed, Shigola keeps that licence and retains its copyright notice, and all
   credit for what Shigola inherited belongs upstream.
 - **morecantile** — Shigola's `tms` package is a faithful Go port of
