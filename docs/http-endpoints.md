@@ -41,15 +41,6 @@ and `:y` values.
 - `:x`: The tile column.
 - `:y`: The tile row.
 
-:::note
-
-The non-standard `/capabilities` and `/capabilities/:map.json` endpoints have been removed. Service
-discovery is the [landing page](./ogc-api-tiles.md), `/conformance` and `/collections`; a map's
-TileJSON is `/collections/{collectionId}/tiles/{tileMatrixSetId}?f=tilejson`, which serves TileJSON
-3.0 per tiling scheme.
-
-:::
-
 ### `GET` /maps/:map/style.json
 
 Returns an automatically generated [Mapbox GL style](https://docs.mapbox.com/style-spec/) for the
