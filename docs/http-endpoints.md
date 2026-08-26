@@ -41,85 +41,14 @@ and `:y` values.
 - `:x`: The tile column.
 - `:y`: The tile row.
 
-### `GET` /capabilities
+:::note
 
-The `/capabilities` endpoint returns JSON with details about the running Shigola instance.
+The non-standard `/capabilities` and `/capabilities/:map.json` endpoints have been removed. Service
+discovery is the [landing page](./ogc-api-tiles.md), `/conformance` and `/collections`; a map's
+TileJSON is `/collections/{collectionId}/tiles/{tileMatrixSetId}?f=tilejson`, which serves TileJSON
+3.0 per tiling scheme.
 
-**Example response**
-
-```json
-{
-  "version": "v0.6.1",
-  "maps": [{
-    "name": "bonn_osm",
-    "uri": "/maps/bonn_osm",
-    "layers": [{
-        "name": "building",
-        "uri": "/maps/bonn_osm/building",
-        "minZoom": 14,
-        "maxZoom": 20
-      },{
-        "name": "road",
-        "uri": "/maps/bonn_osm/road",
-        "minZoom": 10,
-        "maxZoom": 20
-      }]
-  }]
-}
-```
-
-### `GET` /capabilities/:map.json
-
-Returns information about a map matching the [TileJSON 2.1 specification](https://github.com/mapbox/tilejson-spec/tree/master/2.1.0).
-
-For the OGC equivalent — TileJSON 3.0, per collection and per tiling scheme — request
-`/collections/{collectionId}/tiles/{tileMatrixSetId}?f=tilejson`.
-
-**URL parameters**
-
-- `:map`: The name of the map as defined in the Shigola [config](./configuration.md#maps) file.
-
-**Example response**
-
-```json
-{
-  "attribution": "Open Street Map",
-  "bounds": [-180, -85.0511, 180, 85.0511],
-  "center": [-76.275329586789, 39.153492567373, 8],
-  "format": "pbf",
-  "minzoom": 0,
-  "maxzoom": 20,
-  "name": "osm",
-  "description": null,
-  "scheme": "xyz",
-  "tilejson": "2.1.0",
-  "tiles": ["https://tegola-osm-demo.go-spatial.org/v1/maps/osm/{z}/{x}/{y}.pbf"],
-  "grids": [],
-  "data": [],
-  "version": "1.0.0",
-  "template": null,
-  "legend": null,
-  "vector_layers": [{
-    "version": 2,
-    "extent": 4096,
-    "id": "populated_places",
-    "name": "populated_places",
-    "geometry_type": "point",
-    "minzoom": 0,
-    "maxzoom": 20,
-    "tiles": ["https://tegola-osm-demo.go-spatial.org/v1/maps/osm/populated_places/{z}/{x}/{y}.pbf"]
-  }, {
-    "version": 2,
-    "extent": 4096,
-    "id": "country_lines",
-    "name": "country_lines",
-    "geometry_type": "line",
-    "minzoom": 0,
-    "maxzoom": 10,
-    "tiles": ["https://tegola-osm-demo.go-spatial.org/v1/maps/osm/country_lines/{z}/{x}/{y}.pbf"]
-  }]
-}
-```
+:::
 
 ### `GET` /maps/:map/style.json
 
