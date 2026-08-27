@@ -41,7 +41,7 @@ For a file or S3 cache, deleting the old directory tree is faster than purging t
 
 | Path | Resource |
 |:---|:---|
-| `/` | Landing page |
+| `/` | Landing page — includes `shigolaVersion`, the build serving the request |
 | `/api` | This service's OpenAPI 3.0 definition |
 | `/conformance` | The conformance classes implemented |
 | `/collections` | Every collection |
@@ -54,6 +54,20 @@ For a file or S3 cache, deleting the old directory tree is faster than purging t
 
 Behind a reverse proxy, `uri_prefix` applies to these routes as it does to the native ones, and every
 link and URI template the service emits carries the prefix it was reached on.
+
+### Which build is answering
+
+Two resources report the running build, so an operator can tell from the service itself:
+
+```
+GET /       ->  { "title": "shigola", "shigolaVersion": "v1.2.3", ... }
+GET /api    ->  { "info": { "version": "1.0.0", "x-shigola-version": "v1.2.3", ... } }
+```
+
+Both are extension members. OGC API - Common defines no place for an implementation's version, and
+OpenAPI's `info.version` is the version of the *API* — fixed by the specification this surface
+implements, and unmoved by a rebuild — so the build is reported alongside it as an `x-` extension
+rather than in it. Neither member appears when the binary was built without a version stamped in.
 
 ## Collections
 
