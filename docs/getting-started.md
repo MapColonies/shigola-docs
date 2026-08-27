@@ -45,8 +45,8 @@ This example comes with the `mvt_postgis` provider. After you ran the prerequisi
 `http://localhost:8080/` returns the [OGC API - Tiles](./ogc-api-tiles.md) landing page — a JSON
 document — and `http://localhost:8080/collections` lists your data as OGC collections.
 
-The same data is reachable two ways — as OGC collections and through the native `/maps/...` routes
-(for more on the difference see
+Every map is published as a collection, and so is every one of its layers — `bonn` for the whole map,
+`bonn:landuse` for one layer (for more on layers see
 [provider layers](./configuration.md#provider-layers "provider layers")).
 
 To see the tiles on a map, point a client at them: the [tutorials](/tutorials) do this with
@@ -94,7 +94,7 @@ Create a new HTML file, copy in the contents below, and open in a browser:
               format: new ol.format.MVT(),
               tileGrid: ol.tilegrid.createXYZ({ maxZoom: 22 }),
               tilePixelRatio: 16,
-              url: "/maps/bonn/{z}/{x}/{y}.vector.pbf?debug=true",
+              url: "/collections/bonn/tiles/WebMercatorQuad/{z}/{y}/{x}",
             }),
           }),
         ],

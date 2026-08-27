@@ -262,12 +262,12 @@ sql = """
 
 ## Maps
 
-Shigola is responsible for serving vector map tiles, which are made up of numerous [Map Layers](#map-layers). The name of the Map is used in the URL of all map tile requests (i.e. /maps/:map_name/:z/:x/:y). Maps have the following configuration parameters:
+Shigola is responsible for serving vector map tiles, which are made up of numerous [Map Layers](#map-layers). The name of the Map is its OGC collection id, and so appears in the URL of every tile request (i.e. /collections/:map_name/tiles/:tile_matrix_set_id/:tile_matrix/:tile_row/:tile_col). Maps have the following configuration parameters:
 
 
 | Param              | Required | Description                                                                                                                      |
 |:-------------------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
-| name               | Yes      | The map that will be referenced in the URL (i.e. /maps/:map_name.                                                                |
+| name               | Yes      | The map's collection id, referenced in the URL (i.e. /collections/:map_name/tiles/...).                                          |
 | attribution        | No       | Attribution string to be included in the TileJSON.                                                                               |
 | bounds             | No       | The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: `[-180.0, -85.0511, 180.0, 85.0511]`|
 | center             | No       | The center of the map to be displayed in the preview. (`[lon, lat, zoom]`).                                                      |
@@ -277,7 +277,7 @@ Shigola is responsible for serving vector map tiles, which are made up of numero
 
 ```toml
 [[maps]]
-name = "zoning"		# used in the URL to reference this map (/maps/:map_name)
+name = "zoning"		# the collection id: /collections/zoning/tiles/...
 attribution = "Natural Earth v4"
 center = [-76.275329586789, 39.153492567373, 5.0]
 ```
@@ -291,7 +291,7 @@ per layer or per provider.
 [[maps]]
 name = "parks"
 # Omit for every scheme this build serves. The first entry is the map's
-# default: the scheme its native /maps/... routes serve.
+# default.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 ```
 
@@ -588,7 +588,7 @@ srid = 3857             # The default srid for this provider. If not provided it
 
 # maps are made up of layers
 [[maps]]
-name = "zoning"                             # used in the URL to reference this map (/maps/:map_name)
+name = "zoning"                             # the collection id: /collections/zoning/tiles/...
 tile_buffer = 0                             # number of pixels to extend a tile's clipping area
 tile_matrix_sets = ["WebMercatorQuad"]      # tiling schemes this map may be requested in.
                                             # the first is the default. omit for all servable schemes.
@@ -661,7 +661,7 @@ uri  = "postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer"
 
 [[maps]]
 name = "osm"
-# First entry is the default — what /maps/osm/{z}/{x}/{y} serves.
+# First entry is the default — what a seed run assumes without --tile-matrix-set.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 
   [[maps.layers]]

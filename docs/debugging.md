@@ -63,13 +63,27 @@ latency change. Check `shigola_cache_tier_errors_total`.
 
 ## Client side
 
-When debugging client side, it's often helpful to see an outline of a tile along with it's Z/X/Y values. To encode a debug layer into every tile add the query string variable debug=true to the URL template being used to request tiles. For example:
+When debugging client side, it's often helpful to see an outline of a tile along with its Z/X/Y values.
 
-```
-http://localhost:8080/maps/mymap/{z}/{x}/{y}.vector.pbf?debug=true
+There is no query parameter for this: a debug layer is not part of any tileset the service
+advertises, so a tile carrying one would not match the tileset metadata describing it. Configure the
+`debug` provider's layers explicitly instead, on a map kept for debugging:
+
+```toml
+[[providers]]
+name = "debug"
+type = "debug"
+
+[[maps]]
+name = "mymap_debug"
+  [[maps.layers]]
+  provider_layer = "debug.debug-tile-outline"
+  [[maps.layers]]
+  provider_layer = "debug.debug-tile-center"
 ```
 
-The requested tile will be encoded with an additional layer with the name value set to debug and include two features:
+Request it like any other collection —
+`/collections/mymap_debug/tiles/WebMercatorQuad/{z}/{y}/{x}` — and the tile carries two features:
 
 - `debug_outline`: a line feature that traces the border of the tile
 - `debug_text`: a point feature in the middle of the tile with the following tags:

@@ -8,8 +8,7 @@ description: "What Shigola is and what it serves"
 
 Shigola is a vector tile server written in Go. It reads geospatial data from PostGIS, GeoPackage or
 SAP HANA Spatial and serves it as [Mapbox Vector Tiles](https://github.com/mapbox/vector-tile-spec),
-over both its native tile routes and a standards-compliant
-[OGC API - Tiles](./ogc-api-tiles.md) surface.
+over a standards-compliant [OGC API - Tiles](./ogc-api-tiles.md) surface.
 
 Source: **[MapColonies/shigola](https://github.com/MapColonies/shigola)**.
 
@@ -18,8 +17,8 @@ Source: **[MapColonies/shigola](https://github.com/MapColonies/shigola)**.
 ### OGC API - Tiles
 
 An [OGC API - Tiles](https://ogcapi.ogc.org/tiles/) surface — landing page, conformance declaration,
-collections, tilesets, tiles and tiling-scheme definitions — alongside the native `/maps/...` routes.
-Verified against the official OGC CITE executable test suite.
+collections, tilesets, tiles and tiling-scheme definitions. Verified against the official OGC CITE
+executable test suite.
 
 See [OGC API - Tiles](./ogc-api-tiles.md).
 
