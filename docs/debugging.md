@@ -65,14 +65,9 @@ latency change. Check `shigola_cache_tier_errors_total`.
 
 When debugging client side, it's often helpful to see an outline of a tile along with its Z/X/Y values.
 
-**There is no `debug=true` any more.** The query parameter that added those layers to any tile was
-honoured by the native `/maps/...` tile route, which has been
-[removed](./http-endpoints.md#routes-that-no-longer-exist). The OGC tile route has no equivalent: a
-debug layer is not part of any tileset the service advertises, so a tile carrying one would not match
-the tileset metadata describing it.
-
-The `debug` provider is still registrable, so the same layers can be configured explicitly on a map
-kept for debugging:
+There is no query parameter for this: a debug layer is not part of any tileset the service
+advertises, so a tile carrying one would not match the tileset metadata describing it. Configure the
+`debug` provider's layers explicitly instead, on a map kept for debugging:
 
 ```toml
 [[providers]]

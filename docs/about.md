@@ -17,9 +17,8 @@ Source: **[MapColonies/shigola](https://github.com/MapColonies/shigola)**.
 ### OGC API - Tiles
 
 An [OGC API - Tiles](https://ogcapi.ogc.org/tiles/) surface — landing page, conformance declaration,
-collections, tilesets, tiles and tiling-scheme definitions. It is the only tile surface: the
-`/maps/...` routes it began as an addition to have been removed. Verified against the official OGC
-CITE executable test suite.
+collections, tilesets, tiles and tiling-scheme definitions. Verified against the official OGC CITE
+executable test suite.
 
 See [OGC API - Tiles](./ogc-api-tiles.md).
 

@@ -7,8 +7,7 @@ description: "The standards-compliant tile API Shigola serves"
 ---
 
 Shigola serves [OGC API - Tiles](https://ogcapi.ogc.org/tiles/) for vector (Mapbox Vector Tile)
-data. It is the only tile surface: the `/maps/...` routes it began as an addition to have been
-[removed](./http-endpoints.md#routes-that-no-longer-exist).
+data. It is the only tile surface Shigola serves.
 
 ## Two things to know before deploying
 
@@ -103,12 +102,10 @@ ambiguous.
 ## Tile paths are z/y/x
 
 OGC orders a tile path `{tileMatrix}/{tileRow}/{tileCol}` — zoom, **row**, then **column**. This is
-transposed from the `z/x/y` order of the removed `/maps/{map}/{z}/{x}/{y}` routes, which is the one
-thing to get right when moving a client across:
+worth checking against a client that assumes the `z/x/y` order most tile URLs use:
 
 ```
-was    /maps/parks/3/5/2                                  z=3 x=5 y=2
-now    /collections/parks/tiles/WebMercatorQuad/3/2/5     z=3 y=2 x=5   — the same tile
+/collections/parks/tiles/WebMercatorQuad/3/2/5     z=3 y=2 x=5
 ```
 
 Rows and columns are validated separately, so a transposed request is rejected rather than served as
@@ -127,10 +124,9 @@ service cannot produce gets the default representation, which is what a browser 
 | everything else | `json` |
 
 `mvt` is canonical: it is what every link and template this service emits says, and it is the name in
-the OGC conformance class. `pbf` is accepted because that is what the removed `/maps/...` routes
-called the same tile, serving it at a `.pbf` extension, and it is what the `format` member of the
-TileJSON says — being refused for using Shigola's own word for it would be surprising. Matching
-ignores case. The
+the OGC conformance class. `pbf` is accepted because it is the name the same tile carries in the
+`format` member of the TileJSON above, and the extension vector tiles are commonly served at — being
+refused for using that word would be surprising. Matching ignores case. The
 alias resolves to MVT before a resource's own formats are consulted, so `?f=pbf` on a JSON-only
 resource is still a 400.
 
@@ -142,10 +138,10 @@ than generated a second time. The key is
 spelling of `?f=` shares one entry rather than storing the same bytes twice.
 
 A tile request carrying any **other** query parameter is served **uncached**: the key cannot describe
-it. Nothing on this surface passes query parameters through to a provider — `[[maps.params]]` is still
-configurable but unread, since the route that consumed it was the removed per-layer tile route — so no
-such request can reach a different rendering. Serving it uncached is what keeps that true if it ever
-changes: tiles must not already be pooled under a key that ignores a parameter.
+it. Nothing on this surface passes query parameters through to a provider — `[[maps.params]]` is
+configurable but unread — so no such request can reach a different rendering. Serving it uncached is
+what keeps that true if it ever changes: tiles must not already be pooled under a key that ignores a
+parameter.
 
 ## Conformance
 
