@@ -63,13 +63,15 @@ omits it is served in every scheme this build supports.
 [[maps]]
 name = "parks"
 # The tiling schemes this map may be requested in.
-# The FIRST entry is the map's default — the scheme its native /maps/... routes serve.
+# The FIRST entry is the map's default.
 # Omit the key entirely to offer every scheme this build serves.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 ```
 
 - Omitted → every scheme the build serves.
-- The first entry is the default, and is what `/maps/{map}/{z}/{x}/{y}` returns.
+- The first entry is the default: it is the scheme `shigola cache seed` and `cache purge` assume
+  without `--tile-matrix-set`, and the one a tileset's TileJSON describes when a client asks the
+  collection for its default.
 - A map's layer-collections offer exactly the schemes their map does.
 
 ### Why a scheme id and not an SRID
@@ -90,8 +92,8 @@ resolves to `WebMercatorQuad` and 4326 to `WorldCRS84Quad`.
   definition, verbatim from the bundled register. See
   [OGC API - Tiles](./ogc-api-tiles.md).
 - **Tile URLs** carry the scheme on OGC routes:
-  `/collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}`. The native
-  `/maps/...` routes have nowhere to put it and serve the map's default.
+  `/collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}`. Every tile
+  request names a scheme; there is no route that serves a map's default implicitly.
 - **Cache keys** begin with it: `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`.
 - **`cache seed` / `cache purge`** take `--tile-matrix-set`; one run covers one scheme.
 
