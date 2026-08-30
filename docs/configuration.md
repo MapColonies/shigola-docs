@@ -660,7 +660,8 @@ uri  = "postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer"
 
 [[maps]]
 name = "osm"
-# First entry is the default — what a seed run assumes without --tile-matrix-set.
+# The schemes this map may be requested in. A seed run without --tile-matrix-set
+# takes the first.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 
   [[maps.layers]]
