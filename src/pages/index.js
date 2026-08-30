@@ -78,7 +78,7 @@ const ADDED = [
 
 const UPSTREAM = [
   'Simple to set up. All you need is the Shigola binary and a config file.',
-  'Extensible. Multiple data providers — PostGIS, GeoPackage and SAP HANA.',
+  'Extensible. A provider seam built for more than one data source, with PostGIS behind it.',
   'Open source, MIT licensed, and hosted on GitHub.',
   'Parallelized. Shigola uses all available CPUs.',
   'Written in Go: highly concurrent, lightweight and easy to deploy.',

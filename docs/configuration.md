@@ -169,12 +169,19 @@ refuses to start:
 error fetching geometry type for layer (land): layer (land) returned unsupported geometry type (<nil>)
 ```
 
-A `tablename` may be given instead of `sql`, and is accepted rather than rejected. Shigola then
-builds the query itself — a whole-table select with no `ST_AsMVTGeom` and no bounding-box filter,
-which is not what an MVT layer wants. It is a leftover of the removed `postgis` type, which is what
-that path was shaped for. It does not quietly serve bad tiles — the generated query selects the
-geometry unwrapped, which startup inference cannot type either, so the provider refuses to start.
-Write the `sql`.
+A `tablename` may be given instead of `sql`, along with `fields` to choose the columns it selects.
+Both are accepted rather than rejected, and neither is usable here: Shigola generates a whole-table
+select with no `ST_AsMVTGeom` and no bounding-box filter, which `ST_AsMVT` cannot make a correct tile
+out of. They are leftovers of the removed `postgis` type, which is what that path was shaped for.
+
+:::danger
+
+Which way a `tablename` layer fails depends on something unrelated to it. Without `geometry_type`
+the provider refuses to start, because inferring the type means reading that generated query back.
+**With `geometry_type` — which you are told above to always declare — it starts, and serves
+whole-table tiles.** Write the `sql`.
+
+:::
 
 #### Supported SQL Tokens
 

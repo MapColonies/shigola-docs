@@ -11,8 +11,6 @@ Prebuilt binaries: **[MapColonies/shigola releases](https://github.com/MapColoni
 
 ## From source
 
-The GeoPackage provider needs CGO; everything else builds without it.
-
 ```sh
 git clone https://github.com/MapColonies/shigola.git
 cd shigola
