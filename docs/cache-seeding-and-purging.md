@@ -98,9 +98,32 @@ $ ./shigola cache seed --map=parks --bounds="-117.25,32.5,-117.0,32.75"
 $ ./shigola cache seed --map=parks --tile-matrix-set=WorldCRS84Quad --bounds="-117.25,32.5,-117.0,32.75"
 ```
 
-Without `--map`, a run defaults to `WebMercatorQuad`. If any targeted map does not support the run's
-scheme, **the run fails and names those maps** rather than skipping them: seeding a map on the wrong
-pyramid writes tiles no request will ever ask for, and would otherwise report success.
+#### What you get if you omit it
+
+| Invocation | Scheme used |
+|:---|:---|
+| `--map=parks` | the **first** entry of that map's [`tile_matrix_sets`](./tile-matrix-sets.md), in the order written |
+| no `--map` | `WebMercatorQuad`, whatever any map lists |
+
+"First" is literal — nothing sorts the list, so swapping two entries in the config changes what the
+same command seeds. A map that omits `tile_matrix_sets` is given every servable scheme with
+`WebMercatorQuad` first, so it too defaults to `WebMercatorQuad`.
+
+**A run that names no scheme warns, and says which one it picked.** The wrong scheme is not visibly
+wrong: a seed fills a cache nothing will read, and a purge leaves the tiles you meant to remove in
+place while removing another scheme's. Both exit 0.
+
+```
+WARN cache seed/purge: no --tile-matrix-set given, using WorldCRS84Quad
+     (the first scheme map "parks" lists). one run covers one scheme --
+     pass --tile-matrix-set to choose it
+```
+
+Pass `--tile-matrix-set` and the warning goes away — the run is then saying what it means.
+
+If any targeted map does not support the run's scheme, **the run fails and names those maps** rather
+than skipping them: seeding a map on the wrong pyramid writes tiles no request will ever ask for, and
+would otherwise report success.
 
 ### `--cache-tiers` {#cache-tiers}
 
