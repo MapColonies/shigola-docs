@@ -158,12 +158,23 @@ happen in the query.
 | geometry_fieldname | No       | geom     | The name of the geometry field in the table                      |
 | id_fieldname       | No       | gid      | The name of the feature ID field in the table. Only positive integer IDs are supported. |
 | srid               | No       | 3857     | The SRID for the table. Can be 3857 or 4326.                     |
-| geometry_type      | No       |          | The layer geometry type. If not set, the table will be inspected at startup to try and infer the geometry type. Valid values are: `Point`, `LineString`, `Polygon`, `MultiPoint`, `MultiLineString`, `MultiPolygon`, `GeometryCollection`. |
+| geometry_type      | In practice, yes |  | The layer geometry type. Valid values are: `Point`, `LineString`, `Polygon`, `MultiPoint`, `MultiLineString`, `MultiPolygon`, `GeometryCollection`. See below. |
+
+**Declare `geometry_type`.** It is optional in the sense that Shigola will try to infer it, and the
+way it infers it is to run the layer's SQL at startup and look at what comes back. A query ending in
+`ST_AsMVTGeom` returns tile-space geometry that cannot be typed, so inference fails and the provider
+refuses to start:
+
+```
+error fetching geometry type for layer (land): layer (land) returned unsupported geometry type (<nil>)
+```
 
 A `tablename` may be given instead of `sql`, and is accepted rather than rejected. Shigola then
 builds the query itself — a whole-table select with no `ST_AsMVTGeom` and no bounding-box filter,
 which is not what an MVT layer wants. It is a leftover of the removed `postgis` type, which is what
-that path was shaped for. Write the `sql`.
+that path was shaped for. It does not quietly serve bad tiles — the generated query selects the
+geometry unwrapped, which startup inference cannot type either, so the provider refuses to start.
+Write the `sql`.
 
 #### Supported SQL Tokens
 
@@ -190,6 +201,7 @@ The `sql` configuration supports the following tokens
 name = "landuse"
 # this table uses 'geom' for the geometry_fieldname and 'gid' for the id_fieldname (the defaults),
 # so neither needs to be configured. Wrapping the geom in ST_AsMVTGeom is required.
+geometry_type = "multipolygon"
 sql = "SELECT ST_AsMVTGeom(geom,!BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 ```
 
@@ -203,6 +215,7 @@ token have to be transformed before it sees them:
 name = "landuse"
 # the !BBOX! token in the WHERE clause is not reprojected, so it matches the 4326 data;
 # the matched data and the !BBOX! are then reprojected to 3857 for ST_AsMVTGeom
+geometry_type = "multipolygon"
 sql = "SELECT ST_AsMVTGeom(ST_Transform(geom, 3857),ST_Transform(!BBOX!,3857)) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 ```
 
@@ -495,26 +508,31 @@ type = "mvt_postgis"    # PostGIS does the MVT encoding, via ST_AsMVT
 uri = "postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer" # PostGIS connection string (required)
 srid = 3857             # The default srid for this provider. If not provided it will be WebMercator (3857)
 
-    # `sql` is required on this provider, and the geometry must be wrapped in
-    # ST_AsMVTGeom — which shigola cannot generate from a `tablename`. The key is
-    # parsed rather than rejected, so a layer using it fails by serving wrong
-    # geometry rather than by refusing to start.
+    # `sql` is what a layer is defined by, and the geometry must be wrapped in
+    # ST_AsMVTGeom — which shigola cannot generate from a `tablename`. A layer
+    # using `tablename` is parsed rather than rejected, and then fails at
+    # startup while shigola tries to infer its geometry type.
+    #
+    # geometry_type is declared for the same reason: that inference reads the
+    # layer's SQL back, and cannot type what ST_AsMVTGeom returns.
     [[providers.layers]]
-    name = "landuse"                       # will be encoded as the layer name in the tile
+    name = "landuse"                        # will be encoded as the layer name in the tile
     geometry_fieldname = "geom"             # geom field. default is geom
     id_fieldname = "gid"                    # geom id field. default is gid
+    geometry_type = "multipolygon"
     sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
     name = "roads"                          # will be encoded as the layer name in the tile
     geometry_fieldname = "geom"             # geom field. default is geom
     id_fieldname = "gid"                    # geom id field. default is gid
-    # Extra columns in the SELECT become feature tags — the equivalent of the
-    # `fields` option on the native provider.
+    geometry_type = "multilinestring"
+    # Extra columns in the SELECT become feature tags.
     sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid, class, name FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
     name = "rivers"                         # will be encoded as the layer name in the tile
+    geometry_type = "multilinestring"
     sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.rivers WHERE geom && !BBOX!"
 
 # maps are made up of layers
@@ -589,6 +607,7 @@ uri  = "postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer"
 
   [[providers.layers]]
   name = "landuse"
+  geometry_type = "multipolygon"
   sql  = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 
 [[maps]]
