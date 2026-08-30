@@ -63,16 +63,46 @@ omits it is served in every scheme this build supports.
 [[maps]]
 name = "parks"
 # The tiling schemes this map may be requested in.
-# The FIRST entry is the map's default.
 # Omit the key entirely to offer every scheme this build serves.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 ```
 
 - Omitted → every scheme the build serves.
-- The first entry is the default: it is the scheme `shigola cache seed` and `cache purge` assume
-  without `--tile-matrix-set`, and the one a tileset's TileJSON describes when a client asks the
-  collection for its default.
+- Every request names its scheme, so no entry is a serving default. What the list decides is which
+  schemes a collection offers, and the order its tilesets are listed in.
 - A map's layer-collections offer exactly the schemes their map does.
+
+#### The order matters to `cache seed` and `cache purge`
+
+Serving reads no default off this list, but the CLI does. Without `--tile-matrix-set`, a run scoped
+with `--map` takes **the first entry, in the order you wrote it** — nothing sorts or prioritises it:
+
+| A map's `tile_matrix_sets` | `cache seed --map=parks` seeds |
+|:---|:---|
+| `["WorldCRS84Quad", "WebMercatorQuad"]` | `WorldCRS84Quad` |
+| `["WebMercatorQuad", "WorldCRS84Quad"]` | `WebMercatorQuad` |
+| key omitted | `WebMercatorQuad` |
+
+Swapping the two entries changes what the same command seeds. The third row is why: a map that names
+no schemes is given **every** scheme the build serves, in the order
+`WebMercatorQuad, WGS1984Quad, WorldCRS84Quad` — WebMercatorQuad deliberately first rather than
+sorted, since sorting alone would put `WGS1984Quad` there (`G` sorts before `e`) and quietly change
+which pyramid an unconfigured map seeds.
+
+Without `--map` at all, a run always uses `WebMercatorQuad`, whatever any map lists. That is a
+separate rule, not the first entry of anything.
+
+**A run that names no scheme says which one it picked.** Both cases log a warning naming the scheme
+and where it came from, because the wrong one is not visibly wrong — the run reports success either
+way:
+
+```
+WARN cache seed/purge: no --tile-matrix-set given, using WorldCRS84Quad
+     (the first scheme map "parks" lists). one run covers one scheme --
+     pass --tile-matrix-set to choose it
+```
+
+Full detail in [Cache seeding and purging](./cache-seeding-and-purging.md#tile-matrix-set).
 
 ### Why a scheme id and not an SRID
 
