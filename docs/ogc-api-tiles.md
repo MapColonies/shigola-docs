@@ -187,7 +187,7 @@ provider, so a run needs that fixture up first. To reproduce a run locally, from
 
 ```sh
 docker compose up -d && docker wait migration       # the Athens fixture, in PostGIS
-CGO_ENABLED=0 go build -mod vendor -tags noGpkgProvider -o /tmp/shigola ./cmd/shigola
+go build -mod vendor -o /tmp/shigola ./cmd/shigola
 /tmp/shigola serve --config .github/cite/config.toml --port ":8081" &
 .github/cite/run.sh WebMercatorQuad 14 6324 9271
 .github/cite/run.sh WorldCRS84Quad 14 4740 18542
@@ -197,13 +197,13 @@ Each run prints `<scheme>: 15 passed, 1 untested`, then `<scheme>: OK`. The runn
 of 15 passed assertions, because the EARL report carries no summary line and a run that reached
 nothing at all reports no failures either.
 
-The build flags say something the config cannot. This fixture used to be a GeoPackage, which made
-the server's only external conformance evidence an invisible dependency of one provider; building
-without that provider is what turns "conformance passes with no GeoPackage present" into a fact
-about the binary. `CGO_ENABLED=0` is already enough on its own — the `init()` that registers the
-GeoPackage provider is behind `//go:build cgo`, so without cgo the `gpkg` type is simply unknown and
-the config is rejected at startup. `-tags noGpkgProvider` is belt and braces, and it is the half
-that keeps holding if cgo is ever needed back for an unrelated reason.
+That build line carried `CGO_ENABLED=0 -tags noGpkgProvider` until the GeoPackage provider was
+removed. The fixture used to be a GeoPackage, which made the server's only external conformance
+evidence an invisible dependency of one provider, and building without that provider was what turned
+"conformance passes with no GeoPackage present" into a fact about the binary rather than about the
+config. Moving the fixture into PostGIS first is what let the provider be deleted without taking the
+evidence with it; with no GeoPackage provider left to exclude, the flags describe nothing and the
+ordinary build is the honest one.
 
 The fixture's layers declare a narrow zoom window (13–15). That is about accuracy, not data volume:
 `ST_AsMVTGeom` maps the bounding box onto the tile grid affinely, and one SQL statement cannot be

@@ -6,9 +6,9 @@ sidebar_position: 2
 description: "What Shigola is and what it serves"
 ---
 
-Shigola is a vector tile server written in Go. It reads geospatial data from PostGIS, GeoPackage or
-SAP HANA Spatial and serves it as [Mapbox Vector Tiles](https://github.com/mapbox/vector-tile-spec),
-over a standards-compliant [OGC API - Tiles](./ogc-api-tiles.md) surface.
+Shigola is a vector tile server written in Go. It reads geospatial data from PostGIS and serves it
+as [Mapbox Vector Tiles](https://github.com/mapbox/vector-tile-spec), over a standards-compliant
+[OGC API - Tiles](./ogc-api-tiles.md) surface.
 
 Source: **[MapColonies/shigola](https://github.com/MapColonies/shigola)**.
 
@@ -35,6 +35,22 @@ See [Tile matrix sets](./tile-matrix-sets.md).
 walk the tiers and promote a hit, writes fan out, and no user response waits on a cache write.
 
 See [Layered cache](./layered-cache.md).
+
+## What it does not serve
+
+Shigola is a fork of Tegola, but not a superset of it. It removes more than it adds, and what it
+removes was removed on purpose — this is a server aimed at one job, not a general-purpose Tegola.
+If you are arriving from [tegola.io](https://tegola.io), these are gone:
+
+| Removed | Instead |
+|:---|:---|
+| The built-in map viewer | Nothing. Point your own client at the tile endpoints. |
+| The native `/maps/...` tile routes | [OGC API - Tiles](./ogc-api-tiles.md) is the only tile surface, and `/` is its landing page. |
+| The GeoPackage and SAP HANA providers | PostGIS. A config naming `gpkg` or `hana` is rejected at startup. |
+| The `postgis` provider type | `mvt_postgis`, which encodes the tile in the database with `ST_AsMVT`. A config naming `postgis` is rejected at startup with a message saying so. |
+
+Everything Shigola kept behaves as Tegola's does unless this site says otherwise, and the [official
+Tegola docs](https://tegola.io) remain the reference for it.
 
 ## Behaviour worth knowing
 

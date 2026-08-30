@@ -44,7 +44,9 @@ function ForkNotice() {
           <a href="https://github.com/MapColonies/shigola">
             MapColonies/shigola
           </a>{' '}
-          — everything upstream Tegola does, plus three additions.{' '}
+          — three things Tegola does not have, on a deliberately narrower
+          server. Shigola is not a superset of Tegola: it removes more than it
+          adds.{' '}
           <Link to="/documentation/about">Read more</Link>.
         </p>
       </div>
@@ -57,8 +59,9 @@ const ADDED = [
     title: 'OGC API - Tiles',
     to: '/documentation/ogc-api-tiles',
     body:
-      'A standards-compliant tile API alongside the native routes — landing page, ' +
-      'collections, tilesets and tiles. Verified against the OGC CITE test suite.',
+      'The only tile API this server offers, where Tegola serves its own ' +
+      '/maps/... routes. Landing page, collections, tilesets and tiles, ' +
+      'verified against the OGC CITE test suite.',
   },
   {
     title: 'Tile matrix sets',
@@ -76,9 +79,12 @@ const ADDED = [
   },
 ];
 
+// Inherited from Tegola and kept. The heading below says "From Tegola" for a
+// reason: everything in this list is upstream's work, and the fork narrowed the
+// server around it rather than adding to it.
 const UPSTREAM = [
   'Simple to set up. All you need is the Shigola binary and a config file.',
-  'Extensible. Multiple data providers — PostGIS, GeoPackage and SAP HANA.',
+  'Extensible. A provider seam built for more than one data source, with PostGIS behind it.',
   'Open source, MIT licensed, and hosted on GitHub.',
   'Parallelized. Shigola uses all available CPUs.',
   'Written in Go: highly concurrent, lightweight and easy to deploy.',
@@ -121,7 +127,7 @@ export default function Home() {
 
         <section className={clsx(styles.section, styles.sectionAlt)}>
           <div className="container">
-            <h2>From Shigola</h2>
+            <h2>From Tegola</h2>
             <ul className={styles.featureList}>
               {UPSTREAM.map((f) => (
                 <li key={f}>{f}</li>
