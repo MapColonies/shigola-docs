@@ -91,7 +91,7 @@ Names the [tiling scheme](./tile-matrix-sets.md) to seed or purge.
 once. Seed each scheme you serve.
 
 ```shell
-# defaults to the map's own default scheme
+# defaults to the first scheme the map lists
 $ ./shigola cache seed --map=parks --bounds="-117.25,32.5,-117.0,32.75"
 
 # or name one explicitly

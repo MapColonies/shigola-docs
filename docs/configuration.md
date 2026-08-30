@@ -290,8 +290,7 @@ per layer or per provider.
 ```toml
 [[maps]]
 name = "parks"
-# Omit for every scheme this build serves. The first entry is the map's
-# default.
+# Omit for every scheme this build serves.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 ```
 
@@ -591,7 +590,7 @@ srid = 3857             # The default srid for this provider. If not provided it
 name = "zoning"                             # the collection id: /collections/zoning/tiles/...
 tile_buffer = 0                             # number of pixels to extend a tile's clipping area
 tile_matrix_sets = ["WebMercatorQuad"]      # tiling schemes this map may be requested in.
-                                            # the first is the default. omit for all servable schemes.
+                                            # omit for all servable schemes.
 
     # A map using an MVT provider may use ONLY that provider — every layer here
     # has to come from test_postgis. Mixing in a second provider, MVT or not, is

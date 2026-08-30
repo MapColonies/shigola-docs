@@ -63,15 +63,16 @@ omits it is served in every scheme this build supports.
 [[maps]]
 name = "parks"
 # The tiling schemes this map may be requested in.
-# The FIRST entry is the map's default.
 # Omit the key entirely to offer every scheme this build serves.
 tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
 ```
 
 - Omitted → every scheme the build serves.
-- The first entry is the default: it is the scheme `shigola cache seed` and `cache purge` assume
-  without `--tile-matrix-set`, and the one a tileset's TileJSON describes when a client asks the
-  collection for its default.
+- Every request names its scheme, so no entry is a serving default. What the list decides is which
+  schemes a collection offers, and the order its tilesets are listed in.
+- `shigola cache seed` and `cache purge` do have a default: without `--tile-matrix-set`, a run
+  scoped with `--map` takes the first scheme that map lists. See
+  [Cache seeding and purging](./cache-seeding-and-purging.md).
 - A map's layer-collections offer exactly the schemes their map does.
 
 ### Why a scheme id and not an SRID
