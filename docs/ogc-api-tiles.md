@@ -197,14 +197,6 @@ Each run prints `<scheme>: 15 passed, 1 untested`, then `<scheme>: OK`. The runn
 of 15 passed assertions, because the EARL report carries no summary line and a run that reached
 nothing at all reports no failures either.
 
-That build line carried `CGO_ENABLED=0 -tags noGpkgProvider` until the GeoPackage provider was
-removed. The fixture used to be a GeoPackage, which made the server's only external conformance
-evidence an invisible dependency of one provider, and building without that provider was what turned
-"conformance passes with no GeoPackage present" into a fact about the binary rather than about the
-config. Moving the fixture into PostGIS first is what let the provider be deleted without taking the
-evidence with it; with no GeoPackage provider left to exclude, the flags describe nothing and the
-ordinary build is the honest one.
-
 The fixture's layers declare a narrow zoom window (13–15). That is about accuracy, not data volume:
 `ST_AsMVTGeom` maps the bounding box onto the tile grid affinely, and one SQL statement cannot be
 affine-correct for a mercator grid and a geographic one at the same time. The comments in
