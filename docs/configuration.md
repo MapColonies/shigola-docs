@@ -286,8 +286,6 @@ Map Layers define which [Provider Layers](#provider-layers) to render at what zo
 | name               | No       | Overrides the `provider_layer` name. Can also be used to group multiple `provider_layers` under the same namespace.                      |
 | min_zoom           | No       | The minimum zoom to render this layer at.                                                                                                |
 | max_zoom           | No       | The maximum zoom to render this layer at.                                                                                                |
-| default_tags       | No       | Default tags to be added to features on this layer.                                                                                      |
-| dont_simplify      | No       | Boolean to prevent feature simplification from being applied.                                                                            |
 
 
 **Example Map Layer**
@@ -298,20 +296,6 @@ provider_layer = "test_postgis.landuse" # must match a data provider layer
 min_zoom = 12                       	# minimum zoom level to include this layer
 max_zoom = 16                       	# maximum zoom level to include this layer
 ```
-
-#### Default Tags
-
-Map Layer Default Tags provide a convenient way to encode additional tags that are not supplied by a data provider. If a Default Tag is defined and the same tag is returned by the Provider, the Provider defined tag will take precedence.
-
-Default Tags are `key = value` pairs.
-
-**Example Map Layer Default Tags**
-
-```toml
-[maps.layers.default_tags]
-class = "park"			# a default tag to encode into the feature
-```
-
 
 ## Cache
 
@@ -565,13 +549,9 @@ tile_matrix_sets = ["WebMercatorQuad"]      # tiling schemes this map may be req
 
 Two things about an MVT provider are worth knowing, and neither reports an error:
 
-- **`default_tags` is ignored.** Shigola adds default tags while encoding a tile, and an MVT provider
-  returns a tile that is already encoded, so there is nothing to add them to. Put the value in the
-  `SELECT` instead — `'park'::text AS class`.
-- **A map may contain exactly one MVT provider and nothing else.** This is enforced at startup. With
-  `mvt_postgis` the only provider type that serves real data, the rule is not one a config can
-  easily trip over now, but a map mixing it with the `debug` provider still fails to load rather
-  than serving a partial tile.
+- **A map draws its layers from exactly one provider.** This is enforced at startup: a map naming
+  two fails to load rather than serving a partial tile. An MVT provider returns a tile that is
+  already encoded, so there is nothing to merge a second provider's features into.
 
 ## Layered Cache Example
 

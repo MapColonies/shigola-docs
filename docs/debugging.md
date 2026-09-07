@@ -29,8 +29,6 @@ $ SHIGOLA_SQL_DEBUG=LAYER_SQL shigola --config=/path/to/conf.toml
 
 | Option | Default | Effect |
 |:---|:---|:---|
-| `DontSimplifyGeo` | off | Disable geometry simplification. |
-| `SimplifyMaxZoom=N` | 10 | The zoom above which simplification stops. |
 | `DetachedWriteSlots=N` | 256 | **Fork only.** Cache write-pool capacity. |
 | `DetachedWriteTimeoutMs=N` | 10000 | **Fork only.** Bound on a detached cache write. 0 disables. |
 | `DetachedWriteDrainMs=N` | 5000 | **Fork only.** How long shutdown waits for in-flight writes. 0 disables. |
