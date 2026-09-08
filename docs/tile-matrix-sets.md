@@ -72,6 +72,17 @@ tile_matrix_sets = ["WebMercatorQuad", "WorldCRS84Quad"]
   schemes a collection offers, and the order its tilesets are listed in.
 - A map's layer-collections offer exactly the schemes their map does.
 
+:::warning
+
+**A map served in more than one scheme needs its layer SQL written for that.** The provider hands the
+tile-space mapping to `ST_AsMVTGeom`, which spaces a tile across whichever envelope it is given — so
+the envelope has to be the scheme's, through `!TILE_BBOX!`, with the geometry transformed to
+`!TILE_SRID!` to match. A layer that clips against `!BBOX!` instead is only correct in a scheme whose
+CRS happens to be the layer's own; in any other it is skewed, worst at the shallow zooms. See
+[Layer SRID and tiling scheme CRS](configuration#layer-srid-and-tiling-scheme-crs).
+
+:::
+
 #### The order matters to `cache seed` and `cache purge`
 
 Serving reads no default off this list, but the CLI does. Without `--tile-matrix-set`, a run scoped
