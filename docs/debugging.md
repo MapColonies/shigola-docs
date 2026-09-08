@@ -29,8 +29,6 @@ $ SHIGOLA_SQL_DEBUG=LAYER_SQL shigola --config=/path/to/conf.toml
 
 | Option | Default | Effect |
 |:---|:---|:---|
-| `DontSimplifyGeo` | off | Disable geometry simplification. |
-| `SimplifyMaxZoom=N` | 10 | The zoom above which simplification stops. |
 | `DetachedWriteSlots=N` | 256 | **Fork only.** Cache write-pool capacity. |
 | `DetachedWriteTimeoutMs=N` | 10000 | **Fork only.** Bound on a detached cache write. 0 disables. |
 | `DetachedWriteDrainMs=N` | 5000 | **Fork only.** How long shutdown waits for in-flight writes. 0 disables. |
@@ -61,30 +59,3 @@ With a [layered cache](./layered-cache.md), a **failing tier is invisible in
 the response**: a read failure degrades to a miss, so there is no error, no status-code change and no
 latency change. Check `shigola_cache_tier_errors_total`.
 
-## Client side
-
-When debugging client side, it's often helpful to see an outline of a tile along with its Z/X/Y values.
-
-There is no query parameter for this: a debug layer is not part of any tileset the service
-advertises, so a tile carrying one would not match the tileset metadata describing it. Configure the
-`debug` provider's layers explicitly instead, on a map kept for debugging:
-
-```toml
-[[providers]]
-name = "debug"
-type = "debug"
-
-[[maps]]
-name = "mymap_debug"
-  [[maps.layers]]
-  provider_layer = "debug.debug-tile-outline"
-  [[maps.layers]]
-  provider_layer = "debug.debug-tile-center"
-```
-
-Request it like any other collection —
-`/collections/mymap_debug/tiles/WebMercatorQuad/{z}/{y}/{x}` — and the tile carries two features:
-
-- `debug_outline`: a line feature that traces the border of the tile
-- `debug_text`: a point feature in the middle of the tile with the following tags:
-- `zxy`: a string with the Z, X and Y values formatted as: Z:0, X:0, Y:0
