@@ -252,14 +252,15 @@ sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!),!TILE_BBOX!) AS geom, 
 Shigola is responsible for serving vector map tiles, which are made up of numerous [Map Layers](#map-layers). The name of the Map is its OGC collection id, and so appears in the URL of every tile request (i.e. /collections/:map_name/tiles/:tile_matrix_set_id/:tile_matrix/:tile_row/:tile_col). Maps have the following configuration parameters:
 
 
-| Param              | Required | Description                                                                                                                      |
-|:-------------------|:---------|:---------------------------------------------------------------------------------------------------------------------------------|
-| name               | Yes      | The map's collection id, referenced in the URL (i.e. /collections/:map_name/tiles/...).                                          |
-| attribution        | No       | Attribution string to be included in the TileJSON.                                                                               |
-| bounds             | No       | The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: `[-180.0, -85.0511, 180.0, 85.0511]`|
-| center             | No       | The center of the map to be displayed in the preview. (`[lon, lat, zoom]`).                                                      |
-| tile_buffer        | No       | The number of pixels to extend a tile's clipping area, defaults to `64` or the [global](#global) value                           |
-| tile_matrix_sets   | No       | The [tiling schemes](#tile-matrix-sets) this map may be requested in. Omitted, every scheme the build serves.                    |
+| Param                   | Required | Description                                                                                                                       |
+|:------------------------|:---------|:----------------------------------------------------------------------------------------------------------------------------------|
+| name                    | Yes      | The map's collection id, referenced in the URL (i.e. /collections/:map_name/tiles/...).                                           |
+| attribution             | No       | Attribution string to be included in the TileJSON.                                                                                |
+| bounds                  | No       | The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: `[-180.0, -85.0511, 180.0, 85.0511]` |
+| center                  | No       | The center of the map to be displayed in the preview. (`[lon, lat, zoom]`).                                                       |
+| tile_buffer             | No       | The number of pixels to extend a tile's clipping area, defaults to `64` or the [global](#global) value                            |
+| tile_matrix_sets        | No       | The [tiling schemes](#tile-matrix-sets) this map may be requested in. Omitted, every scheme the build serves.                     |
+| serve_layer_collections | No       | Whether this map's layers are [addressable on their own](#serve-layer-collections). Default `true`.                               |
 
 
 ```toml
@@ -296,6 +297,36 @@ what can be served.
 **Changing a map's schemes changes its cache keys** — purge and re-seed that map.
 
 Full detail: [Tile Matrix Sets](./tile-matrix-sets.md).
+
+### Serve layer collections
+
+A map publishes one collection for itself and one for each of its layers, so a client can ask for
+the whole map or for a single layer of it. `serve_layer_collections = false` drops the layer tier
+for that map: it publishes its whole-map collection only.
+
+```toml
+[[maps]]
+name = "parks"
+# /collections/parks works; /collections/parks:trees is not found.
+serve_layer_collections = false
+```
+
+The layer ids stop resolving everywhere — the collections listing omits them, and asking for one by
+id, for its tilesets or for one of its tiles is a 404. Nothing else changes: the whole-map
+collection, its tilesets and its tiles are exactly what they were, and its tiles still carry every
+layer.
+
+It is configured per map, so a map that declines the tier and a map that says nothing about it work
+side by side in one config.
+
+**Cache entries a layer collection already served become unreachable.** A tile's cache key carries
+the layer it was served for, and nothing reads those keys once the layer ids stop resolving. The
+`cache seed` and `cache purge` commands only ever address a map's own key — they pass an empty layer
+— so neither can clear them, and removing them means deleting them from the cache backend. The key
+is `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`, so a file or S3 cache holds one layer directory
+per scheme the map is served in, not one per map.
+
+See [OGC API - Tiles](./ogc-api-tiles.md#collections) for how the two collection tiers are addressed.
 
 ### Map Layers
 
