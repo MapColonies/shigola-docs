@@ -298,7 +298,7 @@ what can be served.
 
 Full detail: [Tile Matrix Sets](./tile-matrix-sets.md).
 
-### Serve layer collections {#serve-layer-collections}
+### Serve layer collections
 
 A map publishes one collection for itself and one for each of its layers, so a client can ask for
 the whole map or for a single layer of it. `serve_layer_collections = false` drops the layer tier
@@ -316,15 +316,17 @@ id, for its tilesets or for one of its tiles is a 404. Nothing else changes: the
 collection, its tilesets and its tiles are exactly what they were, and its tiles still carry every
 layer.
 
-It is configured per map and defaults to on, so a map that declines the tier and a map that says
-nothing about it work side by side in one config.
+It is configured per map, so a map that declines the tier and a map that says nothing about it work
+side by side in one config.
 
 **Cache entries a layer collection already served become unreachable.** A tile's cache key carries
-the layer it was served for, and nothing reads those keys once the layer ids stop resolving.
-`shigola cache purge` writes and purges whole-map keys only, so removing them means deleting them
-from the cache backend — for a file or S3 cache, the layer's directory under the map's.
+the layer it was served for, and nothing reads those keys once the layer ids stop resolving. The
+`cache seed` and `cache purge` commands only ever address a map's own key — they pass an empty layer
+— so neither can clear them, and removing them means deleting them from the cache backend. The key
+is `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`, so a file or S3 cache holds one layer directory
+per scheme the map is served in, not one per map.
 
-Full detail: [OGC API - Tiles](./ogc-api-tiles.md#collections).
+See [OGC API - Tiles](./ogc-api-tiles.md#collections) for how the two collection tiers are addressed.
 
 ### Map Layers
 
