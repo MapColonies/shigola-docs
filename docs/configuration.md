@@ -154,7 +154,7 @@ happen in the query.
 
 | Param              | Required |  Default | Description                                                      |
 |:-------------------|:---------|:---------|:-----------------------------------------------------------------|
-| **sql**            | Yes      |          | Custom SQL. Requires a `!BBOX!` token, and `ST_AsMVTGeom` around the geometry |
+| **sql**            | Yes      |          | Custom SQL. Requires a `!BBOX!` token, and `ST_AsMVTGeom` around the geometry — see [Layer SRID and tiling scheme CRS](#layer-srid-and-tiling-scheme-crs) |
 | geometry_fieldname | No       | geom     | The name of the geometry field in the table                      |
 | id_fieldname       | No       | gid      | The name of the feature ID field in the table. Only positive integer IDs are supported. |
 | srid               | No       | 3857     | The SRID for the table. Can be 3857 or 4326.                     |
@@ -187,19 +187,22 @@ whole-table tiles.** Write the `sql`.
 
 The `sql` configuration supports the following tokens
 
-| Token               | Required | Description                                                      |
-|:--------------------|:---------|:-----------------------------------------------------------------|
-| !BBOX!              | Yes      | Will be replaced with the bounding box of the tile before the query is sent to the database. !bbox! and !BOX! are supported as well for compatibility with queries from Mapnik and MapServer styles. |
-| !ZOOM!              | No       | Will be replaced with the "Z" (zoom) value of the requested tile.|
-| !X!                 | No       | Will be replaced with the "X" value of the requested tile.       |
-| !Y!                 | No       | Will be replaced with the "Y" value of the requested tile.       |
-| !Z!                 | No       | Will be replaced with the "Z" value of the requested tile.       |
-| !SCALE_DENOMINATOR! | No       | Scale denominator, assuming 90.7 DPI (i.e. 0.28mm pixel size)    |
-| !PIXEL_WIDTH!       | No       | The pixel width in meters, assuming 256x256 tiles.               |
-| !PIXEL_HEIGHT!      | No       | The pixel height in meters, assuming 256x256 tiles.              |
-| !ID_FIELD!          | No       | The id field name.                                               |
-| !GEOM_FIELD!        | No       | The geom field name.                                             |
-| !GEOM_TYPE!         | No       | The geom type if defined otherwise.              |
+| Token                | Required | Description                                                      |
+|:---------------------|:---------|:-----------------------------------------------------------------|
+| !BBOX!               | Yes      | The tile's bounding box in **the layer's** SRID — the one to select rows with, because it matches the SRID the spatial index is built in. !bbox! and !BOX! are supported as well for compatibility with queries from Mapnik and MapServer styles. |
+| !TILE_BBOX!          | Yes, for `ST_AsMVTGeom` | The same bounding box in **the tiling scheme's** CRS — the one to clip against. See [Layer SRID and tiling scheme CRS](#layer-srid-and-tiling-scheme-crs). |
+| !TILE_SRID!          | No       | The EPSG code of the tiling scheme's CRS.                        |
+| !ZOOM!               | No       | Will be replaced with the "Z" (zoom) value of the requested tile.|
+| !X!                  | No       | Will be replaced with the "X" value of the requested tile.       |
+| !Y!                  | No       | Will be replaced with the "Y" value of the requested tile.       |
+| !Z!                  | No       | Will be replaced with the "Z" value of the requested tile.       |
+| !WEB_MERCATOR_ZOOM!  | No       | The WebMercatorQuad zoom with the same scale denominator as this tile's. Equal to `!ZOOM!` in WebMercatorQuad; one higher in WorldCRS84Quad and WGS1984Quad. Use it where a query's generalisation thresholds were tuned against the mercator zoom ladder. |
+| !SCALE_DENOMINATOR!  | No       | Scale denominator, assuming 90.7 DPI (i.e. 0.28mm pixel size)    |
+| !PIXEL_WIDTH!        | No       | The pixel width in meters.                                       |
+| !PIXEL_HEIGHT!       | No       | The pixel height in meters.                                      |
+| !ID_FIELD!           | No       | The id field name.                                               |
+| !GEOM_FIELD!         | No       | The geom field name.                                             |
+| !GEOM_TYPE!          | No       | The geom type if defined otherwise.              |
 
 **Example minimum Provider Layer config**
 
@@ -209,21 +212,39 @@ name = "landuse"
 # this table uses 'geom' for the geometry_fieldname and 'gid' for the id_fieldname (the defaults),
 # so neither needs to be configured. Wrapping the geom in ST_AsMVTGeom is required.
 geometry_type = "multipolygon"
-sql = "SELECT ST_AsMVTGeom(geom,!BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
+sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!),!TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 ```
 
-**Example Provider Layer config for SRID 4326**
+#### Layer SRID and tiling scheme CRS
 
-`ST_AsMVTGeom` expects data in 3857, so with a 4326 provider both the geometry and the `!BBOX!`
-token have to be transformed before it sees them:
+`ST_AsMVTGeom` maps a geometry onto the tile's 0–4096 grid affinely, across whatever envelope it is
+handed. That makes the envelope's CRS the CRS the tile is spaced by — so it has to be the tiling
+scheme's, and the geometry has to be in the same one.
+
+Those coincide for a 3857 layer served in WebMercatorQuad, which is why a single `!BBOX!` did both
+jobs while that was the only combination Shigola served. They do not coincide for a 3857 layer served
+in WorldCRS84Quad: hand `ST_AsMVTGeom` the mercator envelope there and the tile comes back spaced by
+mercator y inside a frame the client draws as linear in latitude. At zoom 1 that puts everything
+between the equator and 85°N into the bottom 8.4% of the tile.
+
+So the two tokens do different jobs, and a layer that may be served in more than one scheme uses
+both:
+
+- **`!BBOX!` selects.** It arrives in the layer's own SRID, so `geom && !BBOX!` can use the spatial
+  index.
+- **`!TILE_BBOX!` clips.** It arrives in the scheme's CRS, and the geometry given alongside it has to
+  be transformed to `!TILE_SRID!` to match.
+
+`ST_Transform` is a no-op when the layer is already in the scheme's CRS, so this form is correct in
+every scheme and there is no reason to write anything else — including for a 4326 layer:
 
 ```toml
 [[providers.layers]]
 name = "landuse"
-# the !BBOX! token in the WHERE clause is not reprojected, so it matches the 4326 data;
-# the matched data and the !BBOX! are then reprojected to 3857 for ST_AsMVTGeom
+# !BBOX! is converted into the layer's SRID, so it matches the 4326 data as stored;
+# !TILE_BBOX! and !TILE_SRID! follow whichever scheme the request named.
 geometry_type = "multipolygon"
-sql = "SELECT ST_AsMVTGeom(ST_Transform(geom, 3857),ST_Transform(!BBOX!,3857)) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
+sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!),!TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 ```
 
 ## Maps
@@ -511,7 +532,7 @@ srid = 3857             # The default srid for this provider. If not provided it
     geometry_fieldname = "geom"             # geom field. default is geom
     id_fieldname = "gid"                    # geom id field. default is gid
     geometry_type = "multipolygon"
-    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
+    sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
     name = "roads"                          # will be encoded as the layer name in the tile
@@ -519,12 +540,12 @@ srid = 3857             # The default srid for this provider. If not provided it
     id_fieldname = "gid"                    # geom id field. default is gid
     geometry_type = "multilinestring"
     # Extra columns in the SELECT become feature tags.
-    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid, class, name FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
+    sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid, class, name FROM gis.zoning_base_3857 WHERE geom && !BBOX!"
 
     [[providers.layers]]
     name = "rivers"                         # will be encoded as the layer name in the tile
     geometry_type = "multilinestring"
-    sql = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.rivers WHERE geom && !BBOX!"
+    sql = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.rivers WHERE geom && !BBOX!"
 
 # maps are made up of layers
 [[maps]]
@@ -595,7 +616,7 @@ uri  = "postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer"
   [[providers.layers]]
   name = "landuse"
   geometry_type = "multipolygon"
-  sql  = "SELECT ST_AsMVTGeom(geom, !BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
+  sql  = "SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom && !BBOX!"
 
 [[maps]]
 name = "osm"

@@ -197,10 +197,13 @@ Each run prints `<scheme>: 15 passed, 1 untested`, then `<scheme>: OK`. The runn
 of 15 passed assertions, because the EARL report carries no summary line and a run that reached
 nothing at all reports no failures either.
 
-The fixture's layers declare a narrow zoom window (13–15). That is about accuracy, not data volume:
-`ST_AsMVTGeom` maps the bounding box onto the tile grid affinely, and one SQL statement cannot be
-affine-correct for a mercator grid and a geographic one at the same time. The comments in
-`.github/cite/config.toml` carry the arithmetic.
+The fixture's layers declare a narrow zoom window (13–15). That used to be about accuracy:
+`ST_AsMVTGeom` maps the bounding box onto the tile grid affinely, and one SQL statement passing
+`!BBOX!` could not be affine-correct for a mercator grid and a geographic one at the same time. The
+`!TILE_BBOX!` and `!TILE_SRID!` tokens removed that constraint — see
+[Layer SRID and tiling scheme CRS](configuration#layer-srid-and-tiling-scheme-crs) — and the window
+is now just the range the suite is run over. The comments in `.github/cite/config.toml` carry the
+arithmetic.
 
 Two things about this suite are worth knowing before you blame the server:
 
