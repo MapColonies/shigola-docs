@@ -99,6 +99,19 @@ The separator is `:` rather than `/`, `.` or `_`: a slash would make the id look
 segments, and a dot or underscore can occur in a Shigola map or layer name, which would make the split
 ambiguous.
 
+The layer tier is the part a map can decline. With
+[`serve_layer_collections = false`](./configuration.md#serve-layer-collections) on a map, that map
+publishes its whole-map collection only:
+
+```
+parks           the whole map — unchanged
+parks:trees     collection not found
+```
+
+The flag removes the layer ids and nothing else: the whole-map collection keeps its tilesets and
+keeps serving tiles. It is per map and defaults to on, so a map that declines the tier and a map
+that says nothing about it sit in the same config.
+
 ## Tile paths are z/y/x
 
 OGC orders a tile path `{tileMatrix}/{tileRow}/{tileCol}` — zoom, **row**, then **column**. This is
