@@ -68,9 +68,10 @@ Three things commonly surprise people setting Shigola up for the first time:
   [go-spatial/tegola](https://github.com/go-spatial/tegola), an open source vector tile server
   created and maintained by the **[Go Spatial](https://github.com/go-spatial) team** and documented
   at [tegola.io](https://tegola.io). Effectively all of this codebase is their work: the providers,
-  the geometry processing, the MVT encoder and the tile pipeline all originate there.
-  Tegola is MIT licensed, Shigola keeps that licence and retains its copyright notice, and all
-  credit for what Shigola inherited belongs upstream.
+  the MVT encoder and the tile pipeline all originate there, as did the Go-side geometry processing
+  — clipping, make-valid, simplification — until Shigola moved tile encoding into the database and
+  deleted it. Tegola is MIT licensed, Shigola keeps that licence and retains its copyright notice,
+  and all credit for what Shigola inherited belongs upstream.
 - **morecantile** — Shigola's `tms` package is a faithful Go port of
   [developmentseed/morecantile](https://github.com/developmentseed/morecantile) 7.0.3, MIT licensed
   © Development Seed. Its document model, tile algorithms, bundled grid definitions and test suite
