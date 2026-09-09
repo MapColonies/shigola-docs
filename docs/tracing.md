@@ -119,7 +119,7 @@ theirs does:
 
 | Outgoing call | Carries trace context? |
 |:---|:---|
-| GCS cache tier | **Yes.** Its transport is wrapped in `otelhttp`, which reads the global propagator, so reads and writes inject `traceparent` and appear as client spans. |
+| GCS cache tier | **Yes.** Its transport is wrapped in `otelhttp`, which reads the global propagator, so reads and writes inject `traceparent` and appear as HTTP client spans. |
 | PostGIS queries | No. pgx is configured with a statement-logging tracer, not an OpenTelemetry one. |
 | S3 cache tier | No. The AWS SDK v1 client has no OpenTelemetry hook. |
 | Azure Blob cache tier | No. The Azure SDK has its own tracing abstraction rather than OpenTelemetry's. |
@@ -127,6 +127,13 @@ theirs does:
 For the three that do not, the call's latency is still visible as the duration of
 the `provider.MVTForLayers` or `cache.tier.*` span containing it — but the trace
 stops there rather than continuing into the database or the object store.
+
+Two details about the GCS case. Its spans are the HTTP transport's, at request
+level — the Google Cloud Storage client's own operation spans are gated behind
+an experimental `GO_STORAGE_DEV_OTEL_TRACING` flag that Shigola does not set. And
+the transport is built before tracing is installed, so it works only because
+OpenTelemetry's global propagator delegates rather than being captured at
+construction.
 
 The GCS client also reads the global *meter* provider, which Shigola leaves as a
 no-op, so none of this adds metrics.
