@@ -11,7 +11,8 @@ to [Grafana Tempo](https://grafana.com/oss/tempo/) or any collector that speaks
 it. It is **off by default** and configured in its own `[tracing]` section.
 
 Tracing runs *alongside* the [Prometheus observer](#relationship-to-metrics)
-rather than replacing it.
+rather than replacing it, and puts its trace ids on
+[log records](#relationship-to-logs).
 
 ## What tracing answers that metrics cannot
 
@@ -163,6 +164,14 @@ construction.
 
 The GCS client also reads the global *meter* provider, which Shigola leaves as a
 no-op, so none of this adds metrics.
+
+## Relationship to logs
+
+Every log record written while serving a traced request carries `trace_id` and
+`span_id` as top-level fields, which is what makes a trace in Tempo reach the
+log lines it produced and a log line reach its trace. The fields, the Grafana
+datasource wiring for both directions, and the sampling caveat are on the
+[Logging](./logging.md#trace-correlation) page.
 
 ## Relationship to metrics
 
