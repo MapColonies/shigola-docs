@@ -14,8 +14,9 @@ Shigola logs structured JSON to standard error, one object per line.
 
 Every record carries `time`, `level`, `msg`, and a `shigola` object naming the
 build and process that wrote it. Records at `ERROR` and above also carry a
-`stack` field. Records written while serving a
-[traced](./tracing.md) request carry two more — see
+top-level `stack` field — which was `shigola.stack` before trace correlation
+was added, so anything parsing that path needs updating. Records written while
+serving a [traced](./tracing.md) request carry two more fields — see
 [Trace correlation](#trace-correlation).
 
 ## Log Levels
@@ -39,8 +40,8 @@ unrecognised falls back to `info` rather than failing to start.
 
 ## Trace correlation
 
-When [tracing](./tracing.md) is enabled, every record written while serving a
-request carries that request's trace and span ids as top-level fields:
+When [tracing](./tracing.md) is enabled, the records written while serving a
+request carry that request's trace and span ids as top-level fields:
 
 ```json
 {"time":"2026-09-09T11:16:33.181Z","level":"ERROR","msg":"cache/multi: tier (redis) get: dial tcp: connection refused","shigola":{"version":"1.4.0","pid":1,"rev":"9f3c1ab"},"trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7"}
@@ -75,16 +76,27 @@ without a prefix.
 
 ### What is correlated, and what is not
 
-Correlated: cache tier read and promotion failures, PostGIS statement warnings
-and errors, the PostGIS SQL debug output, GCS cache operations, and the OGC
-handlers' response and cache failures. Detached cache writes are correlated too
-— a write completes after the response is sent, but still names the request that
-caused it.
+**Correlated:** cache tier read and promotion failures, PostGIS statement
+warnings and errors, the PostGIS SQL debug output, GCS cache operations, and the
+OGC handlers' response and cache failures. Detached cache writes are correlated
+too — a write completes after the response is sent, but still names the request
+that caused it.
 
-Not correlated, because there is no request to name: startup, configuration and
-shutdown lines, and the cache write pool's saturation warning, which is a
-property of the pool rather than of one request. No empty fields are added to
-these — the keys are simply absent.
+**Not correlated, because there is no request to name:** startup, configuration
+and shutdown lines, and the cache write pool's saturation warning, which is a
+property of the pool rather than of one request.
+
+**Not correlated, though written during a request:** three tile-grid errors —
+`tile grid ... has no EPSG code`, `Unsupported tile SRID` and `Could not
+generate valid extent for tile`. They are raised from signatures that take no
+context, and each reports a misconfigured tile matrix set, which fails
+identically for every request to that map rather than telling you anything
+about one. So an uncorrelated `ERROR` in the middle of a request is possible —
+if you see one of those three, the trace it belongs to is not recoverable from
+the line, and the fault is in the map's configuration rather than in that
+request.
+
+No empty fields are added in any of these cases; the keys are simply absent.
 
 :::warning
 **A trace id on a log line does not mean Tempo holds that trace.** The ids are
