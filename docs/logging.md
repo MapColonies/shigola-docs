@@ -8,22 +8,21 @@ description: "Managing logging output in Shigola"
 
 ## Log Levels
 
-In decreasing order of severity. Logs below the set level will be ignored.
+In decreasing order of severity. Logs below the set level are ignored.
 
-- `FATAL` - only log events that prevent the program from continuing i.e. can't allocate additional memory 
-- `ERROR` - only log event that prevent a valid execution, i.e. can't connect to a database
-- `WARN` - only log event that are unusual but don't prevent a valid execution, i.e. deprecation warnings
-- `INFO` - (default) least severe, helpful for debugging bot not too verbose
-- `DEBUG` - log high level info for developers, verbose
-- `TRACE` - very verbose
+- `error` - prevents a valid execution, i.e. can't connect to a database
+- `warn` - unusual but does not prevent a valid execution, i.e. deprecation warnings
+- `info` - (default) least severe level a sysadmin would want, i.e. request logs
+- `debug` - high level detail for developers, verbose
+- `silent` - emit nothing at all
 
 ### Set Log Levels
 
-Log levels can be set on start up
+Log levels can be set on start up. The value is case-insensitive, and anything
+unrecognised falls back to `info` rather than failing to start.
 
 ```bash
-/opt/shigola serve --log-level INFO
-
+/opt/shigola serve --log-level info
 ```
 
 
