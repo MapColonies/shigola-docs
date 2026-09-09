@@ -26,7 +26,8 @@ GET /collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{
 │   ├── cache.tier.Get  tier=hot        miss
 │   └── cache.tier.Get  tier=durable    miss
 ├── atlas.Encode                    map, scheme and tile on the span
-│   └── provider.MVTForLayers       the ST_AsMVT round trip
+│   └── provider.MVTForLayers       the SQL assembly and the query
+│       └── postgis.query           the round trip: statement, server, duration
 └── cache.tier.Set      tier=durable    the write, off the response path
 ```
 
@@ -145,7 +146,7 @@ theirs does:
 | Outgoing call | Carries trace context? |
 |:---|:---|
 | GCS cache tier | **Yes.** Its transport is wrapped in `otelhttp`, which reads the global propagator, so reads and writes inject `traceparent` and appear as HTTP client spans. |
-| PostGIS queries | No. pgx is configured with a statement-logging tracer, not an OpenTelemetry one. |
+| PostGIS queries | No. pgx is configured with a statement-logging tracer, not an OpenTelemetry one. Shigola does emit a `postgis.query` client span around the call, so the query is visible and timed — what does not happen is the trace continuing into the database. |
 | S3 cache tier | No. The AWS SDK v1 client has no OpenTelemetry hook. |
 | Azure Blob cache tier | No. The Azure SDK has its own tracing abstraction rather than OpenTelemetry's. |
 
@@ -184,9 +185,45 @@ traces tell you *where*, for one request.
 | `cache.tier.Get` / `cache.tier.Set` / `cache.tier.Purge` | one tier of a chain, carrying `shigola.cache.tier`                                                |
 | `atlas.Encode`                                           | the encode, carrying the map, scheme and tile coordinates                                          |
 | `provider.MVTForLayers`                                  | the provider query, carrying `shigola.provider` and `shigola.layer_count`                          |
+| `postgis.query`                                          | the `ST_AsMVT` round trip — see [The query span](#the-query-span)                                   |
 
 Attributes live in Shigola's own `shigola.*` namespace, because the OpenTelemetry
 semantic conventions have nothing for a tile or a cache tier.
+
+### The query span
+
+`postgis.query` is the exception: it uses the OpenTelemetry **database**
+conventions, which do exist and which Grafana and Tempo render specially.
+
+| Attribute                       | What                                            |
+|:--------------------------------|:------------------------------------------------|
+| `db.query.text`                 | the statement, parameterised                    |
+| `db.system.name`                | `postgresql`                                    |
+| `db.namespace`                  | the database name                               |
+| `server.address`, `server.port` | the server the query went to                    |
+| `shigola.db.query_truncated`    | present when the statement hit the size cap     |
+
+Its **duration is the database's own time**, where the enclosing
+`provider.MVTForLayers` also covers assembling the SQL. That is the split worth
+having: a tile that took 300ms because the query took 295ms is a database
+problem, and one where the query took 5ms is not.
+
+Three things about `db.query.text`:
+
+- **No parameter values.** Configured query parameters are passed to the driver
+  as arguments, so the statement holds `$1` placeholders — which is what the
+  conventions ask for, and what keeps client-supplied values out of traces.
+- **No credentials.** The server attributes come from three fields of the
+  connection config — host, port, database — and not from the user or password
+  it also holds.
+- **Capped at 8KiB**, cut on a UTF-8 boundary, with
+  `shigola.db.query_truncated` set when it cuts. A tile query is one statement
+  per layer, unioned, with the tile's tokens substituted, so a wide map
+  produces a large one.
+
+The statement is built only for a span that is being recorded, so tracing off
+or a sampling miss costs no string work, and
+`shigola_mvt_provider_query_seconds` is unaffected.
 
 A failed operation records its error on the span. The span's *status* is set to
 error only when the failure is Shigola's own: a read that failed because the
