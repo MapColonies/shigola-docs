@@ -16,6 +16,11 @@ The Shigola config file uses [TOML](https://github.com/toml-lang/toml) syntax wi
 - [Maps](#maps): map configuration including map names, layers and zoom levels.
 - [Cache](#cache): cache configurations.
 
+Two further sections are optional and documented on their own pages:
+
+- [Tracing](#tracing): `[tracing]`, OpenTelemetry export over OTLP.
+- `[observer]`: Prometheus metrics.
+
 > Two optional keys are worth knowing about up front:
 >
 > - A map may name the tiling schemes it serves with [`tile_matrix_sets`](#tile-matrix-sets).
@@ -517,6 +522,29 @@ Cache tiles in a GCS bucket.
 |:---------|:---------|:--------|:----------------------------------------------|
 | bucket   | Yes      |         | The name of the GCS bucket to use.           |
 | basepath | No       |         | A path prefix added to all cache operations. |
+
+## Tracing
+
+`[tracing]` configures OpenTelemetry trace export over OTLP. It is off unless
+the section says otherwise, and it is independent of `[observer]`: metrics and
+traces are switched on separately.
+
+```toml
+[tracing]
+enabled = true
+exporter = "otlp_grpc"
+endpoint = "tempo.observability:4317"
+insecure = true
+sample_ratio = 0.01
+```
+
+`endpoint` takes either `host:port` or a full URL; anything that cannot work is
+rejected at startup.
+
+**Do not run a production tile server at `sample_ratio = 1.0`** — each tile
+request produces several spans, so full sampling multiplies request rate by the
+span tree's width. See [Tracing](tracing.md) for every parameter, the sampling
+argument in full, and what the resulting span tree looks like.
 
 ## Env Var
 

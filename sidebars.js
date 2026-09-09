@@ -43,6 +43,7 @@ const sidebars = {
         'cache-seeding-and-purging',
         'debugging',
         'logging',
+        'tracing',
       ],
     },
   ],
