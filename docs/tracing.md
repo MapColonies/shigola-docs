@@ -254,11 +254,25 @@ whether or not Tempo kept the trace.
 
 ### Two limits
 
-**`le` label values changed.** Under OpenMetrics a bucket boundary that would
-otherwise look like an integer is written with a trailing `.0`, and a label value
-is part of a series' identity — so `le="1"` is now `le="1.0"`. That affects the
-1, 2.5 and 5 boundaries of the cache families and the 1, 5 and 10 of the HTTP
-one. Anything matching an exact `le` — a recording rule, a panel pinned to one
+**`le` label values changed.** Under OpenMetrics a boundary that renders as a
+whole number is written with a trailing `.0`, and a label value is part of a
+series' identity — so `le="1"` is now `le="1.0"`, which Prometheus sees as a
+different series.
+
+| Family | Respelled boundaries |
+|:---|:---|
+| `shigola_cache_duration_seconds`, `shigola_cache_tier_duration_seconds` | `1`, `5` |
+| `shigola_api_duration_seconds` | `1`, `5`, `10` |
+| `shigola_cache_response_size_bytes`, `shigola_cache_tier_response_size_bytes` | `1024`, `5120`, `25600`, `102400`, `256000`, `512000` |
+| `shigola_api_response_size_bytes` | `512000` |
+
+Two things about that table are worth reading twice. `2.5` is **not** in it — it
+already contains a `.` — and nor are the megabyte boundaries, which render as
+`1.048576e+06` and `5.24288e+06`. And the **response-size** families are in it
+even though they carry no exemplars: the format is negotiated once per scrape,
+not per family.
+
+Anything matching an exact `le` — a recording rule, a panel pinned to one
 bucket — needs checking against the new spelling. It was the price of exemplars
 being scrapeable at all.
 
