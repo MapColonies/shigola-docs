@@ -50,12 +50,37 @@ timeout_ms = 10000
 |:---------------|:---------|:----------------|:--------------------------------------------------------------------------------------------------------------|
 | `enabled`      | No       | `false`         | Absent or false installs the no-op backend and dials nothing.                                                 |
 | `exporter`     | No       | `otlp_grpc`     | OTLP transport: `otlp_grpc` or `otlp_http`. Tempo listens for gRPC on 4317 and HTTP on 4318.                   |
-| `endpoint`     | No       | *(SDK default)* | Collector address. Empty defers to the OTEL SDK, which reads `OTEL_EXPORTER_OTLP_ENDPOINT`.                    |
-| `insecure`     | No       | `false`         | Export without TLS. Normal for a collector reached over the pod network, wrong across anything else.           |
+| `endpoint`     | No       | *(SDK default)* | Collector address, as either `host:port` or a full URL — see [Endpoint shapes](#endpoint-shapes). Empty defers to the OTEL SDK, which reads `OTEL_EXPORTER_OTLP_ENDPOINT`. |
+| `insecure`     | No       | `false`         | Export without TLS. Normal for a collector reached over the pod network, wrong across anything else. Ignored when `endpoint` is a URL, whose scheme has already said. |
 | `sample_ratio` | No       | `0.01`          | Fraction of traces Shigola *starts* to record. See [Sampling](#sampling).                                      |
 | `service_name` | No       | `shigola`       | `service.name` on every span. Set it per deployment if several Shigolas report to one Tempo.                    |
 | `timeout_ms`   | No       | `10000`         | Bounds one export attempt.                                                                                     |
 | `[tracing.headers]` | No  |                 | Headers sent with each export request — an auth header, a Tempo tenant id.                                      |
+
+## Endpoint shapes
+
+Both of these work:
+
+```toml
+endpoint = "tempo.observability:4317"                   # host and port
+endpoint = "https://collector.example.io/v1/traces"     # a full URL
+```
+
+They are not interchangeable underneath — the OTLP exporters accept them through
+different options — and Shigola picks the right one from whether a scheme is
+present. Anything that cannot work is refused at **startup**, naming the key:
+
+- a path with no scheme, such as `tempo:4318/v1/traces`
+- a scheme that is not `http` or `https`
+- a non-numeric port
+- an `https` endpoint together with `insecure = true`, which ask for opposite
+  things
+
+:::warning
+**If traces stop arriving, check for `ERROR` lines prefixed `tracing:`.**
+A dead or unreachable collector is reported there. Earlier versions reported it
+at `INFO`, where a service running at `--log-level WARN` never saw it.
+:::
 
 `endpoint` is the one place Shigola does not use its own `SHIGOLA_*`
 [environment variable](configuration.md#env-var) convention. The OTLP exporters

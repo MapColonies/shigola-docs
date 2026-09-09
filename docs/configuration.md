@@ -538,6 +538,9 @@ insecure = true
 sample_ratio = 0.01
 ```
 
+`endpoint` takes either `host:port` or a full URL; anything that cannot work is
+rejected at startup.
+
 **Do not run a production tile server at `sample_ratio = 1.0`** — each tile
 request produces several spans, so full sampling multiplies request rate by the
 span tree's width. See [Tracing](tracing.md) for every parameter, the sampling
