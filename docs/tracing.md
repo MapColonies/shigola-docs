@@ -12,7 +12,8 @@ it. It is **off by default** and configured in its own `[tracing]` section.
 
 Tracing runs *alongside* the [Prometheus observer](#relationship-to-metrics)
 rather than replacing it, and puts its trace ids on
-[log records](#relationship-to-logs).
+[log records](#relationship-to-logs) and on the
+[duration histograms](#trace-exemplars).
 
 ## What tracing answers that metrics cannot
 
@@ -175,15 +176,95 @@ datasource wiring for both directions, and the sampling caveat are on the
 
 ## Relationship to metrics
 
-Tracing and metrics are configured and switched on independently: `[tracing]`
-and `[observer]` have nothing to say to each other. Metrics stay the Prometheus
-observer's job. Nothing in the tracing path registers a Prometheus collector or
+Tracing and metrics are switched on independently — `[tracing]` and `[observer]`
+are separate sections and neither implies the other. Metrics stay the Prometheus
+observer's job: nothing in the tracing path registers a Prometheus collector or
 installs an OpenTelemetry meter provider, so a build with tracing enabled
-publishes exactly the metric families it published before — which Shigola's own
+publishes exactly the metric families it published before, which Shigola's own
 test suite asserts rather than assuming.
 
+With both enabled, though, the two signals are joined in one direction: the
+duration histograms carry the active trace as a **Prometheus exemplar**.
+
 Use both. Metrics tell you *that* something is slow across the whole fleet;
-traces tell you *where*, for one request.
+traces tell you *where*, for one request. Exemplars are what get you from the
+first to the second without a search.
+
+### Trace exemplars
+
+Each duration observation made inside a **sampled** trace carries that trace and
+span, so a bucket in a Grafana histogram panel shows a dot you can click:
+
+| Family | The exemplar names |
+|:---|:---|
+| `shigola_cache_duration_seconds` | the cache operation as a whole |
+| `shigola_cache_tier_duration_seconds` | that tier's own read, write or purge |
+| `shigola_api_duration_seconds` | the request |
+
+The labels are `trace_id` and `span_id` — the same names the
+[log records](./logging.md#trace-correlation) carry.
+
+`span_id` names the operation measured rather than the request, which is the
+point on the per-tier family: a slow bucket there lands on the tier read that
+was slow, on the one histogram whose
+[whole purpose](./layered-cache.md#tier-latency-and-why-it-used-to-look-identical-everywhere)
+is telling tiers apart.
+
+Nothing is attached to an observation made outside a trace, or inside an
+unsampled one. The observation is recorded exactly as it would have been, with
+no empty label — so a panel looks the same as before, minus the dots.
+
+### Wiring it up in Grafana
+
+Three things have to be true, and each fails quietly on its own.
+
+**The scraper must ask for OpenMetrics.** It is the only exposition format that
+encodes exemplars; the classic Prometheus text format has no syntax for them and
+drops them without a word. Prometheus asks for it by default, and Shigola's
+`/metrics` answers in it — so this is normally already true, and worth checking
+first if the dots never appear.
+
+**The server must store them.** Prometheus needs
+`--enable-feature=exemplar-storage`; Mimir has its own equivalent. Without it
+the exemplars are scraped and discarded.
+
+**The Prometheus datasource needs the link.** In its *Exemplars* section, add
+one with the label name `trace_id` and the Tempo datasource as its target:
+
+```yaml
+exemplarTraceIdDestinations:
+  - name: trace_id
+    datasourceUid: <your Tempo datasource uid>
+```
+
+Without it the exemplars still render as dots on the panel, with nothing behind
+them.
+
+:::warning
+**An exemplar is only ever a link, so unsampled traces are deliberately left
+out.** Prometheus keeps one exemplar per bucket and overwrites it with the next
+observation to land there, so the stored one is almost always the most recent —
+and at the default `sample_ratio = 0.01` the most recent observation is almost
+never sampled. Attaching them regardless would make clicking a bucket open
+nothing roughly 99 times out of 100. This is the opposite of what
+[log records](./logging.md#trace-correlation) do with the same trace, and for
+the opposite reason: a log line's trace id still groups that request's lines
+whether or not Tempo kept the trace.
+:::
+
+### Two limits
+
+**`le` label values changed.** Under OpenMetrics a bucket boundary that would
+otherwise look like an integer is written with a trailing `.0`, and a label value
+is part of a series' identity — so `le="1"` is now `le="1.0"`. That affects the
+1, 2.5 and 5 boundaries of the cache families and the 1, 5 and 10 of the HTTP
+one. Anything matching an exact `le` — a recording rule, a panel pinned to one
+bucket — needs checking against the new spelling. It was the price of exemplars
+being scrapeable at all.
+
+**Pushed metrics carry no exemplars.** A deployment using the observer's
+`push_url` pushes through the classic text format to a Pushgateway, which has no
+notion of them. Everything above applies to scraped deployments only.
 
 ## Spans
 
