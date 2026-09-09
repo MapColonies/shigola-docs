@@ -74,6 +74,11 @@ Loki with the trace id off the span:
 Both keys are flat, so `| json` yields the labels `trace_id` and `span_id`
 without a prefix.
 
+The [duration histograms](./tracing.md#trace-exemplars) carry the same two names
+as Prometheus exemplars, so a trace reached from a log line and one reached from
+a latency spike are the same trace. Exemplars differ in one respect: they are
+attached only for sampled traces, for the reason given there.
+
 ### What is correlated, and what is not
 
 **Correlated:** cache tier read and promotion failures, PostGIS statement

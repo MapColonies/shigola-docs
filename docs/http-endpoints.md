@@ -25,7 +25,7 @@ it, apart from `/metrics`.
 | `/collections/{collectionId}/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}` | A vector tile |
 | `/tileMatrixSets` | The [tiling schemes](./tile-matrix-sets.md) served |
 | `/tileMatrixSets/{tileMatrixSetId}` | One scheme's definition |
-| `/metrics` | Prometheus metrics, when a Prometheus observer is configured. Cache metrics are listed under [Layered cache](./layered-cache.md#metrics). |
+| `/metrics` | Prometheus metrics, when a Prometheus observer is configured. Answers in OpenMetrics when the scraper asks for it, which is what carries [trace exemplars](./tracing.md#trace-exemplars). Cache metrics are listed under [Layered cache](./layered-cache.md#metrics). |
 
 Full documentation on [OGC API - Tiles](./ogc-api-tiles.md), including content negotiation, caching
 and the conformance classes declared.
