@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-configuration" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.10.2">
+<title data-rh="true">Shigola Configuration | Shigola</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/images/logo.png"><meta data-rh="true" name="twitter:image" content="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/images/logo.png"><meta data-rh="true" property="og:url" content="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/documentation/configuration"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Shigola Configuration | Shigola"><meta data-rh="true" name="description" content="Configure Shigola to process your geospatial data"><meta data-rh="true" property="og:description" content="Configure Shigola to process your geospatial data"><link data-rh="true" rel="icon" href="/shigola-docs/pr-preview/pr-16/images/logo.png"><link data-rh="true" rel="canonical" href="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/documentation/configuration"><link data-rh="true" rel="alternate" href="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/documentation/configuration" hreflang="en"><link data-rh="true" rel="alternate" href="https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/documentation/configuration" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Configuration","item":"https://mapcolonies.github.io/shigola-docs/pr-preview/pr-16/documentation/configuration"}]}</script><link rel="stylesheet" href="/shigola-docs/pr-preview/pr-16/assets/css/styles.70e0455e.css">
+<script src="/shigola-docs/pr-preview/pr-16/assets/js/runtime~main.d93116dd.js" defer="defer"></script>
+<script src="/shigola-docs/pr-preview/pr-16/assets/js/main.32dd7112.js" defer="defer"></script>
+</head>
+<body>
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/shigola-docs/pr-preview/pr-16/"><div class="navbar__logo"><img src="/shigola-docs/pr-preview/pr-16/images/logo.png" alt="Shigola" class="themedComponent_mlkZ themedComponent--light_NVdE"><img src="/shigola-docs/pr-preview/pr-16/images/logo.png" alt="Shigola" class="themedComponent_mlkZ themedComponent--dark_xIcU"></div><b class="navbar__title text--truncate">Shigola</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/shigola-docs/pr-preview/pr-16/documentation/">Documentation</a><a class="navbar__item navbar__link" href="/shigola-docs/pr-preview/pr-16/tutorials/">Tutorials</a><a class="navbar__item navbar__link" href="/shigola-docs/pr-preview/pr-16/support">Support</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a class="navbar__item navbar__link" href="/shigola-docs/pr-preview/pr-16/documentation/about">About Shigola</a><a class="navbar__item navbar__link" href="/shigola-docs/pr-preview/pr-16/download">Download</a><a href="https://github.com/MapColonies/shigola" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_Bca1"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="docsWrapper_hBAB"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type="button"></button><div class="docRoot_UBD9"><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class="sidebarViewport_aRkj"><div class="sidebar_njMd"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/shigola-docs/pr-preview/pr-16/documentation/"><span class="linkLabel_WmDU">Documentation Home</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/shigola-docs/pr-preview/pr-16/documentation/about"><span class="linkLabel_WmDU">About Shigola</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/shigola-docs/pr-preview/pr-16/documentation/getting-started"><span class="linkLabel_WmDU">Getting Started</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/shigola-docs/pr-preview/pr-16/documentation/configuration"><span class="categoryLinkLabel_W154">Reference</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/configuration"><span class="linkLabel_WmDU">Configuration</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/http-endpoints"><span class="linkLabel_WmDU">HTTP Endpoints</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" href="/shigola-docs/pr-preview/pr-16/documentation/tile-matrix-sets"><span class="categoryLinkLabel_W154">Added by this fork</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/tile-matrix-sets"><span class="linkLabel_WmDU">Tile Matrix Sets</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/ogc-api-tiles"><span class="linkLabel_WmDU">OGC API - Tiles</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/layered-cache"><span class="linkLabel_WmDU">Layered Cache</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="true" href="/shigola-docs/pr-preview/pr-16/documentation/cache-seeding-and-purging"><span class="categoryLinkLabel_W154">Operating</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/cache-seeding-and-purging"><span class="linkLabel_WmDU">Cache Seeding and Purging</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/debugging"><span class="linkLabel_WmDU">Debugging</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/logging"><span class="linkLabel_WmDU">Logging</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/shigola-docs/pr-preview/pr-16/documentation/tracing"><span class="linkLabel_WmDU">Tracing</span></a></li></ul></li></ul></nav></div></div></aside><main class="docMainContainer_TBSr"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_VOVn"><div class="docItemContainer_Djhp"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/shigola-docs/pr-preview/pr-16/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_YNFT"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Reference</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Configuration</span></li></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type="button" class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Shigola Configuration</h1></header><h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="overview">Overview<a href="#overview" class="hash-link" aria-label="Direct link to Overview" title="Direct link to Overview" translate="no">​</a></h2>
+<p>The Shigola config file uses <a href="https://github.com/toml-lang/toml" target="_blank" rel="noopener noreferrer" class="">TOML</a> syntax with additional support for <a href="#env-var" class="">environment variables</a>. It is comprised of five primary sections:</p>
+<ul>
+<li class=""><a href="#global" class="">Global</a>: global options</li>
+<li class=""><a href="#webserver" class="">Webserver</a>: webserver configuration.</li>
+<li class=""><a href="#providers" class="">Providers</a>: data provider configuration (i.e. PostGIS).</li>
+<li class=""><a href="#maps" class="">Maps</a>: map configuration including map names, layers and zoom levels.</li>
+<li class=""><a href="#cache" class="">Cache</a>: cache configurations.</li>
+</ul>
+<p>Two further sections are optional and documented on their own pages:</p>
+<ul>
+<li class=""><a href="#tracing" class="">Tracing</a>: <code>[tracing]</code>, OpenTelemetry export over OTLP.</li>
+<li class=""><code>[observer]</code>: Prometheus metrics.</li>
+</ul>
+<blockquote>
+<p>Two optional keys are worth knowing about up front:</p>
+<ul>
+<li class="">A map may name the tiling schemes it serves with <a href="#tile-matrix-sets" class=""><code>tile_matrix_sets</code></a>.</li>
+<li class=""><code>[cache]</code> accepts <code>type = &quot;multi&quot;</code> for a <a href="#layered-cache" class="">layered cache</a>, and <code>timeout_ms</code> on any
+cache.</li>
+</ul>
+</blockquote>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="global">Global<a href="#global" class="hash-link" aria-label="Direct link to Global" title="Direct link to Global" translate="no">​</a></h2>
+<p>Unlike the other sections, global config options do not have <code>[[]]</code> heading.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Param</th><th style="text-align:left">Requered</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td>tile_buffer</td><td style="text-align:left">No</td><td style="text-align:left">64</td><td style="text-align:left">The number of pixels to extend a tile&#x27;s clipping area</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="webserver">Webserver<a href="#webserver" class="hash-link" aria-label="Direct link to Webserver" title="Direct link to Webserver" translate="no">​</a></h2>
+<p>The webserver part of the config has the following parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td>port</td><td style="text-align:left">No</td><td style="text-align:left">:8080</td><td style="text-align:left">A string with the value for port.</td></tr><tr><td>hostname</td><td style="text-align:left">No</td><td style="text-align:left">HTTP Hostname in request</td><td style="text-align:left">Set the hostname used to generate URLs for JSON based responses.</td></tr><tr><td>uri_prefix</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A prefix to add to all API routes. This is useful when shigola is behind a proxy (i.e. example.com/shigola). The prefix will be added to all URLs Shigola includes in its responses.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="headers">Headers<a href="#headers" class="hash-link" aria-label="Direct link to Headers" title="Direct link to Headers" translate="no">​</a></h3>
+<p>Allows shigola to respond to tile request with user defined headers. Default <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank" rel="noopener noreferrer" class="">CORS</a> headers values:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Header</th><th style="text-align:left">Default</th></tr></thead><tbody><tr><td>Access-Control-Allow-Origin</td><td style="text-align:left">&quot;*&quot;</td></tr><tr><td>Access-Control-Allow-Methods</td><td style="text-align:left">&quot;GET, OPTIONS&quot;</td></tr></tbody></table>
+<p><strong>Example Webserver config</strong></p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">webserver</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">port</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;:8080&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">hostname</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;tiles.example.com&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">webserver.headers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># redefine default cors origin</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">Access-Control-Allow-Origin</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;http://map.example.com&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># define CDN max age</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">Cache-Control</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;s-maxage=300&quot;</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="providers">Providers<a href="#providers" class="hash-link" aria-label="Direct link to Providers" title="Direct link to Providers" translate="no">​</a></h2>
+<p>The providers configuration tells Shigola where your data lives. Data providers each have their own specific configuration, but all are required to have the following two config params:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">name</td><td style="text-align:left">User defined data provider name. This is used by map layers to reference the data provider.</td></tr><tr><td style="text-align:left">type</td><td style="text-align:left">The type of data provider. <code>mvt_postgis</code> is the only one.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="postgis">PostGIS<a href="#postgis" class="hash-link" aria-label="Direct link to PostGIS" title="Direct link to PostGIS" translate="no">​</a></h3>
+<p>Load data from a Postgres/PostGIS database. The type is <code>mvt_postgis</code>: the tile is encoded by the
+database with <a href="https://postgis.net/docs/ST_AsMVT.html" target="_blank" rel="noopener noreferrer" class=""><code>ST_AsMVT</code></a>, and Shigola serves the bytes it
+returns.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>warning</div><div class="admonitionContent_BuS1"><p><strong><code>postgis</code> was removed — use <code>mvt_postgis</code>.</strong> A second type, <code>postgis</code>, pulled raw geometry into
+Shigola and encoded the tile in Go. It returned distorted polygon and multipolygon geometries
+(<a href="https://github.com/go-spatial/tegola/issues/1104#issuecomment-4671741621" target="_blank" rel="noopener noreferrer" class="">go-spatial/tegola#1104</a>),
+which <code>mvt_postgis</code> renders correctly, and it no longer exists in this fork.</p><p>A config still naming it is rejected at startup rather than ignored:</p><div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">config: provider test_postgis uses type (postgis), which has been removed; use type (mvt_postgis) instead</span><br></div></code></pre></div></div><p>Changing the type is usually not enough on its own — see <a href="#postgis-1" class="">Provider Layers</a>, since an MVT
+layer&#x27;s <code>sql</code> must wrap the geometry in <code>ST_AsMVTGeom</code>.</p></div></div>
+<p>In addition to the required <code>name</code> and <code>type</code> parameters, a PostGIS data provider supports the following parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">uri</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">The database connection string.</td></tr><tr><td style="text-align:left">srid</td><td style="text-align:left">No</td><td style="text-align:left">3857</td><td style="text-align:left">The default SRID for this data provider</td></tr></tbody></table>
+<p><strong>Example</strong></p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain"># {protocol}://{user}:{password}@{host}:{port}/{database}?{options}=</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer&amp;pool_max_conns=10</span><br></div></code></pre></div></div>
+<p><strong>Options</strong></p>
+<ul>
+<li class=""><code>sslmode</code>: [Optional] PostGIS SSL mode. Default: &quot;prefer&quot;</li>
+<li class=""><code>pool_max_conns</code>: [Optional] The max connections to maintain in the connection pool. Defaults to 100. 0 means no max.</li>
+<li class=""><code>pool_min_conns</code>: [Optional] The min connections to maintain in the connection pool. Defaults to 0. 0 mean there are no open connections in the pool if not needed.</li>
+<li class=""><code>pool_max_conn_idle_time</code>: [Optional] The maximum time an idle connection is kept alive. Defaults to &quot;30m&quot;.</li>
+<li class=""><code>pool_max_conn_lifetime</code> [Optional] The maximum time a connection lives before it is terminated and recreated. Defaults to &quot;1h&quot;.</li>
+<li class=""><code>pool_health_check_period</code> [Optional] Time in between health checks. Defaults to &quot;1m&quot;.</li>
+</ul>
+<p><strong>Example PostGIS Provider config</strong></p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;test_postgis&quot;</span><span class="token plain">       </span><span class="token comment" style="color:#999988;font-style:italic"># provider name is referenced from map layers (required)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;mvt_postgis&quot;</span><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># the type of data provider must be &quot;mvt_postgis&quot; for this data provider (required)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">uri</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer&quot;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># PostGIS connection string (required)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">srid</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3857</span><span class="token plain">             </span><span class="token comment" style="color:#999988;font-style:italic"># The default srid for this provider. If not provided it will be WebMercator (3857)</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="provider-layers">Provider Layers<a href="#provider-layers" class="hash-link" aria-label="Direct link to Provider Layers" title="Direct link to Provider Layers" translate="no">​</a></h2>
+<p>Provider Layers are referenced by <a href="#map-layers" class="">Map Layers</a> using the dot syntax <code>provder_name.provider_layer_name</code> (i.e. <code>my_postgis.rivers</code>). Provider Layers are required to have a <code>name</code> and will typically have additional parameters which are specific to that Provider. A Provider Layer has the following top level configuration parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">name</td><td style="text-align:left">Yes</td><td style="text-align:left">The name that will be referenced from a map layer.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="postgis-1">PostGIS<a href="#postgis-1" class="hash-link" aria-label="Direct link to PostGIS" title="Direct link to PostGIS" translate="no">​</a></h3>
+<p>PostGIS Provider Layers define how Shigola will fetch data for a layer from a <a href="#postgis" class="">PostGIS</a>
+Provider. A layer is defined by <code>sql</code>, and the geometry it selects MUST be wrapped in
+<a href="https://postgis.net/docs/ST_AsMVTGeom.html" target="_blank" rel="noopener noreferrer" class=""><code>ST_AsMVTGeom()</code></a>: Shigola wraps the layer&#x27;s <code>sql</code> in
+<code>ST_AsMVT()</code> and serves what the database returns, so the transform into tile coordinates has to
+happen in the query.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left"><strong>sql</strong></td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">Custom SQL. Requires a <code>!BBOX!</code> token, and <code>ST_AsMVTGeom</code> around the geometry — see <a href="#layer-srid-and-tiling-scheme-crs" class="">Layer SRID and tiling scheme CRS</a></td></tr><tr><td style="text-align:left">geometry_fieldname</td><td style="text-align:left">No</td><td style="text-align:left">geom</td><td style="text-align:left">The name of the geometry field in the table</td></tr><tr><td style="text-align:left">id_fieldname</td><td style="text-align:left">No</td><td style="text-align:left">gid</td><td style="text-align:left">The name of the feature ID field in the table. Only positive integer IDs are supported.</td></tr><tr><td style="text-align:left">srid</td><td style="text-align:left">No</td><td style="text-align:left">3857</td><td style="text-align:left">The SRID for the table. Can be 3857 or 4326.</td></tr><tr><td style="text-align:left">geometry_type</td><td style="text-align:left">In practice, yes</td><td style="text-align:left"></td><td style="text-align:left">The layer geometry type. Valid values are: <code>Point</code>, <code>LineString</code>, <code>Polygon</code>, <code>MultiPoint</code>, <code>MultiLineString</code>, <code>MultiPolygon</code>, <code>GeometryCollection</code>. See below.</td></tr></tbody></table>
+<p><strong>Declare <code>geometry_type</code>.</strong> It is optional in the sense that Shigola will try to infer it, and the
+way it infers it is to run the layer&#x27;s SQL at startup and look at what comes back. A query ending in
+<code>ST_AsMVTGeom</code> returns tile-space geometry that cannot be typed, so inference fails and the provider
+refuses to start:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">error fetching geometry type for layer (land): layer (land) returned unsupported geometry type (&lt;nil&gt;)</span><br></div></code></pre></div></div>
+<p>A <code>tablename</code> may be given instead of <code>sql</code>, along with <code>fields</code> to choose the columns it selects.
+Both are accepted rather than rejected, and neither is usable here: Shigola generates a whole-table
+select with no <code>ST_AsMVTGeom</code> and no bounding-box filter, which <code>ST_AsMVT</code> cannot make a correct tile
+out of. They are leftovers of the removed <code>postgis</code> type, which is what that path was shaped for.</p>
+<div class="theme-admonition theme-admonition-danger admonition_xJq3 alert alert--danger"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M5.05.31c.81 2.17.41 3.38-.52 4.31C3.55 5.67 1.98 6.45.9 7.98c-1.45 2.05-1.7 6.53 3.53 7.7-2.2-1.16-2.67-4.52-.3-6.61-.61 2.03.53 3.33 1.94 2.86 1.39-.47 2.3.53 2.27 1.67-.02.78-.31 1.44-1.13 1.81 3.42-.59 4.78-3.42 4.78-5.56 0-2.84-2.53-3.22-1.25-5.61-1.52.13-2.03 1.13-1.89 2.75.09 1.08-1.02 1.8-1.86 1.33-.67-.41-.66-1.19-.06-1.78C8.18 5.31 8.68 2.45 5.05.32L5.03.3l.02.01z"></path></svg></span>danger</div><div class="admonitionContent_BuS1"><p>Which way a <code>tablename</code> layer fails depends on something unrelated to it. Without <code>geometry_type</code>
+the provider refuses to start, because inferring the type means reading that generated query back.
+<strong>With <code>geometry_type</code> — which you are told above to always declare — it starts, and serves
+whole-table tiles.</strong> Write the <code>sql</code>.</p></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="supported-sql-tokens">Supported SQL Tokens<a href="#supported-sql-tokens" class="hash-link" aria-label="Direct link to Supported SQL Tokens" title="Direct link to Supported SQL Tokens" translate="no">​</a></h4>
+<p>The <code>sql</code> configuration supports the following tokens</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Token</th><th style="text-align:left">Required</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">!BBOX!</td><td style="text-align:left">Yes</td><td style="text-align:left">The tile&#x27;s bounding box in <strong>the layer&#x27;s</strong> SRID — the one to select rows with, because it matches the SRID the spatial index is built in. !bbox! and !BOX! are supported as well for compatibility with queries from Mapnik and MapServer styles.</td></tr><tr><td style="text-align:left">!TILE_BBOX!</td><td style="text-align:left">Yes, for <code>ST_AsMVTGeom</code></td><td style="text-align:left">The same bounding box in <strong>the tiling scheme&#x27;s</strong> CRS — the one to clip against. See <a href="#layer-srid-and-tiling-scheme-crs" class="">Layer SRID and tiling scheme CRS</a>.</td></tr><tr><td style="text-align:left">!TILE_SRID!</td><td style="text-align:left">No</td><td style="text-align:left">The EPSG code of the tiling scheme&#x27;s CRS.</td></tr><tr><td style="text-align:left">!ZOOM!</td><td style="text-align:left">No</td><td style="text-align:left">Will be replaced with the &quot;Z&quot; (zoom) value of the requested tile.</td></tr><tr><td style="text-align:left">!X!</td><td style="text-align:left">No</td><td style="text-align:left">Will be replaced with the &quot;X&quot; value of the requested tile.</td></tr><tr><td style="text-align:left">!Y!</td><td style="text-align:left">No</td><td style="text-align:left">Will be replaced with the &quot;Y&quot; value of the requested tile.</td></tr><tr><td style="text-align:left">!Z!</td><td style="text-align:left">No</td><td style="text-align:left">Will be replaced with the &quot;Z&quot; value of the requested tile.</td></tr><tr><td style="text-align:left">!WEB_MERCATOR_ZOOM!</td><td style="text-align:left">No</td><td style="text-align:left">The WebMercatorQuad zoom with the same scale denominator as this tile&#x27;s. Equal to <code>!ZOOM!</code> in WebMercatorQuad; one higher in WorldCRS84Quad and WGS1984Quad. Use it where a query&#x27;s generalisation thresholds were tuned against the mercator zoom ladder.</td></tr><tr><td style="text-align:left">!SCALE_DENOMINATOR!</td><td style="text-align:left">No</td><td style="text-align:left">Scale denominator, assuming 90.7 DPI (i.e. 0.28mm pixel size)</td></tr><tr><td style="text-align:left">!PIXEL_WIDTH!</td><td style="text-align:left">No</td><td style="text-align:left">The pixel width in meters.</td></tr><tr><td style="text-align:left">!PIXEL_HEIGHT!</td><td style="text-align:left">No</td><td style="text-align:left">The pixel height in meters.</td></tr><tr><td style="text-align:left">!ID_FIELD!</td><td style="text-align:left">No</td><td style="text-align:left">The id field name.</td></tr><tr><td style="text-align:left">!GEOM_FIELD!</td><td style="text-align:left">No</td><td style="text-align:left">The geom field name.</td></tr><tr><td style="text-align:left">!GEOM_TYPE!</td><td style="text-align:left">No</td><td style="text-align:left">The geom type if defined otherwise.</td></tr></tbody></table>
+<p><strong>Example minimum Provider Layer config</strong></p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;landuse&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># this table uses &#x27;geom&#x27; for the geometry_fieldname and &#x27;gid&#x27; for the id_fieldname (the defaults),</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># so neither needs to be configured. Wrapping the geom in ST_AsMVTGeom is required.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multipolygon&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!),!TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom &amp;&amp; !BBOX!&quot;</span><br></div></code></pre></div></div>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="layer-srid-and-tiling-scheme-crs">Layer SRID and tiling scheme CRS<a href="#layer-srid-and-tiling-scheme-crs" class="hash-link" aria-label="Direct link to Layer SRID and tiling scheme CRS" title="Direct link to Layer SRID and tiling scheme CRS" translate="no">​</a></h4>
+<p><code>ST_AsMVTGeom</code> maps a geometry onto the tile&#x27;s 0–4096 grid affinely, across whatever envelope it is
+handed. That makes the envelope&#x27;s CRS the CRS the tile is spaced by — so it has to be the tiling
+scheme&#x27;s, and the geometry has to be in the same one.</p>
+<p>Those coincide for a 3857 layer served in WebMercatorQuad, which is why a single <code>!BBOX!</code> did both
+jobs while that was the only combination Shigola served. They do not coincide for a 3857 layer served
+in WorldCRS84Quad: hand <code>ST_AsMVTGeom</code> the mercator envelope there and the tile comes back spaced by
+mercator y inside a frame the client draws as linear in latitude. At zoom 1 that puts everything
+between the equator and 85°N into the bottom 8.4% of the tile.</p>
+<p>So the two tokens do different jobs, and a layer that may be served in more than one scheme uses
+both:</p>
+<ul>
+<li class=""><strong><code>!BBOX!</code> selects.</strong> It arrives in the layer&#x27;s own SRID, so <code>geom &amp;&amp; !BBOX!</code> can use the spatial
+index.</li>
+<li class=""><strong><code>!TILE_BBOX!</code> clips.</strong> It arrives in the scheme&#x27;s CRS, and the geometry given alongside it has to
+be transformed to <code>!TILE_SRID!</code> to match.</li>
+</ul>
+<p><code>ST_Transform</code> is a no-op when the layer is already in the scheme&#x27;s CRS, so this form is correct in
+every scheme and there is no reason to write anything else — including for a 4326 layer:</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;landuse&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># !BBOX! is converted into the layer&#x27;s SRID, so it matches the 4326 data as stored;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># !TILE_BBOX! and !TILE_SRID! follow whichever scheme the request named.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multipolygon&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!),!TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom &amp;&amp; !BBOX!&quot;</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="maps">Maps<a href="#maps" class="hash-link" aria-label="Direct link to Maps" title="Direct link to Maps" translate="no">​</a></h2>
+<p>Shigola is responsible for serving vector map tiles, which are made up of numerous <a href="#map-layers" class="">Map Layers</a>. The name of the Map is its OGC collection id, and so appears in the URL of every tile request (i.e. /collections/:map_name/tiles/:tile_matrix_set_id/:tile_matrix/:tile_row/:tile_col). Maps have the following configuration parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">name</td><td style="text-align:left">Yes</td><td style="text-align:left">The map&#x27;s collection id, referenced in the URL (i.e. /collections/:map_name/tiles/...).</td></tr><tr><td style="text-align:left">attribution</td><td style="text-align:left">No</td><td style="text-align:left">Attribution string to be included in the TileJSON.</td></tr><tr><td style="text-align:left">bounds</td><td style="text-align:left">No</td><td style="text-align:left">The bounds in latitude and longitude values, in the order left, bottom, right, top. Default: <code>[-180.0, -85.0511, 180.0, 85.0511]</code></td></tr><tr><td style="text-align:left">center</td><td style="text-align:left">No</td><td style="text-align:left">The center of the map to be displayed in the preview. (<code>[lon, lat, zoom]</code>).</td></tr><tr><td style="text-align:left">tile_buffer</td><td style="text-align:left">No</td><td style="text-align:left">The number of pixels to extend a tile&#x27;s clipping area, defaults to <code>64</code> or the <a href="#global" class="">global</a> value</td></tr><tr><td style="text-align:left">tile_matrix_sets</td><td style="text-align:left">No</td><td style="text-align:left">The <a href="#tile-matrix-sets" class="">tiling schemes</a> this map may be requested in. Omitted, every scheme the build serves.</td></tr><tr><td style="text-align:left">serve_layer_collections</td><td style="text-align:left">No</td><td style="text-align:left">Whether this map&#x27;s layers are <a href="#serve-layer-collections" class="">addressable on their own</a>. Default <code>true</code>.</td></tr></tbody></table>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;zoning&quot;</span><span class="token plain">		</span><span class="token comment" style="color:#999988;font-style:italic"># the collection id: /collections/zoning/tiles/...</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">attribution</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;Natural Earth v4&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">center</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token number" style="color:#36acaa">-76.275329586789</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">39.153492567373</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">5.0</span><span class="token punctuation" style="color:#393A34">]</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="tile-matrix-sets">Tile matrix sets<a href="#tile-matrix-sets" class="hash-link" aria-label="Direct link to Tile matrix sets" title="Direct link to Tile matrix sets" translate="no">​</a></h3>
+<p><code>tile_matrix_sets</code> names the tiling schemes a map may be requested in. It is configured per map, not
+per layer or per provider.</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;parks&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Omit for every scheme this build serves.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">tile_matrix_sets</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">&quot;WebMercatorQuad&quot;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;WorldCRS84Quad&quot;</span><span class="token punctuation" style="color:#393A34">]</span><br></div></code></pre></div></div>
+<p>This build serves the schemes that need no coordinate transformation backend:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">tileMatrixSetId</th><th style="text-align:left">CRS</th><th style="text-align:left">Matrix at zoom z</th></tr></thead><tbody><tr><td style="text-align:left"><code>WebMercatorQuad</code></td><td style="text-align:left">EPSG:3857</td><td style="text-align:left">2^z × 2^z</td></tr><tr><td style="text-align:left"><code>WorldCRS84Quad</code></td><td style="text-align:left">OGC:CRS84</td><td style="text-align:left">2·2^z × 2^z</td></tr><tr><td style="text-align:left"><code>WGS1984Quad</code></td><td style="text-align:left">EPSG:4326</td><td style="text-align:left">2·2^z × 2^z</td></tr></tbody></table>
+<p>Naming a scheme this build cannot serve is a startup error that lists the available ones. The other
+schemes in the OGC register ship with the build but are not servable; <code>/tileMatrixSets</code> lists only
+what can be served.</p>
+<p><strong>Changing a map&#x27;s schemes changes its cache keys</strong> — purge and re-seed that map.</p>
+<p>Full detail: <a class="" href="/shigola-docs/pr-preview/pr-16/documentation/tile-matrix-sets">Tile Matrix Sets</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="serve-layer-collections">Serve layer collections<a href="#serve-layer-collections" class="hash-link" aria-label="Direct link to Serve layer collections" title="Direct link to Serve layer collections" translate="no">​</a></h3>
+<p>A map publishes one collection for itself and one for each of its layers, so a client can ask for
+the whole map or for a single layer of it. <code>serve_layer_collections = false</code> drops the layer tier
+for that map: it publishes its whole-map collection only.</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;parks&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># /collections/parks works; /collections/parks:trees is not found.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">serve_layer_collections</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">false</span><br></div></code></pre></div></div>
+<p>The layer ids stop resolving everywhere — the collections listing omits them, and asking for one by
+id, for its tilesets or for one of its tiles is a 404. Nothing else changes: the whole-map
+collection, its tilesets and its tiles are exactly what they were, and its tiles still carry every
+layer.</p>
+<p>It is configured per map, so a map that declines the tier and a map that says nothing about it work
+side by side in one config.</p>
+<p><strong>Cache entries a layer collection already served become unreachable.</strong> A tile&#x27;s cache key carries
+the layer it was served for, and nothing reads those keys once the layer ids stop resolving. The
+<code>cache seed</code> and <code>cache purge</code> commands only ever address a map&#x27;s own key — they pass an empty layer
+— so neither can clear them, and removing them means deleting them from the cache backend. The key
+is <code>{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}</code>, so a file or S3 cache holds one layer directory
+per scheme the map is served in, not one per map.</p>
+<p>See <a class="" href="/shigola-docs/pr-preview/pr-16/documentation/ogc-api-tiles#collections">OGC API - Tiles</a> for how the two collection tiers are addressed.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="map-layers">Map Layers<a href="#map-layers" class="hash-link" aria-label="Direct link to Map Layers" title="Direct link to Map Layers" translate="no">​</a></h3>
+<p>Map Layers define which <a href="#provider-layers" class="">Provider Layers</a> to render at what zoom levels. Map Layers have the following configuration parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">provider_layer</td><td style="text-align:left">Yes</td><td style="text-align:left">The name of the provider and provider layer using dot syntax. (i.e. my_postgis.rivers).</td></tr><tr><td style="text-align:left">name</td><td style="text-align:left">No</td><td style="text-align:left">Overrides the <code>provider_layer</code> name. Can also be used to group multiple <code>provider_layers</code> under the same namespace.</td></tr><tr><td style="text-align:left">min_zoom</td><td style="text-align:left">No</td><td style="text-align:left">The minimum zoom to render this layer at.</td></tr><tr><td style="text-align:left">max_zoom</td><td style="text-align:left">No</td><td style="text-align:left">The maximum zoom to render this layer at.</td></tr></tbody></table>
+<p><strong>Example Map Layer</strong></p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">provider_layer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;test_postgis.landuse&quot;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># must match a data provider layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">min_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">12</span><span class="token plain">                       	</span><span class="token comment" style="color:#999988;font-style:italic"># minimum zoom level to include this layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">max_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">16</span><span class="token plain">                       	</span><span class="token comment" style="color:#999988;font-style:italic"># maximum zoom level to include this layer</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="cache">Cache<a href="#cache" class="hash-link" aria-label="Direct link to Cache" title="Direct link to Cache" translate="no">​</a></h2>
+<p>This section configures caches for generated tiles. There is exactly <strong>one</strong> <code>[cache]</code> table for the
+whole process — per-map cache selection is not a feature. All cache configs have the following
+parameters:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">type</td><td style="text-align:left">Yes</td><td style="text-align:left">The type of cache to use (<code>file</code>, <code>redis</code>, <code>s3</code>, <code>azblob</code>, <code>gcs</code>, or <code>multi</code>)</td></tr><tr><td style="text-align:left">max_zoom</td><td style="text-align:left">No</td><td style="text-align:left">The max zoom which should be cached.</td></tr><tr><td style="text-align:left">timeout_ms</td><td style="text-align:left">No</td><td style="text-align:left">A read deadline for this cache, in integer milliseconds. See <a href="#timeout-ms" class="">below</a>.</td></tr></tbody></table>
+<blockquote>
+<p><strong>Cache writes do not block the response</strong> — every cache, chained or not, hands its write to a
+bounded pool after the response is flushed, including single-backend deployments. See
+<a class="" href="/shigola-docs/pr-preview/pr-16/documentation/layered-cache#writes-do-not-block-the-response">Layered cache</a>.</p>
+</blockquote>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="timeout-ms"><code>timeout_ms</code><a href="#timeout-ms" class="hash-link" aria-label="Direct link to timeout-ms" title="Direct link to timeout-ms" translate="no">​</a></h3>
+<p>An optional per-cache read deadline, in <strong>integer milliseconds</strong>. It carries its unit where the
+adjacent <code>ttl</code> takes bare seconds. It applies to any cache at any nesting depth, including a plain
+non-chained <code>[cache]</code> table, and affects <code>Get</code> only.</p>
+<p>It is <strong>enforced</strong> by <code>redis</code>, <code>s3</code>, <code>azblob</code> and <code>gcs</code>, and only <strong>advisory</strong> for <code>file</code>, whose
+<code>os.Open</code>/<code>Stat</code> calls block before any cancellation check — on an NFS/EFS mount use the mount&#x27;s own
+<code>soft</code> and <code>timeo=</code> options instead.</p>
+<p>A read that times out is a <strong>miss, not an error</strong>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="layered-cache">Layered cache<a href="#layered-cache" class="hash-link" aria-label="Direct link to Layered cache" title="Direct link to Layered cache" translate="no">​</a></h3>
+<p><code>type = &quot;multi&quot;</code> puts an ordered chain of cache backends behind the single <code>[cache]</code> table. Reads walk
+the tiers in declaration order and promote a hit into the earlier ones; writes fan out; purges run in
+reverse.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">layers</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">The ordered list of tiers, as <code>[[cache.layers]]</code> tables. Declaration order is read order.</td></tr><tr><td style="text-align:left">promote_on_hit</td><td style="text-align:left">No</td><td style="text-align:left"><code>true</code></td><td style="text-align:left">Promote a later-tier hit into the earlier tiers. <code>false</code> gives a read-only fan-out.</td></tr></tbody></table>
+<p>Each <code>[[cache.layers]]</code> entry takes its backend&#x27;s own parameters, plus <code>timeout_ms</code> and an optional
+<code>name</code> that pins the tier&#x27;s metric label and <code>--cache-tiers</code> value.</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">           </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multi&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">promote_on_hit</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">       </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">ttl</span><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3600</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">timeout_ms</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">35</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain">       </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;hot&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">   </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;s3&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">bucket</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;tiles&quot;</span><br></div></code></pre></div></div>
+<p>Note that <code>[[cache.layers]]</code> headers are <em>siblings</em> however deeply they are indented — TOML
+indentation is cosmetic. Real nesting needs <code>[[cache.layers.layers]]</code>.</p>
+<p>Full detail, including metrics and operations: <a class="" href="/shigola-docs/pr-preview/pr-16/documentation/layered-cache">Layered cache</a>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="file">File<a href="#file" class="hash-link" aria-label="Direct link to File" title="Direct link to File" translate="no">​</a></h3>
+<p>Cache tiles in a directory on the local filesystem.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">basepath</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">A directory on the file system to write the cached tiles to.</td></tr><tr><td style="text-align:left">ttl</td><td style="text-align:left">No</td><td style="text-align:left">0</td><td style="text-align:left">Seconds after which a cached tile is treated as expired. 0 means no expiry.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="redis">Redis<a href="#redis" class="hash-link" aria-label="Direct link to Redis" title="Direct link to Redis" translate="no">​</a></h3>
+<p>Cache tiles in <a href="https://redis.io/" target="_blank" rel="noopener noreferrer" class="">Redis</a>.</p>
+<p>When no parameters are supplied, this cache will try and connect to a local Redis
+instance with default configuration.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">uri</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left"><code>redis://</code> or <code>rediss://</code> followed by <code>&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;database&gt;</code>. The preferred form.</td></tr><tr><td style="text-align:left">network</td><td style="text-align:left">No</td><td style="text-align:left"><code>tcp</code></td><td style="text-align:left"><em>Deprecated.</em> The type of connection (<code>tcp</code> or <code>unix</code>)</td></tr><tr><td style="text-align:left">address</td><td style="text-align:left">No</td><td style="text-align:left">127.0.0.1:6379</td><td style="text-align:left"><em>Deprecated.</em> The address of Redis in the form <code>ip:port</code>.</td></tr><tr><td style="text-align:left">password</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">Password to use when connecting. <strong>Takes precedence over a password in <code>uri</code>.</strong></td></tr><tr><td style="text-align:left">db</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left"><em>Deprecated.</em> Database to use (int).</td></tr><tr><td style="text-align:left">ttl</td><td style="text-align:left">No</td><td style="text-align:left">0</td><td style="text-align:left">Key TTL in seconds. 0 means the key has no expiration.</td></tr><tr><td style="text-align:left">key_prefix</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A string prepended to every cache key, so one Redis instance can be shared.</td></tr><tr><td style="text-align:left">ssl</td><td style="text-align:left">No</td><td style="text-align:left">false</td><td style="text-align:left"><em>Deprecated.</em> Encrypt connection to the Redis server.</td></tr></tbody></table>
+<p>Connecting via <code>uri</code> is the default from v0.22.0 onwards; <code>network</code>, <code>address</code>, <code>db</code> and <code>ssl</code> are
+deprecated in its favour. <code>password</code> is <strong>not</strong> deprecated — when both are given the <code>password</code> key
+wins over the credential in the uri, including when it is present and empty, which asks for no
+password rather than falling back to the uri&#x27;s.</p>
+<p><code>key_prefix</code> is concatenated verbatim, so <strong>supply your own separator</strong>: <code>key_prefix = &quot;shigola:&quot;</code>
+gives keys like <code>shigola:WebMercatorQuad/mymap/mylayer/10/511/340</code>, whereas <code>key_prefix = &quot;shigola&quot;</code>
+gives <code>shigolaWebMercatorQuad/...</code>.</p>
+<h4 class="anchor anchorTargetStickyNavbar_Vzrq" id="passwords-with-special-characters">Passwords with special characters<a href="#passwords-with-special-characters" class="hash-link" aria-label="Direct link to Passwords with special characters" title="Direct link to Passwords with special characters" translate="no">​</a></h4>
+<p>A <code>uri</code> is parsed as a URL, so a password inside one must be percent-encoded. Unencoded, the outcome
+depends on the character:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">In the uri</th><th style="text-align:left">Result</th></tr></thead><tbody><tr><td style="text-align:left"><code>^</code> <code>[</code> <code>]</code> <code>{</code> <code>}</code> <code>|</code> <code>&lt;</code> <code>&gt;</code> <code>\</code> <code>&quot;</code> space</td><td style="text-align:left">startup fails with <code>net/url: invalid userinfo</code></td></tr><tr><td style="text-align:left"><code>%</code></td><td style="text-align:left">startup fails with <code>invalid URL escape</code></td></tr><tr><td style="text-align:left"><code>/</code> <code>?</code></td><td style="text-align:left">startup fails — the authority ends there</td></tr><tr><td style="text-align:left"><code>#</code></td><td style="text-align:left"><strong>truncates the uri at that point.</strong> Usually a startup error, but when what remains still parses it silently yields the wrong password</td></tr><tr><td style="text-align:left"><code>$</code> <code>@</code> <code>&amp;</code> <code>!</code> <code>*</code> <code>(</code> <code>)</code> <code>+</code> <code>=</code> <code>:</code> <code>~</code> <code>,</code> <code>;</code> <code>&#x27;</code></td><td style="text-align:left">works unencoded</td></tr></tbody></table>
+<p>Percent-encode, or use the separate <code>password</code> key, which is not subject to URL rules:</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">     </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">uri</span><span class="token plain">      </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis://user@localhost:6379/0&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">password</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;${SECRET_REDIS_PASSWORD}&quot;</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="s3">S3<a href="#s3" class="hash-link" aria-label="Direct link to S3" title="Direct link to S3" translate="no">​</a></h3>
+<p>Cache tiles in Amazon S3, or any S3-compatible store via <code>endpoint</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">bucket</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">The name of the S3 bucket to use.</td></tr><tr><td style="text-align:left">basepath</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A path prefix added to all cache operations inside the S3 bucket</td></tr><tr><td style="text-align:left">region</td><td style="text-align:left">No</td><td style="text-align:left">us-east-1</td><td style="text-align:left">The region the bucket is in.</td></tr><tr><td style="text-align:left">endpoint</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A non-AWS S3-compatible endpoint.</td></tr><tr><td style="text-align:left">aws_access_key_id</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The AWS access key id to use.</td></tr><tr><td style="text-align:left">aws_secret_access_key</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The AWS secret access key to use.</td></tr><tr><td style="text-align:left">access_control_list</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The canned ACL to apply to written objects.</td></tr><tr><td style="text-align:left">cache_control</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The <code>Cache-Control</code> header to store with written objects.</td></tr><tr><td style="text-align:left">content_type</td><td style="text-align:left">No</td><td style="text-align:left">application/vnd.mapbox-vector-tile</td><td style="text-align:left">The <code>Content-Type</code> to store with written objects.</td></tr></tbody></table>
+<p>If the <code>aws_access_key_id</code> and <code>aws_secret_access_key</code> are not set, then the
+<a href="https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html" target="_blank" rel="noopener noreferrer" class="">credential provider chain</a>
+will be used. The provider chain supports multiple methods for passing credentials, one of which is
+through environment variables. For example:</p>
+<div class="language-bash codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-bash codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token plain">$ </span><span class="token builtin class-name">export</span><span class="token plain"> </span><span class="token assign-left variable" style="color:#36acaa">AWS_REGION</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">us-west-2</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">$ </span><span class="token builtin class-name">export</span><span class="token plain"> </span><span class="token assign-left variable" style="color:#36acaa">AWS_ACCESS_KEY_ID</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">YOUR_AKID</span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">$ </span><span class="token builtin class-name">export</span><span class="token plain"> </span><span class="token assign-left variable" style="color:#36acaa">AWS_SECRET_ACCESS_KEY</span><span class="token operator" style="color:#393A34">=</span><span class="token plain">YOUR_SECRET_KEY</span><br></div></code></pre></div></div>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="azure-blob-storage">Azure Blob Storage<a href="#azure-blob-storage" class="hash-link" aria-label="Direct link to Azure Blob Storage" title="Direct link to Azure Blob Storage" translate="no">​</a></h3>
+<p>Cache tiles in an Azure Blob Storage container.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">container_url</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">The URL of the blob container to write to.</td></tr><tr><td style="text-align:left">az_account_name</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The storage account name.</td></tr><tr><td style="text-align:left">az_shared_key</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">The storage account shared key.</td></tr><tr><td style="text-align:left">basepath</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A path prefix added to all cache operations.</td></tr><tr><td style="text-align:left">read_only</td><td style="text-align:left">No</td><td style="text-align:left">false</td><td style="text-align:left">Serve from the container without writing to it.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="google-cloud-storage">Google Cloud Storage<a href="#google-cloud-storage" class="hash-link" aria-label="Direct link to Google Cloud Storage" title="Direct link to Google Cloud Storage" translate="no">​</a></h3>
+<p>Cache tiles in a GCS bucket.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th style="text-align:left">Param</th><th style="text-align:left">Required</th><th style="text-align:left">Default</th><th style="text-align:left">Description</th></tr></thead><tbody><tr><td style="text-align:left">bucket</td><td style="text-align:left">Yes</td><td style="text-align:left"></td><td style="text-align:left">The name of the GCS bucket to use.</td></tr><tr><td style="text-align:left">basepath</td><td style="text-align:left">No</td><td style="text-align:left"></td><td style="text-align:left">A path prefix added to all cache operations.</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="tracing">Tracing<a href="#tracing" class="hash-link" aria-label="Direct link to Tracing" title="Direct link to Tracing" translate="no">​</a></h2>
+<p><code>[tracing]</code> configures OpenTelemetry trace export over OTLP. It is off unless
+the section says otherwise, and it is independent of <code>[observer]</code>: metrics and
+traces are switched on separately. With both on, the duration histograms carry
+<a class="" href="/shigola-docs/pr-preview/pr-16/documentation/tracing#trace-exemplars">trace exemplars</a>.</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">tracing</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">enabled</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">exporter</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;otlp_grpc&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">endpoint</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;tempo.observability:4317&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">insecure</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">sample_ratio</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0.01</span><br></div></code></pre></div></div>
+<p><code>endpoint</code> takes either <code>host:port</code> or a full URL; anything that cannot work is
+rejected at startup.</p>
+<p><strong>Do not run a production tile server at <code>sample_ratio = 1.0</code></strong> — each tile
+request produces several spans, so full sampling multiplies request rate by the
+span tree&#x27;s width. See <a class="" href="/shigola-docs/pr-preview/pr-16/documentation/tracing">Tracing</a> for every parameter, the sampling
+argument in full, and what the resulting span tree looks like.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="env-var">Env Var<a href="#env-var" class="hash-link" aria-label="Direct link to Env Var" title="Direct link to Env Var" translate="no">​</a></h2>
+<p>Environmental variables can be used in any configuration option. However, they must be written within quotes as a string:</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key property" style="color:#36acaa">tile_buffer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;${SHIGOLA_TILE_BUFFER}&quot;</span><span class="token plain">     </span><span class="token comment" style="color:#999988;font-style:italic"># note that tile buffer expects an integer, shigola will handle the conversion</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">password</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;${SECRET_REDIS_PASSWORD}&quot;</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="full-config-example">Full Config Example<a href="#full-config-example" class="hash-link" aria-label="Direct link to Full Config Example" title="Direct link to Full Config Example" translate="no">​</a></h2>
+<p>The following config demonstrates the various concepts discussed above:</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key property" style="color:#36acaa">tile_buffer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">64</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">webserver</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">port</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;:9090&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token punctuation" style="color:#393A34">=</span><span class="token string" style="color:#e3116c">&quot;file&quot;</span><span class="token plain">             </span><span class="token comment" style="color:#999988;font-style:italic"># cache type</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">basepath</span><span class="token punctuation" style="color:#393A34">=</span><span class="token string" style="color:#e3116c">&quot;/tmp/shigola&quot;</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># cache specific config</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># register data providers</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;test_postgis&quot;</span><span class="token plain">   </span><span class="token comment" style="color:#999988;font-style:italic"># provider name is referenced from map layers</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;mvt_postgis&quot;</span><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># PostGIS does the MVT encoding, via ST_AsMVT</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">uri</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer&quot;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># PostGIS connection string (required)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">srid</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3857</span><span class="token plain">             </span><span class="token comment" style="color:#999988;font-style:italic"># The default srid for this provider. If not provided it will be WebMercator (3857)</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># `sql` is what a layer is defined by, and the geometry must be wrapped in</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># ST_AsMVTGeom — which shigola cannot generate from a `tablename`. A layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># using `tablename` is parsed rather than rejected, and then fails at</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># startup while shigola tries to infer its geometry type.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic">#</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># geometry_type is declared for the same reason: that inference reads the</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># layer&#x27;s SQL back, and cannot type what ST_AsMVTGeom returns.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;landuse&quot;</span><span class="token plain">                        </span><span class="token comment" style="color:#999988;font-style:italic"># will be encoded as the layer name in the tile</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">geometry_fieldname</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;geom&quot;</span><span class="token plain">             </span><span class="token comment" style="color:#999988;font-style:italic"># geom field. default is geom</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">id_fieldname</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;gid&quot;</span><span class="token plain">                    </span><span class="token comment" style="color:#999988;font-style:italic"># geom id field. default is gid</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multipolygon&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.zoning_base_3857 WHERE geom &amp;&amp; !BBOX!&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;roads&quot;</span><span class="token plain">                          </span><span class="token comment" style="color:#999988;font-style:italic"># will be encoded as the layer name in the tile</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">geometry_fieldname</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;geom&quot;</span><span class="token plain">             </span><span class="token comment" style="color:#999988;font-style:italic"># geom field. default is geom</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">id_fieldname</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;gid&quot;</span><span class="token plain">                    </span><span class="token comment" style="color:#999988;font-style:italic"># geom id field. default is gid</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multilinestring&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># Extra columns in the SELECT become feature tags.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid, class, name FROM gis.zoning_base_3857 WHERE geom &amp;&amp; !BBOX!&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;rivers&quot;</span><span class="token plain">                         </span><span class="token comment" style="color:#999988;font-style:italic"># will be encoded as the layer name in the tile</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multilinestring&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.rivers WHERE geom &amp;&amp; !BBOX!&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># maps are made up of layers</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;zoning&quot;</span><span class="token plain">                             </span><span class="token comment" style="color:#999988;font-style:italic"># the collection id: /collections/zoning/tiles/...</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">tile_buffer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">0</span><span class="token plain">                             </span><span class="token comment" style="color:#999988;font-style:italic"># number of pixels to extend a tile&#x27;s clipping area</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">tile_matrix_sets</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">&quot;WebMercatorQuad&quot;</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain">      </span><span class="token comment" style="color:#999988;font-style:italic"># tiling schemes this map may be requested in.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">                                            </span><span class="token comment" style="color:#999988;font-style:italic"># omit for all servable schemes.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># A map using an MVT provider may use ONLY that provider — every layer here</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># has to come from test_postgis. Mixing in a second provider, MVT or not, is</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># a startup error.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">provider_layer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;test_postgis.landuse&quot;</span><span class="token plain"> </span><span class="token comment" style="color:#999988;font-style:italic"># must match a data provider layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">min_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">12</span><span class="token plain">                           </span><span class="token comment" style="color:#999988;font-style:italic"># minimum zoom level to include this layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">max_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">16</span><span class="token plain">                           </span><span class="token comment" style="color:#999988;font-style:italic"># maximum zoom level to include this layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">provider_layer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;test_postgis.rivers&quot;</span><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># must match a data provider layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">min_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">10</span><span class="token plain">                           </span><span class="token comment" style="color:#999988;font-style:italic"># minimum zoom level to include this layer</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token key property" style="color:#36acaa">max_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">18</span><span class="token plain">                           </span><span class="token comment" style="color:#999988;font-style:italic"># maximum zoom level to include this layer</span><br></div></code></pre></div></div>
+<p>Two things about an MVT provider are worth knowing, and neither reports an error:</p>
+<ul>
+<li class=""><strong>A map draws its layers from exactly one provider.</strong> This is enforced at startup: a map naming
+two fails to load rather than serving a partial tile. An MVT provider returns a tile that is
+already encoded, so there is nothing to merge a second provider&#x27;s features into.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="layered-cache-example">Layered Cache Example<a href="#layered-cache-example" class="hash-link" aria-label="Direct link to Layered Cache Example" title="Direct link to Layered Cache Example" translate="no">​</a></h2>
+<p>A Redis hot tier in front of an S3 durable tier, serving two tiling schemes — both
+<a class="" href="/shigola-docs/pr-preview/pr-16/documentation/about">fork-only</a> features:</p>
+<div class="language-toml codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_QJqH"><pre tabindex="0" class="prism-code language-toml codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><div class="token-line" style="color:#393A34"><span class="token key property" style="color:#36acaa">tile_buffer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">64</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">webserver</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">port</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;:8080&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># Exactly one [cache] table for the process. `multi` makes it a chain.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">           </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multi&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">promote_on_hit</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token plain">       </span><span class="token comment" style="color:#999988;font-style:italic"># default: a hit in s3 is written back into redis</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># Tier 0 — read first, promoted into. Fast, evicting, bounded.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">       </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain">       </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;hot&quot;</span><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># pins the metric label and --cache-tiers value</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">uri</span><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;redis://localhost:6379/0&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">password</span><span class="token plain">   </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;${SECRET_REDIS_PASSWORD}&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">key_prefix</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;shigola:&quot;</span><span class="token plain">    </span><span class="token comment" style="color:#999988;font-style:italic"># supply your own separator</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">ttl</span><span class="token plain">        </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">3600</span><span class="token plain">         </span><span class="token comment" style="color:#999988;font-style:italic"># seconds; bounds redis memory, not staleness</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">timeout_ms</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">35</span><span class="token plain">           </span><span class="token comment" style="color:#999988;font-style:italic"># abandon this tier&#x27;s read after 35ms; a timeout is a miss</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># Tier 1 — the durable one, and what `cache seed` writes by default.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">cache.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">type</span><span class="token plain">     </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;s3&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">bucket</span><span class="token plain">   </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;${S3_BUCKET}&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">region</span><span class="token plain">   </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;us-east-2&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">basepath</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;tiles&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic"># timeout_ms omitted: the durable tier is allowed to be slow.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;osm&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;mvt_postgis&quot;</span><span class="token plain">        </span><span class="token comment" style="color:#999988;font-style:italic"># PostGIS does the MVT encoding, via ST_AsMVT</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">uri</span><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;postgres://shigola:supersecret@localhost:5432/shigola?sslmode=prefer&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">providers.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;landuse&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">geometry_type</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;multipolygon&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">sql</span><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;SELECT ST_AsMVTGeom(ST_Transform(geom,!TILE_SRID!), !TILE_BBOX!) AS geom, gid FROM gis.landuse WHERE geom &amp;&amp; !BBOX!&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">name</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;osm&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># The schemes this map may be requested in. A seed run scoped to this map with</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic"># --map, and given no --tile-matrix-set, takes the first and warns which it took.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token key property" style="color:#36acaa">tile_matrix_sets</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">&quot;WebMercatorQuad&quot;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;WorldCRS84Quad&quot;</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">[</span><span class="token punctuation" style="color:#393A34">[</span><span class="token table class-name">maps.layers</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">provider_layer</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;osm.landuse&quot;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">min_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">10</span><span class="token plain"></span><br></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token key property" style="color:#36acaa">max_zoom</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">=</span><span class="token plain"> </span><span class="token number" style="color:#36acaa">16</span><br></div></code></pre></div></div></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href="https://github.com/MapColonies/shigola-docs/edit/master/docs/configuration.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_Z9Sw" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/shigola-docs/pr-preview/pr-16/documentation/getting-started"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Getting Started</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/shigola-docs/pr-preview/pr-16/documentation/http-endpoints"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">HTTP Endpoints</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#overview" class="table-of-contents__link toc-highlight">Overview</a></li><li><a href="#global" class="table-of-contents__link toc-highlight">Global</a></li><li><a href="#webserver" class="table-of-contents__link toc-highlight">Webserver</a><ul><li><a href="#headers" class="table-of-contents__link toc-highlight">Headers</a></li></ul></li><li><a href="#providers" class="table-of-contents__link toc-highlight">Providers</a><ul><li><a href="#postgis" class="table-of-contents__link toc-highlight">PostGIS</a></li></ul></li><li><a href="#provider-layers" class="table-of-contents__link toc-highlight">Provider Layers</a><ul><li><a href="#postgis-1" class="table-of-contents__link toc-highlight">PostGIS</a></li></ul></li><li><a href="#maps" class="table-of-contents__link toc-highlight">Maps</a><ul><li><a href="#tile-matrix-sets" class="table-of-contents__link toc-highlight">Tile matrix sets</a></li><li><a href="#serve-layer-collections" class="table-of-contents__link toc-highlight">Serve layer collections</a></li><li><a href="#map-layers" class="table-of-contents__link toc-highlight">Map Layers</a></li></ul></li><li><a href="#cache" class="table-of-contents__link toc-highlight">Cache</a><ul><li><a href="#timeout-ms" class="table-of-contents__link toc-highlight"><code>timeout_ms</code></a></li><li><a href="#layered-cache" class="table-of-contents__link toc-highlight">Layered cache</a></li><li><a href="#file" class="table-of-contents__link toc-highlight">File</a></li><li><a href="#redis" class="table-of-contents__link toc-highlight">Redis</a></li><li><a href="#s3" class="table-of-contents__link toc-highlight">S3</a></li><li><a href="#azure-blob-storage" class="table-of-contents__link toc-highlight">Azure Blob Storage</a></li><li><a href="#google-cloud-storage" class="table-of-contents__link toc-highlight">Google Cloud Storage</a></li></ul></li><li><a href="#tracing" class="table-of-contents__link toc-highlight">Tracing</a></li><li><a href="#env-var" class="table-of-contents__link toc-highlight">Env Var</a></li><li><a href="#full-config-example" class="table-of-contents__link toc-highlight">Full Config Example</a></li><li><a href="#layered-cache-example" class="table-of-contents__link toc-highlight">Layered Cache Example</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Docs</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/documentation/about">About Shigola</a></li><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/documentation/getting-started">Getting Started</a></li><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/documentation/configuration">Configuration</a></li><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/documentation/ogc-api-tiles">OGC API - Tiles</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Shigola</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/MapColonies/shigola" target="_blank" rel="noopener noreferrer" class="footer__link-item">Source<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/download">Download</a></li><li class="footer__item"><a class="footer__link-item" href="/shigola-docs/pr-preview/pr-16/support">Support</a></li><li class="footer__item"><a href="https://github.com/MapColonies/shigola-docs" target="_blank" rel="noopener noreferrer" class="footer__link-item">These docs<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_nPIU"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Shigola is maintained by <a href="https://github.com/MapColonies">MapColonies</a> and is MIT licensed.</div></div></div></footer></div>
+</body>
+</html>
