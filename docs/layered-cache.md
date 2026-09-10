@@ -205,7 +205,7 @@ needs re-deriving against real ones.
 The `le` *values* then changed once more, separately, when the metrics route began negotiating
 OpenMetrics for [exemplars](./tracing.md#trace-exemplars): a boundary rendering as a whole number is
 now written `le="1.0"` rather than `le="1"`. Both of these families are affected —
-[which boundaries exactly](./tracing.md#two-limits).
+[which boundaries exactly](./tracing.md#changed-le-labels-and-pushed-metrics).
 :::
 
 ## Operating a layered cache

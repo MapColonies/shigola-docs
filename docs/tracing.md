@@ -252,7 +252,7 @@ the opposite reason: a log line's trace id still groups that request's lines
 whether or not Tempo kept the trace.
 :::
 
-### Two limits
+### Changed `le` labels, and pushed metrics
 
 **`le` label values changed.** Under OpenMetrics a boundary that renders as a
 whole number is written with a trailing `.0`, and a label value is part of a
