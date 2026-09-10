@@ -202,11 +202,10 @@ identity, so `le` series from before the change do not line up with the ones aft
 the upgrade shows a discontinuity, and any alert threshold tuned against the old artifact values
 needs re-deriving against real ones.
 
-The `le` *values* changed once more, separately, when the metrics route began negotiating
+The `le` *values* then changed once more, separately, when the metrics route began negotiating
 OpenMetrics for [exemplars](./tracing.md#trace-exemplars): a boundary rendering as a whole number is
-now written `le="1.0"` rather than `le="1"`. For these two families that is `1` and `5` on the
-duration histogram and every boundary from `1024` to `512000` on the size one —
-[the full table](./tracing.md#two-limits) covers the HTTP families too.
+now written `le="1.0"` rather than `le="1"`. Both of these families are affected —
+[which boundaries exactly](./tracing.md#two-limits).
 :::
 
 ## Operating a layered cache
