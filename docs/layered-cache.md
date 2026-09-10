@@ -175,6 +175,11 @@ The pool and the chain publish their own counters:
 > `shigola_cache_errors_total` (and `shigola_cache_tier_errors_total` per tier). Dashboards and alerts
 > referring to `errors` need updating.
 
+With [tracing](./tracing.md) enabled, `shigola_cache_duration_seconds` and
+`shigola_cache_tier_duration_seconds` also carry a
+[trace exemplar](./tracing.md#trace-exemplars) — so a slow bucket on the per-tier
+histogram is one click from the trace of the tier read that was slow.
+
 ### Tier latency, and why it used to look identical everywhere
 
 `shigola_cache_tier_duration_seconds` buckets at **1-2-5 per decade from 100µs to 5 seconds**, and
@@ -196,6 +201,11 @@ round number, that was this.
 identity, so `le` series from before the change do not line up with the ones after. A panel spanning
 the upgrade shows a discontinuity, and any alert threshold tuned against the old artifact values
 needs re-deriving against real ones.
+
+The `le` *values* then changed once more, separately, when the metrics route began negotiating
+OpenMetrics for [exemplars](./tracing.md#trace-exemplars): a boundary rendering as a whole number is
+now written `le="1.0"` rather than `le="1"`. Both of these families are affected —
+[which boundaries exactly](./tracing.md#changed-le-labels-and-pushed-metrics).
 :::
 
 ## Operating a layered cache

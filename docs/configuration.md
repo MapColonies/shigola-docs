@@ -527,7 +527,8 @@ Cache tiles in a GCS bucket.
 
 `[tracing]` configures OpenTelemetry trace export over OTLP. It is off unless
 the section says otherwise, and it is independent of `[observer]`: metrics and
-traces are switched on separately.
+traces are switched on separately. With both on, the duration histograms carry
+[trace exemplars](./tracing.md#trace-exemplars).
 
 ```toml
 [tracing]
