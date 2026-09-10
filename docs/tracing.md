@@ -276,9 +276,14 @@ Anything matching an exact `le` — a recording rule, a panel pinned to one
 bucket — needs checking against the new spelling. It was the price of exemplars
 being scrapeable at all.
 
-**Pushed metrics carry no exemplars.** A deployment using the observer's
-`push_url` pushes through the classic text format to a Pushgateway, which has no
-notion of them. Everything above applies to scraped deployments only.
+**Pushed metrics take a different path, and an unverified one.** A deployment
+using the observer's `push_url` never reaches the exposition format above — the
+push client sends protobuf, which *does* carry exemplars. Whether they are then
+stored and re-exposed is the Pushgateway's own business, and Shigola does not
+test it either way. `push_url` is in any case meant for
+[ephemeral jobs](./cache-seeding-and-purging.md) rather than for the serving
+path this section is about, so treat everything above as describing a scraped
+deployment.
 
 ## Spans
 
