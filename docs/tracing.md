@@ -272,9 +272,18 @@ already contains a `.` — and nor are the megabyte boundaries, which render as
 even though they carry no exemplars: the format is negotiated once per scrape,
 not per family.
 
-Anything matching an exact `le` — a recording rule, a panel pinned to one
-bucket — needs checking against the new spelling. It was the price of exemplars
-being scrapeable at all.
+:::warning
+**It reaches past `le`, and past Shigola's own metrics.** The respelling belongs
+to the encoder, not to histograms — it writes summary `quantile` labels through
+the same formatter. The Go runtime's `go_gc_duration_seconds` is a summary, so
+`quantile="0"` becomes `quantile="0.0"` and `quantile="1"` becomes
+`quantile="1.0"`, on a metric Shigola never touches and every Go service
+publishes. A dashboard pinned to either is affected.
+:::
+
+Anything matching an exact `le` or `quantile` — a recording rule, a panel pinned
+to one bucket — needs checking against the new spelling. It was the price of
+exemplars being scrapeable at all.
 
 **Pushed metrics take a different path, and an unverified one.** A deployment
 using the observer's `push_url` never reaches the exposition format above — the
