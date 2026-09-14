@@ -282,11 +282,11 @@ exemplars.
 
 Three things about that table are worth reading twice. `2.5` is **not** in it —
 it already contains a `.` — and nor are the megabyte boundaries, which render as
-`1.048576e+06` and `5.24288e+06`, nor the provider families' `.1`, which renders
+`1.048576e+06` and `5.24288e+06`, nor the provider family's `.1`, which renders
 as `0.1`. The **response-size** families are in it even though they carry no
-exemplars: the format is negotiated once per scrape, not per family. And so are
-the **provider query** families, for the same reason — they carry no exemplars
-either, and their `le` labels move regardless.
+exemplars: the format is negotiated once per scrape, not per family. And so is
+`shigola_mvt_provider_sql_query_seconds`, for the same reason — it carries no
+exemplar either, and its `le` labels move regardless.
 
 :::warning
 **It reaches past `le`, and past Shigola's own metrics.** The respelling belongs
