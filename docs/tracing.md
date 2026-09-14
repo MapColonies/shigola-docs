@@ -202,12 +202,11 @@ trace, so a bucket in a Grafana histogram panel shows a dot you can click:
 | `shigola_api_duration_seconds` | the request |
 
 Not every duration histogram is in that table.
-`shigola_mvt_provider_sql_query_seconds` and `shigola_provider_sql_query_seconds`
-are measured inside their own query span and still carry nothing, because the
-provider would have to import the Prometheus observer to attach one — and that
-observer is compiled out entirely under the `noPrometheusObserver` build tag.
-Their latency is still readable as the duration of the query span itself, in the
-trace.
+`shigola_mvt_provider_sql_query_seconds` is measured inside its own query span
+and still carries nothing, because the provider would have to import the
+Prometheus observer to attach one — and that observer is compiled out entirely
+under the `noPrometheusObserver` build tag. Its latency is still readable as the
+duration of the query span itself, in the trace.
 
 The labels are `trace_id` and `span_id` — the same names the
 [log records](./logging.md#trace-correlation) carry.
@@ -279,7 +278,7 @@ exemplars.
 | `shigola_api_duration_seconds` | `1`, `5`, `10` |
 | `shigola_cache_response_size_bytes`, `shigola_cache_tier_response_size_bytes` | `1024`, `5120`, `25600`, `102400`, `256000`, `512000` |
 | `shigola_api_response_size_bytes` | `512000` |
-| `shigola_mvt_provider_sql_query_seconds`, `shigola_provider_sql_query_seconds` | `1`, `5`, `20` |
+| `shigola_mvt_provider_sql_query_seconds` | `1`, `5`, `20` |
 
 Three things about that table are worth reading twice. `2.5` is **not** in it —
 it already contains a `.` — and nor are the megabyte boundaries, which render as
