@@ -203,9 +203,11 @@ the upgrade shows a discontinuity, and any alert threshold tuned against the old
 needs re-deriving against real ones.
 
 The `le` *values* then changed once more, separately, when the metrics route began negotiating
-OpenMetrics for [exemplars](./tracing.md#trace-exemplars): a boundary rendering as a whole number is
-now written `le="1.0"` rather than `le="1"`. Both of these families are affected —
-[which boundaries exactly](./tracing.md#changed-le-labels-and-pushed-metrics).
+OpenMetrics: a boundary rendering as a whole number is now written `le="1.0"` rather than `le="1"`.
+Both of these families are affected —
+[which boundaries exactly](./tracing.md#changed-le-labels-and-pushed-metrics). That switch was made
+for [trace exemplars](./tracing.md#trace-exemplars), but it is not conditional on them: the metrics
+route negotiates OpenMetrics whenever the observer is enabled, tracing on or off.
 :::
 
 ## Operating a layered cache

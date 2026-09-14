@@ -267,6 +267,12 @@ whole number is written with a trailing `.0`, and a label value is part of a
 series' identity — so `le="1"` is now `le="1.0"`, which Prometheus sees as a
 different series.
 
+This section is on the tracing page because exemplars are why the format was
+switched, but **the break is not conditional on tracing**. The metrics route
+negotiates OpenMetrics whenever the observer is enabled; running with
+`[tracing]` disabled — the default — gets you these renamed series and no
+exemplars.
+
 | Family | Respelled boundaries |
 |:---|:---|
 | `shigola_cache_duration_seconds`, `shigola_cache_tier_duration_seconds` | `1`, `5` |
