@@ -192,14 +192,22 @@ first to the second without a search.
 
 ### Trace exemplars
 
-Each duration observation made inside a **sampled** trace carries that trace and
-span, so a bucket in a Grafana histogram panel shows a dot you can click:
+Three families carry an exemplar on every observation made inside a **sampled**
+trace, so a bucket in a Grafana histogram panel shows a dot you can click:
 
 | Family | The exemplar names |
 |:---|:---|
 | `shigola_cache_duration_seconds` | the cache operation as a whole |
 | `shigola_cache_tier_duration_seconds` | that tier's own read, write or purge |
 | `shigola_api_duration_seconds` | the request |
+
+Not every duration histogram is in that table.
+`shigola_mvt_provider_sql_query_seconds` and `shigola_provider_sql_query_seconds`
+are measured inside their own query span and still carry nothing, because the
+provider would have to import the Prometheus observer to attach one — and that
+observer is compiled out entirely under the `noPrometheusObserver` build tag.
+Their latency is still readable as the duration of the query span itself, in the
+trace.
 
 The labels are `trace_id` and `span_id` — the same names the
 [log records](./logging.md#trace-correlation) carry.
@@ -265,12 +273,15 @@ different series.
 | `shigola_api_duration_seconds` | `1`, `5`, `10` |
 | `shigola_cache_response_size_bytes`, `shigola_cache_tier_response_size_bytes` | `1024`, `5120`, `25600`, `102400`, `256000`, `512000` |
 | `shigola_api_response_size_bytes` | `512000` |
+| `shigola_mvt_provider_sql_query_seconds`, `shigola_provider_sql_query_seconds` | `1`, `5`, `20` |
 
-Two things about that table are worth reading twice. `2.5` is **not** in it — it
-already contains a `.` — and nor are the megabyte boundaries, which render as
-`1.048576e+06` and `5.24288e+06`. And the **response-size** families are in it
-even though they carry no exemplars: the format is negotiated once per scrape,
-not per family.
+Three things about that table are worth reading twice. `2.5` is **not** in it —
+it already contains a `.` — and nor are the megabyte boundaries, which render as
+`1.048576e+06` and `5.24288e+06`, nor the provider families' `.1`, which renders
+as `0.1`. The **response-size** families are in it even though they carry no
+exemplars: the format is negotiated once per scrape, not per family. And so are
+the **provider query** families, for the same reason — they carry no exemplars
+either, and their `le` labels move regardless.
 
 :::warning
 **It reaches past `le`, and past Shigola's own metrics.** The respelling belongs
