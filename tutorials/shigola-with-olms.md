@@ -21,7 +21,7 @@ To get setup for using OLMS you'll need a Shigola source, a Mapbox stylesheet, a
 ### Shigola source
 The first thing you'll need is a Shigola endpoint. You can either set up one locally by following the instructions located in the [Shigola docs](/documentation/getting-started) or you can use an existing endpoint.
 
-For the following example we'll be pulling in data from a Shigola instance hosted at https://tegola-osm-demo.go-spatial.org.
+For the following example we'll be pulling in data from the Tegola demo instance hosted at https://tegola-osm-demo.go-spatial.org.
 
 ### Get a Mapbox stylesheet
 You may either pull a Mapbox stylesheet from Mapbox directly using an API key, you can craft your own, or you may use a stylesheet provided in this repo in the style directory.

@@ -25,8 +25,8 @@ The first thing you'll need is a Shigola endpoint. You can either set up one
 locally by following the instructions located in the [Shigola docs](/documentation/getting-started)
 or you can use an existing endpoint.
 
-For the following example we'll be pulling in data from a Shigola instance
-hosted at https://tegola-osm-demo.go-spatial.org.
+For the following example we'll be pulling in data from the Tegola demo
+instance hosted at https://tegola-osm-demo.go-spatial.org.
 
 ## Set up the HTML
 

@@ -258,7 +258,7 @@ Together, it all looks like the following:
 
 From here, you should see the road layers populate in red on top of the basemap:
 
-![Map with roads loaded](/images/mapbox-tegola-roads.png "Roads")
+![Map with roads loaded](/images/mapbox-roads.png "Roads")
 
 From here, you can load other layers from the same source.
 Keep in mind that you aren't limited to lines, fills (polygon fills) and points.
