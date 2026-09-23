@@ -19,6 +19,7 @@ The Shigola config file uses [TOML](https://github.com/toml-lang/toml) syntax wi
 Two further sections are optional and documented on their own pages:
 
 - [Tracing](#tracing): `[tracing]`, OpenTelemetry export over OTLP.
+- [Logging](#logging): `[logging.otlp]`, log export over OTLP.
 - `[observer]`: Prometheus metrics.
 
 > Two optional keys are worth knowing about up front:
@@ -545,6 +546,28 @@ rejected at startup.
 request produces several spans, so full sampling multiplies request rate by the
 span tree's width. See [Tracing](tracing.md) for every parameter, the sampling
 argument in full, and what the resulting span tree looks like.
+
+## Logging
+
+`[logging.otlp]` exports every log record to an OTLP collector — Loki's OTLP
+intake, or an OpenTelemetry collector — in addition to the JSON Shigola writes
+to standard error. It is off unless the section says otherwise, and it is
+independent of `[tracing]`: either can be on without the other, and they can
+point at different collectors.
+
+```toml
+[logging.otlp]
+enabled = true
+exporter = "otlp_grpc"
+endpoint = "otel-collector.observability:4317"
+insecure = true
+```
+
+The keys are the same as `[tracing]`'s — `exporter`, `endpoint`, `insecure`,
+`service_name`, `timeout_ms` and `[logging.otlp.headers]` — except
+`sample_ratio`, because logs are not sampled. The level is still set by
+`--log-level`. See [Logging](logging.md#exporting-over-otlp) for what an
+exported record carries.
 
 ## Env Var
 

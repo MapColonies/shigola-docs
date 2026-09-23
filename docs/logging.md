@@ -59,6 +59,43 @@ unrecognised falls back to `info` rather than failing to start.
 /opt/shigola serve --log-level info
 ```
 
+## Exporting over OTLP
+
+Shigola can also send every record to an OTLP collector, such as Loki's OTLP
+intake or an OpenTelemetry collector. Standard error keeps its copy, so a
+collector that is down never costs you the log.
+
+```toml
+[logging.otlp]
+enabled = true
+exporter = "otlp_grpc"                          # or "otlp_http"
+endpoint = "otel-collector.observability:4317"  # host:port, or a full URL
+insecure = true
+service_name = "shigola"
+```
+
+| Key | Default | Meaning |
+|:---|:---|:---|
+| `enabled` | `false` | Absent or false exports nothing and dials nothing. |
+| `exporter` | `otlp_grpc` | OTLP transport: `otlp_grpc` or `otlp_http`. |
+| `endpoint` | *(SDK default)* | `host:port` or a full URL. Empty defers to `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT` / `OTEL_EXPORTER_OTLP_ENDPOINT`. |
+| `insecure` | `false` | Send to a `host:port` endpoint without TLS. |
+| `service_name` | `shigola` | `service.name` on the exported records. |
+| `timeout_ms` | `10000` | Bounds one export attempt. |
+| `[logging.otlp.headers]` | *(none)* | Sent with each export — an auth header, a tenant id. |
+
+It is independent of [tracing](./tracing.md) — each has its own section and can
+name its own collector.
+
+An exported record has the same message, level and fields as the line on
+standard error, `err` included. Two things move to where OTLP keeps them:
+`pid`, `hostname`, `version` and `rev` describe the process once, as the
+record's resource (`service.name`, `service.version`), and `trace_id` and
+`span_id` become the record's own trace context rather than fields.
+
+Not exported: the lines written before the configuration is read (it is what
+names the collector), and records from the Lambda build.
+
 ## Trace correlation
 
 When [tracing](./tracing.md) is enabled, the records written while serving a
