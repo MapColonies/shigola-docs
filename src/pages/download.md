@@ -14,10 +14,11 @@ Prebuilt binaries: **[MapColonies/shigola releases](https://github.com/MapColoni
 ```sh
 git clone https://github.com/MapColonies/shigola.git
 cd shigola
-go build -mod vendor ./cmd/shigola
+go build ./cmd/shigola
 ```
 
-Dependencies are vendored, so `-mod vendor` builds offline and pins exactly what CI used.
+The build downloads its Go modules and verifies each against `go.sum`, so it needs network access to
+the Go module proxy. To build offline, see "Dependencies" in the repository's `CONTRIBUTING.md`.
 
 ## Docker
 
