@@ -6,18 +6,39 @@ sidebar_position: 11
 description: "Managing logging output in Shigola"
 ---
 
-Shigola logs structured JSON to standard error, one object per line.
+Shigola logs structured JSON to standard error, one object per line, in the
+same format as the other MapColonies services — the shape
+[js-logger](https://github.com/MapColonies/infra-packages/tree/master/packages/js-logger)
+writes — so one collector and one set of queries work across all of them.
 
 ```json
-{"time":"2026-09-09T11:16:33.181Z","level":"INFO","msg":"starting shigola server (1.4.0) on port :8080","shigola":{"version":"1.4.0","pid":1,"rev":"9f3c1ab"}}
+{"time":1790161509602,"level":"info","msg":"starting shigola server (1.4.0) on port :8080","pid":1,"hostname":"shigola-7d9f8","version":"1.4.0","rev":"9f3c1ab"}
 ```
 
-Every record carries `time`, `level`, `msg`, and a `shigola` object naming the
-build and process that wrote it. Records at `ERROR` and above also carry a
-top-level `stack` field — which was `shigola.stack` before trace correlation
-was added, so anything parsing that path needs updating. Records written while
-serving a [traced](./tracing.md) request carry two more fields — see
-[Trace correlation](#trace-correlation).
+| Field | What it is |
+|:---|:---|
+| `time` | Integer milliseconds since the Unix epoch |
+| `level` | `debug`, `info`, `warn` or `error` |
+| `msg` | The message |
+| `pid` | The process id |
+| `hostname` | The host's name — the pod name, under Kubernetes |
+| `version`, `rev` | The build's version and git revision |
+| `err` | Present when an error is logged; see [Errors](#errors) |
+
+Records written while serving a [traced](./tracing.md) request carry two more
+fields — see [Trace correlation](#trace-correlation).
+
+### Errors
+
+A record reporting an error carries it as an `err` object, the way pino's error
+serialiser does:
+
+```json
+{"time":1790161525425,"level":"error","msg":"config file at location (/nope.toml) not found","pid":1,"hostname":"shigola-7d9f8","version":"1.4.0","rev":"9f3c1ab","err":{"type":"*errors.errorString","message":"config file at location (/nope.toml) not found","stack":"goroutine 1 [running]:\n..."}}
+```
+
+`type` is the error's Go type and `message` its text. `stack` is the stack of
+the code that wrote the line, and is present on `error` records only.
 
 ## Log Levels
 
@@ -44,7 +65,7 @@ When [tracing](./tracing.md) is enabled, the records written while serving a
 request carry that request's trace and span ids as top-level fields:
 
 ```json
-{"time":"2026-09-09T11:16:33.181Z","level":"ERROR","msg":"cache/multi: tier (redis) get: dial tcp: connection refused","shigola":{"version":"1.4.0","pid":1,"rev":"9f3c1ab"},"trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7"}
+{"time":1790161525425,"level":"error","msg":"cache/multi: tier (redis) get: dial tcp: connection refused","pid":1,"hostname":"shigola-7d9f8","version":"1.4.0","rev":"9f3c1ab","err":{"type":"*net.OpError","message":"dial tcp: connection refused","stack":"..."},"trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7"}
 ```
 
 | Field      | What it names                                                     |
@@ -91,7 +112,7 @@ property of the pool rather than of one request.
 generate valid extent for tile`. They are raised from signatures that take no
 context, and each reports a misconfigured tile matrix set, which fails
 identically for every request to that map rather than telling you anything
-about one. So an uncorrelated `ERROR` in the middle of a request is possible —
+about one. So an uncorrelated `error` in the middle of a request is possible —
 if you see one of those three, the trace it belongs to is not recoverable from
 the line, and the fault is in the map's configuration rather than in that
 request.
