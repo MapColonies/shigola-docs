@@ -44,6 +44,7 @@ The webserver part of the config has the following parameters:
 | port                  | No       | :8080                       | A string with the value for port.                                              |
 | hostname              | No       | HTTP Hostname in request    | Set the hostname used to generate URLs for JSON based responses.               |
 | uri_prefix            | No       |                             | A prefix to add to all API routes. This is useful when shigola is behind a proxy (i.e. example.com/shigola). The prefix will be added to all URLs Shigola includes in its responses.|
+| admin                 | No       | off                         | The [Cache Admin API](./cache-admin-api.md#enabling-it): its own `port` and an optional bearer `token`. |
 
 
 ### Headers

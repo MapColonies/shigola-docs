@@ -2,7 +2,7 @@
 id: tracing
 title: "Tracing in Shigola"
 sidebar_label: "Tracing"
-sidebar_position: 12
+sidebar_position: 13
 description: "Export OpenTelemetry traces from Shigola over OTLP to Grafana Tempo"
 ---
 

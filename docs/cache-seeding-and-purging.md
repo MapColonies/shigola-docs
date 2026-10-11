@@ -192,6 +192,9 @@ still clears the whole-map tile, because that tile contains those layers too:
 $ ./shigola cache purge --map=osm --layers=roads --bounds "-117.25,32.5,-117.0,32.75"
 ```
 
+To purge over HTTP instead, from a service rather than a shell, see the
+[Cache Admin API](./cache-admin-api.md).
+
 `--layers` needs `--map`, since layer names belong to one map. Seeding covers whole maps only: a
 seed fills the whole-map tile, and layer tiles are cached as they are requested.
 

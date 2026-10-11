@@ -2,7 +2,7 @@
 id: logging
 title: "Logging in Shigola"
 sidebar_label: "Logging"
-sidebar_position: 11
+sidebar_position: 12
 description: "Managing logging output in Shigola"
 ---
 

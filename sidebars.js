@@ -41,6 +41,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'cache-seeding-and-purging',
+        'cache-admin-api',
         'debugging',
         'logging',
         'tracing',
