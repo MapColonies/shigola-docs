@@ -3,12 +3,13 @@ id: cache-admin-api
 title: "Cache Admin API"
 sidebar_label: "Cache Admin API"
 sidebar_position: 10
-description: "Purging the tile cache over HTTP, on a port of its own"
+description: "Purging and seeding the tile cache over HTTP, on a port of its own"
 ---
 
-The Cache Admin API purges tiles from the cache over HTTP. A purge through it does the same as
-[`shigola cache purge`](./cache-seeding-and-purging.md#cache-purge), so a service that knows which
-part of the map changed, such as retiler after an OSM update, can clear the stale tiles without
+The Cache Admin API purges and seeds tiles in the cache over HTTP. A request does the same as
+[`shigola cache purge`](./cache-seeding-and-purging.md#cache-purge) or
+[`shigola cache seed`](./cache-seeding-and-purging.md#cache-seed), so a service that knows which
+part of the map changed, such as retiler after an OSM update, can refresh those tiles without
 running the CLI.
 
 It runs on **its own port**, separate from the tile port, and is **off by default**. Keep that port
@@ -88,6 +89,39 @@ left alone. This is the same rule as [`--layers`](./cache-seeding-and-purging.md
 A purge clears every tier of a [layered cache](./layered-cache.md) reachable from the pod that
 handles it.
 
+## `POST /cache/seed`
+
+Renders the whole-map tiles covering an area and writes them to the cache, in every tile matrix set
+each targeted map serves. The body is the same as a purge's, plus two fields that mean what the
+CLI's flags mean:
+
+| Field | Required | Description |
+|:------|:---------|:------------|
+| `overwrite` | No | `true` re-renders tiles already cached. Without it they are skipped and counted in `skipped`. With a layered cache it also purges the tiers not written, so the hot tier stops serving the old tile. |
+| `tiers` | No | For a [layered cache](./layered-cache.md), the comma-separated tiers to write, or `"all"`. Omitted, only the last tier in read order is written, as with [`--cache-tiers`](./cache-seeding-and-purging.md#cache-tiers). |
+
+```shell
+curl -X POST http://localhost:9090/cache/seed \
+  -H "Authorization: Bearer $SHIGOLA_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "bounds": [34.75, 32.05, 34.80, 32.10],
+        "zoomRange": { "min": 10, "max": 14 },
+        "targets": [ { "map": "osm" } ],
+        "overwrite": true
+      }'
+```
+
+The response reports `seeded` where a purge reports `purged`.
+
+**Seeding is whole-map only.** A target naming `layers` gets `422`: a layer's tiles are cached as
+they are requested. `overwrite` is seed only, and a purge given it gets `400`. A purge accepts
+`tiers` as the CLI's purge does, and gets `400` for a tier that does not exist, but it clears every
+tier regardless.
+
+**Seeding renders on the pod that serves tiles.** Each tile is a database query, so a large seed
+competes with users for the database and the CPU. Keep seeds small, or run large ones with the CLI.
+
 ### Limits
 
 The API runs on the same pods that serve tiles, so it refuses work that could tie them up:
@@ -95,8 +129,7 @@ The API runs on the same pods that serve tiles, so it refuses work that could ti
 - **Size.** A request may touch at most `max_tiles_per_request` cache keys, counted across every
   tile matrix set, zoom and layer it covers. A purge of a map with two layers counts three keys per
   tile: the whole-map tile and each layer's. A larger request gets `422` and touches nothing.
-  Narrow it, or run [`shigola cache purge`](./cache-seeding-and-purging.md#cache-purge), which has no
-  such limit.
+  Narrow it, or use the [`shigola cache`](./cache-seeding-and-purging.md) CLI, which has no such limit.
 - **Concurrency.** At most `max_concurrent_requests` run at once. Another request gets `429` with a
   `Retry-After` header and touches nothing.
 - **Duration.** A request still running after `request_timeout_ms` has its remaining work
@@ -118,7 +151,7 @@ Counts are per map tile: one tile purged from two maps counts twice.
 | `200` | Every tile was purged. |
 | `400` | The request was malformed, or named a map, layer, tile or tile matrix set that does not exist. `error` says which. Nothing was purged. |
 | `401` | A token is configured and the request did not send it. Nothing was purged. |
-| `422` | The request covers more than `max_tiles_per_request`. Nothing was purged. |
+| `422` | The request covers more than `max_tiles_per_request`, or is a seed naming layers. Nothing was touched. |
 | `429` | `max_concurrent_requests` are already running. Retry after `Retry-After` seconds. Nothing was purged. |
 | `500` | Some tiles could not be purged, usually because a cache backend failed. Every tile was still attempted: `failed` counts the ones that failed and `error` gives the first failure. Purging the same area again is safe. |
 | `503` | The request timed out. The body holds the counts so far. Purging the same area again is safe. |
