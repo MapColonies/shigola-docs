@@ -46,6 +46,33 @@ The webserver part of the config has the following parameters:
 | uri_prefix            | No       |                             | A prefix to add to all API routes. This is useful when shigola is behind a proxy (i.e. example.com/shigola). The prefix will be added to all URLs Shigola includes in its responses.|
 
 
+### Cache-Control
+
+How long browsers and map clients may reuse a response, set per surface:
+
+| Param    | Required | Default | Description |
+|:---------|:---------|:--------|:------------|
+| tiles    | No       | `public, max-age=60, stale-while-revalidate=300` | The `Cache-Control` of tile responses. |
+| metadata | No       | none    | The `Cache-Control` of every other response: the landing page, collections, tile matrix sets and the API document. |
+
+```toml
+[webserver.cache_control]
+tiles    = "public, max-age=60, stale-while-revalidate=300"
+metadata = "public, max-age=300"
+```
+
+A tile's `max-age` adds directly to how stale a client can see the map after an update, on top of
+however long the server takes to purge the tile. Error responses always carry
+`Cache-Control: no-store`, so a client does not keep reusing a failure.
+
+A `Cache-Control` set under [`[webserver.headers]`](#headers) still applies to every response, as
+before, unless a value here names the surface: then this one wins for that surface, and Shigola
+warns at startup that both are set. The tile default applies only when neither is set.
+
+**Upgrading:** before this setting existed, a config with no `Cache-Control` sent tiles without
+one, leaving browsers to guess how long to keep them. Such a config now sends the tile default
+above. Set `tiles` to keep tiles for longer or shorter.
+
 ### Headers
 
 Allows shigola to respond to tile request with user defined headers. Default [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) headers values:
@@ -67,8 +94,8 @@ hostname = "tiles.example.com"
   # redefine default cors origin
   Access-Control-Allow-Origin = "http://map.example.com"
 
-  # define CDN max age
-  Cache-Control = "s-maxage=300"
+  [webserver.cache_control]
+  tiles = "public, max-age=60"
 ```
 
 ## Providers
