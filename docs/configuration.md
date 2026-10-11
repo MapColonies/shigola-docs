@@ -324,12 +324,10 @@ layer.
 It is configured per map, so a map that declines the tier and a map that says nothing about it work
 side by side in one config.
 
-**Cache entries a layer collection already served become unreachable.** A tile's cache key carries
-the layer it was served for, and nothing reads those keys once the layer ids stop resolving. The
-`cache seed` and `cache purge` commands only ever address a map's own key — they pass an empty layer
-— so neither can clear them, and removing them means deleting them from the cache backend. The key
-is `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`, so a file or S3 cache holds one layer directory
-per scheme the map is served in, not one per map.
+**Cache entries a layer collection already served are no longer read.** A tile's cache key carries
+the layer it was served for, and nothing reads those keys once the layer ids stop resolving.
+`cache purge --map=parks` clears them: a purge removes a map's whole-map tile and every layer's
+tile, whether or not the map serves its layer collections.
 
 See [OGC API - Tiles](./ogc-api-tiles.md#collections) for how the two collection tiers are addressed.
 
