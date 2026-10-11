@@ -39,6 +39,16 @@ it into the config file.
 The token is optional, because the port should be unreachable from outside anyway. Without one,
 Shigola logs a loud `WARN` at startup naming the port, so an unprotected API does not go unnoticed.
 
+## Exploring it
+
+The admin port serves its own description:
+
+- `GET /docs`: Swagger UI, for reading the API and trying requests. Use **Authorize** to enter the
+  token. It is served from the binary, so it works without internet access.
+- `GET /openapi.json`: the OpenAPI 3 document behind it.
+
+Neither needs the token. Only the `/cache/*` routes do.
+
 ## `POST /cache/purge`
 
 Purges the tiles covering an area at a range of zooms, from every tile matrix set each targeted map
