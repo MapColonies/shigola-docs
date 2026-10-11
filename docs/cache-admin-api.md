@@ -86,8 +86,10 @@ set's extent are clipped, so WebMercatorQuad covers up to ±85.05°.
 `layers` clears those layers' tiles and the whole-map tile, which contains them too. Other layers are
 left alone. This is the same rule as [`--layers`](./cache-seeding-and-purging.md#cache-purge).
 
-A purge clears every tier of a [layered cache](./layered-cache.md) reachable from the pod that
-handles it.
+A purge clears every tier of a [layered cache](./layered-cache.md), but a file tier only on the
+replica that handled the request. Give file tiers a short `ttl` so the other replicas let go of the
+purged tile too. Shigola warns at startup about any that have none. See
+[Purging across replicas](./layered-cache.md#purging-across-replicas).
 
 ## `POST /cache/seed`
 
