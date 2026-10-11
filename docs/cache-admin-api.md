@@ -29,6 +29,9 @@ port = ":8080"
 |:------|:---------|:--------|:------------|
 | port  | No       |         | The port the API listens on. Setting it turns the API on. It must differ from the tile port. |
 | token | No       |         | A secret that requests to `/cache/*` must send as `Authorization: Bearer <token>`. |
+| max_tiles_per_request | No | 10000 | The most cache keys one request may touch. See [Limits](#limits). |
+| max_concurrent_requests | No | 4 | The most requests worked on at once. |
+| request_timeout_ms | No | 60000 | How long a request may run before its remaining work is cancelled. |
 
 ### The admin token
 
@@ -85,6 +88,21 @@ left alone. This is the same rule as [`--layers`](./cache-seeding-and-purging.md
 A purge clears every tier of a [layered cache](./layered-cache.md) reachable from the pod that
 handles it.
 
+### Limits
+
+The API runs on the same pods that serve tiles, so it refuses work that could tie them up:
+
+- **Size.** A request may touch at most `max_tiles_per_request` cache keys, counted across every
+  tile matrix set, zoom and layer it covers. A purge of a map with two layers counts three keys per
+  tile: the whole-map tile and each layer's. A larger request gets `422` and touches nothing.
+  Narrow it, or run [`shigola cache purge`](./cache-seeding-and-purging.md#cache-purge), which has no
+  such limit.
+- **Concurrency.** At most `max_concurrent_requests` run at once. Another request gets `429` with a
+  `Retry-After` header and touches nothing.
+- **Duration.** A request still running after `request_timeout_ms` has its remaining work
+  cancelled and gets `503` with the counts so far. A client that disconnects cancels its request
+  the same way. Repeat the purge to finish it: purging a tile twice is harmless.
+
 ### Response
 
 The request runs to completion before the response is sent.
@@ -100,4 +118,7 @@ Counts are per map tile: one tile purged from two maps counts twice.
 | `200` | Every tile was purged. |
 | `400` | The request was malformed, or named a map, layer, tile or tile matrix set that does not exist. `error` says which. Nothing was purged. |
 | `401` | A token is configured and the request did not send it. Nothing was purged. |
+| `422` | The request covers more than `max_tiles_per_request`. Nothing was purged. |
+| `429` | `max_concurrent_requests` are already running. Retry after `Retry-After` seconds. Nothing was purged. |
 | `500` | Some tiles could not be purged, usually because a cache backend failed. Every tile was still attempted: `failed` counts the ones that failed and `error` gives the first failure. Purging the same area again is safe. |
+| `503` | The request timed out. The body holds the counts so far. Purging the same area again is safe. |
