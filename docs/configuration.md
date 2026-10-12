@@ -61,9 +61,11 @@ tiles    = "public, max-age=60, stale-while-revalidate=300"
 metadata = "public, max-age=300"
 ```
 
-A tile's `max-age` adds directly to how stale a client can see the map after an update, on top of
-however long the server takes to purge the tile. Error responses always carry
-`Cache-Control: no-store`, so a client does not keep reusing a failure.
+A tile's `max-age`, plus its `stale-while-revalidate`, adds directly to how stale a client can see
+the map after an update, on top of however long the server takes to purge the tile. With the
+default, that is up to 360 seconds. Error responses from the OGC API routes carry
+`Cache-Control: no-store`, so a client does not keep reusing a failure. Responses the router
+answers itself, such as a 404 for a path that matches no route, are not given one.
 
 A `Cache-Control` set under [`[webserver.headers]`](#headers) still applies to every response, as
 before, unless a value here names the surface: then this one wins for that surface, and Shigola
