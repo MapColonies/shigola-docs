@@ -88,6 +88,6 @@ Counts are per map tile: one tile purged from two maps counts twice.
 | Status | Meaning |
 |:-------|:--------|
 | `200` | Every tile was purged. |
-| `400` | The request was malformed, or named a map, layer, tile or tile matrix set that does not exist. `error` says which. Nothing was purged. |
+| `400` | The request was malformed or its body was over 1 MiB, or named a map, layer, tile or tile matrix set that does not exist. `error` says which. Nothing was purged. |
 | `401` | A token is configured and the request did not send it. Nothing was purged. |
 | `500` | Some tiles could not be purged, usually because a cache backend failed. Every tile was still attempted: `failed` counts the ones that failed and `error` gives the first failure. Purging the same area again is safe. |
