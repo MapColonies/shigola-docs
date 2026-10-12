@@ -163,8 +163,8 @@ with no `ttl`, because a purge would never reach it on the other replicas.
 
 The longest a client can be served a tile older than the database is then:
 
-> the time from the database update to the purge, **plus** the pod tier's `ttl`, **plus** the
-> `max-age` browsers are allowed to keep a tile for.
+> the time from the database update to the purge, **plus** the pod tier's `ttl`, **plus** how long
+> browsers may reuse a tile: its `max-age`, and any `stale-while-revalidate` on top.
 
 ## Metrics
 
