@@ -56,7 +56,7 @@ Neither needs the token. Only the `/cache/*` routes do.
 ## `POST /cache/purge`
 
 Purges the tiles covering an area at a range of zooms, from every tile matrix set each targeted map
-serves.
+serves, or only from those named in `tileMatrixSets`.
 
 ```shell
 curl -X POST http://localhost:9090/cache/purge \
@@ -73,13 +73,15 @@ curl -X POST http://localhost:9090/cache/purge \
 |:------|:---------|:------------|
 | `bounds` | One of `bounds` or `tiles` | The area as `[west, south, east, north]` in lng/lat. A box with west greater than east crosses the antimeridian. |
 | `tiles` | One of `bounds` or `tiles` | The area as a list of `z/x/y` tile names in `sourceTileMatrixSet`. Each tile stands for the ground it covers. |
-| `sourceTileMatrixSet` | With `tiles` | The tile matrix set the `tiles` names belong to, by id. |
+| `sourceTileMatrixSet` | With `tiles` | The tile matrix set the `tiles` names belong to, by id. It does not choose which sets are worked on; `tileMatrixSets` does. |
+| `tileMatrixSets` | No | Work on only these tile matrix sets, by id, as [`--tile-matrix-set`](./cache-seeding-and-purging.md#tile-matrix-set) does for the CLI. Every targeted map must serve each one, or the request gets `400`. Omitted, every set each map serves. |
 | `zoomRange` | Yes | `{ "min": …, "max": … }`, inclusive. |
 | `targets` | Yes | The maps to purge, each `{ "map": "…", "layers": [ … ] }`. A request without targets gets `400`. |
 
-**Every tile matrix set a map serves is purged.** The area is tiled in each of the map's tile matrix
-sets at the same zoom numbers, so a map served in both WebMercatorQuad and WorldCRS84Quad loses the
-covering tiles from both. Tiles that only touch the area's edge are not included. Latitudes outside a
+**Every tile matrix set a map serves is purged unless `tileMatrixSets` narrows it.** The area is
+tiled in each of the map's tile matrix sets at the same zoom numbers, so a map served in both
+WebMercatorQuad and WorldCRS84Quad loses the covering tiles from both. Purging only some sets leaves
+the others serving their cached copies of the same data. Tiles that only touch the area's edge are not included. Latitudes outside a
 set's extent are clipped, so WebMercatorQuad covers up to ±85.05°.
 
 **Layers.** With no `layers`, a target clears its whole-map tile and every layer's tile. Naming
@@ -94,7 +96,7 @@ purged tile too. Shigola warns at startup about any that have none. See
 ## `POST /cache/seed`
 
 Renders the whole-map tiles covering an area and writes them to the cache, in every tile matrix set
-each targeted map serves. The body is the same as a purge's, plus two fields that mean what the
+each targeted map serves, or only those named in `tileMatrixSets`. The body is the same as a purge's, plus two fields that mean what the
 CLI's flags mean:
 
 | Field | Required | Description |
