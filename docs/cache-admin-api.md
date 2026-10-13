@@ -150,6 +150,8 @@ The request runs to completion before the response is sent.
 
 Counts are per map tile: one tile purged from two maps counts twice.
 
+A request refused before any tile is touched (`400`, `401`, `422`, `429`) gets only `{ "error": "…" }`, with no counts.
+
 | Status | Meaning |
 |:-------|:--------|
 | `200` | Every tile was purged. |
