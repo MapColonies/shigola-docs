@@ -44,7 +44,37 @@ The webserver part of the config has the following parameters:
 | port                  | No       | :8080                       | A string with the value for port.                                              |
 | hostname              | No       | HTTP Hostname in request    | Set the hostname used to generate URLs for JSON based responses.               |
 | uri_prefix            | No       |                             | A prefix to add to all API routes. This is useful when shigola is behind a proxy (i.e. example.com/shigola). The prefix will be added to all URLs Shigola includes in its responses.|
+| admin                 | No       | off                         | The [Cache Admin API](./cache-admin-api.md#enabling-it): its own `port`, an optional bearer `token`, and its [limits](./cache-admin-api.md#limits). |
 
+
+### Cache-Control
+
+How long browsers and map clients may reuse a response, set per surface:
+
+| Param    | Required | Default | Description |
+|:---------|:---------|:--------|:------------|
+| tiles    | No       | `public, max-age=60, stale-while-revalidate=300` | The `Cache-Control` of tile responses. |
+| metadata | No       | none    | The `Cache-Control` of every other response: the landing page, collections, tile matrix sets and the API document. |
+
+```toml
+[webserver.cache_control]
+tiles    = "public, max-age=60, stale-while-revalidate=300"
+metadata = "public, max-age=300"
+```
+
+A tile's `max-age`, plus its `stale-while-revalidate`, adds directly to how stale a client can see
+the map after an update, on top of however long the server takes to purge the tile. With the
+default, that is up to 360 seconds. Error responses from the OGC API routes carry
+`Cache-Control: no-store`, so a client does not keep reusing a failure. Responses the router
+answers itself, such as a 404 for a path that matches no route, are not given one.
+
+A `Cache-Control` set under [`[webserver.headers]`](#headers) still applies to every response, as
+before, unless a value here names the surface: then this one wins for that surface, and Shigola
+warns at startup that both are set. The tile default applies only when neither is set.
+
+**Upgrading:** before this setting existed, a config with no `Cache-Control` sent tiles without
+one, leaving browsers to guess how long to keep them. Such a config now sends the tile default
+above. Set `tiles` to keep tiles for longer or shorter.
 
 ### Headers
 
@@ -67,8 +97,8 @@ hostname = "tiles.example.com"
   # redefine default cors origin
   Access-Control-Allow-Origin = "http://map.example.com"
 
-  # define CDN max age
-  Cache-Control = "s-maxage=300"
+  [webserver.cache_control]
+  tiles = "public, max-age=60"
 ```
 
 ## Providers
@@ -324,12 +354,10 @@ layer.
 It is configured per map, so a map that declines the tier and a map that says nothing about it work
 side by side in one config.
 
-**Cache entries a layer collection already served become unreachable.** A tile's cache key carries
-the layer it was served for, and nothing reads those keys once the layer ids stop resolving. The
-`cache seed` and `cache purge` commands only ever address a map's own key — they pass an empty layer
-— so neither can clear them, and removing them means deleting them from the cache backend. The key
-is `{tileMatrixSetId}/{map}/{layer}/{z}/{x}/{y}`, so a file or S3 cache holds one layer directory
-per scheme the map is served in, not one per map.
+**Cache entries a layer collection already served are no longer read.** A tile's cache key carries
+the layer it was served for, and nothing reads those keys once the layer ids stop resolving.
+`cache purge --map=parks` clears them: a purge removes a map's whole-map tile and every layer's
+tile, whether or not the map serves its layer collections.
 
 See [OGC API - Tiles](./ogc-api-tiles.md#collections) for how the two collection tiers are addressed.
 

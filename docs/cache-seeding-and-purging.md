@@ -64,6 +64,7 @@ Flags:
       --cache-tiers string      for a layered cache, the comma-separated tier names this run may write
       --concurrency int         the amount of concurrency to use. defaults to the number of CPUs on the machine (default 8)
   -h, --help                    help for seed
+      --layers string           purge only: comma-separated layers of --map to purge, with the map's whole-map tile
       --log-threshold int       during seeding, only log tiles that take this number of milliseconds or longer to render
       --map string              map name as defined in the config
       --max-zoom uint           max zoom to seed cache to (default 22)
@@ -182,6 +183,21 @@ $ ./shigola cache purge --bounds "-117.25,32.5,-117.0,32.75"
 ```
 This command will purge the only tile at zoom 0, based on the layers specified in the `bonn.toml` configuration file.
 
+A map's tiles are cached under one key for the whole map and, when it
+[serves layer collections](./configuration.md#serve-layer-collections), one key per layer. A purge
+clears the whole-map tile and every layer's tile. `--layers` narrows it to the layers named, and
+still clears the whole-map tile, because that tile contains those layers too:
+
+```shell
+$ ./shigola cache purge --map=osm --layers=roads --bounds "-117.25,32.5,-117.0,32.75"
+```
+
+To purge over HTTP instead, from a service rather than a shell, see the
+[Cache Admin API](./cache-admin-api.md).
+
+`--layers` needs `--map`, since layer names belong to one map. Seeding covers whole maps only: a
+seed fills the whole-map tile, and layer tiles are cached as they are requested.
+
 
 ### cache [seed|purge] tile-name
 
@@ -295,6 +311,7 @@ Global Flags are valid for all subcommands
 * concurrency -- the amount of concurrency to use.
 * config -- path to config file (default “config.toml”)
 * map -- the name of the map to use from the config file 
+* layers -- purge only: the layers of `--map` to purge, together with the map's whole-map tile. Omitted, a purge clears every layer's tile.
 * overwrite -- if the tile already exists overwrite it. With a [layered cache](./layered-cache.md), also purges the tiers this run did not write.
 * cache-tiers -- for a layered cache, the tiers this run may write. See [`--cache-tiers`](#cache-tiers).
 * tile-matrix-set -- the tiling scheme to operate on. See [`--tile-matrix-set`](#tile-matrix-set).

@@ -148,6 +148,24 @@ short TTL, and a rising durable-tier hit rate is the signal it is set too short.
 
 See [Cache Seeding and Purging](./cache-seeding-and-purging.md).
 
+## Purging across replicas
+
+Tiers come in two kinds when Shigola runs as several replicas:
+
+- A **shared tier** (redis, s3, azblob, gcs) is the same store for every replica, so a purge on any
+  one of them clears it for all.
+- A **pod tier** (file) lives on one replica's disk. A purge clears it only on the replica that
+  handled the purge. The others keep serving the old tile until it expires.
+
+So give every file tier in front of a shared one a short `ttl`, such as 60 seconds. When the
+[Cache Admin API](./cache-admin-api.md) is on, Shigola logs a warning at startup for each file tier
+with no `ttl`, because a purge would never reach it on the other replicas.
+
+The longest a client can be served a tile older than the database is then:
+
+> the time from the database update to the purge, **plus** the pod tier's `ttl`, **plus** how long
+> browsers may reuse a tile: its `max-age`, and any `stale-while-revalidate` on top.
+
 ## Metrics
 
 With an observer configured there are **two families, and they must not be summed together**.

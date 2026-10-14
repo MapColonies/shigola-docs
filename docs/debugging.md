@@ -2,7 +2,7 @@
 id: debugging
 title: "Debugging Shigola"
 sidebar_label: "Debugging"
-sidebar_position: 10
+sidebar_position: 11
 description: "Fixing problems in Shigola"
 ---
 
