@@ -518,6 +518,7 @@ Cache tiles in Amazon S3, or any S3-compatible store via `endpoint`.
 | access_control_list | No |           | The canned ACL to apply to written objects.                         |
 | cache_control | No |                  | The `Cache-Control` header to store with written objects.           |
 | content_type | No | application/vnd.mapbox-vector-tile | The `Content-Type` to store with written objects.      |
+| force_path_style | No | false        | Use path-style addressing (`https://host/BUCKET/KEY`) instead of virtual-hosted style (`https://BUCKET.host/KEY`). Usually needed with `endpoint`, e.g. MinIO. |
 
 If the `aws_access_key_id` and `aws_secret_access_key` are not set, then the
 [credential provider chain](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html)
@@ -528,6 +529,16 @@ through environment variables. For example:
 $ export AWS_REGION=us-west-2
 $ export AWS_ACCESS_KEY_ID=YOUR_AKID
 $ export AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
+```
+
+For an S3-compatible store such as MinIO, which typically does not resolve bucket subdomains:
+
+```toml
+[cache]
+type             = "s3"
+bucket           = "tiles"
+endpoint         = "http://minio:9000"
+force_path_style = true
 ```
 
 ### Azure Blob Storage
