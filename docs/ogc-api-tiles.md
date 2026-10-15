@@ -205,7 +205,7 @@ provider, so a run needs that fixture up first. To reproduce a run locally, from
 
 ```sh
 docker compose up -d && docker wait migration       # the Athens fixture, in PostGIS
-go build -mod vendor -o /tmp/shigola ./cmd/shigola
+go build -o /tmp/shigola ./cmd/shigola
 /tmp/shigola serve --config .github/cite/config.toml --port ":8081" &
 .github/cite/run.sh WebMercatorQuad 14 6324 9271
 .github/cite/run.sh WorldCRS84Quad 14 4740 18542
