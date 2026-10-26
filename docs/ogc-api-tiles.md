@@ -92,8 +92,8 @@ parks           the whole map — tiles carry all its layers
 parks:trees     one layer — tiles carry only that layer
 ```
 
-The map-collection is always published, even for a single-layer map, so a map name is always a usable
-collection id.
+The map-collection is published by default even for a single-layer map, so a map name is a usable
+collection id unless the map says otherwise.
 
 The separator is `:` rather than `/`, `.` or `_`: a slash would make the id look like two path
 segments, and a dot or underscore can occur in a Shigola map or layer name, which would make the split
@@ -111,6 +111,18 @@ parks:trees     collection not found
 The flag removes the layer ids and nothing else: the whole-map collection keeps its tilesets and
 keeps serving tiles. It is per map and defaults to on, so a map that declines the tier and a map
 that says nothing about it sit in the same config.
+
+The whole-map tier can be declined the same way. With
+[`serve_map_collection = false`](./configuration.md#serve-map-collection) on a map, that map
+publishes its layer collections only:
+
+```
+parks           collection not found
+parks:trees     one layer — unchanged
+```
+
+The map name stops resolving for the listing, its tilesets and its tiles, and the layer ids keep
+working. Turning both flags off on one map is a startup error, since the map would publish nothing.
 
 ## Tile paths are z/y/x
 

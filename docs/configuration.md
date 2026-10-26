@@ -296,6 +296,7 @@ Shigola is responsible for serving vector map tiles, which are made up of numero
 | tile_buffer             | No       | The number of pixels to extend a tile's clipping area, defaults to `64` or the [global](#global) value                            |
 | tile_matrix_sets        | No       | The [tiling schemes](#tile-matrix-sets) this map may be requested in. Omitted, every scheme the build serves.                     |
 | serve_layer_collections | No       | Whether this map's layers are [addressable on their own](#serve-layer-collections). Default `true`.                               |
+| serve_map_collection    | No       | Whether this map publishes a [collection of its own](#serve-map-collection). Default `true`.                                      |
 
 
 ```toml
@@ -358,6 +359,27 @@ side by side in one config.
 the layer it was served for, and nothing reads those keys once the layer ids stop resolving.
 `cache purge --map=parks` clears them: a purge removes a map's whole-map tile and every layer's
 tile, whether or not the map serves its layer collections.
+
+### Serve map collection
+
+`serve_map_collection = false` is the opposite choice: the map publishes its layer collections and
+no collection of its own.
+
+```toml
+[[maps]]
+name = "parks"
+# /collections/parks:trees works; /collections/parks is not found.
+serve_map_collection = false
+```
+
+The map name stops resolving everywhere — the collections listing omits it, and asking for it by id,
+for its tilesets or for one of its tiles is a 404. Its layer collections are exactly what they were.
+
+Setting both `serve_map_collection` and `serve_layer_collections` to `false` on one map is a startup
+error: the map would publish nothing.
+
+**`cache seed` covers whole-map tiles only**, so seeding a map that sets this to `false` writes tiles
+no request reads. A purge still clears the map's whole-map and layer tiles as before.
 
 See [OGC API - Tiles](./ogc-api-tiles.md#collections) for how the two collection tiers are addressed.
 
