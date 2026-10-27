@@ -95,7 +95,7 @@ purged tile too. Shigola warns at startup about any that have none. See
 
 ## `POST /cache/seed`
 
-Renders the whole-map tiles covering an area and writes them to the cache, in every tile matrix set
+Renders the tiles covering an area and writes them to the cache, in every tile matrix set
 each targeted map serves, or only those named in `tileMatrixSets`. The body is the same as a purge's, plus two fields that mean what the
 CLI's flags mean:
 
@@ -118,8 +118,23 @@ curl -X POST http://localhost:9090/cache/seed \
 
 The response reports `seeded` where a purge reports `purged`.
 
-**Seeding is whole-map only.** A target naming `layers` gets `422`: a layer's tiles are cached as
-they are requested. `overwrite` is seed only, and a purge given it gets `400`. A purge accepts
+**Layers.** With no `layers`, a target seeds only its whole-map tile. Naming `layers` seeds those
+layers' tiles, the ones their [layer collections](./configuration.md#serve-layer-collections) serve,
+and the whole-map tile, which contains them too. Other layers are left alone. These are the same
+keys a purge naming those layers clears, so purging a layer and then seeding it leaves nothing
+missing. A layer is not seeded at zooms outside its `min_zoom` and `max_zoom`.
+
+```json
+"targets": [ { "map": "osm", "layers": [ "roads" ] } ]
+```
+
+Without `overwrite`, each key is checked on its own: a tile whose whole-map key is cached but whose
+layer key is not gets only the layer key written. It counts in `skipped` only when every key was
+cached already.
+
+A target naming `layers` of a map that does not
+[serve layer collections](./configuration.md#serve-layer-collections) gets `422`: those tiles would
+never be read. `overwrite` is seed only, and a purge given it gets `400`. A purge accepts
 `tiers` as the CLI's purge does, and gets `400` for a tier that does not exist, but it clears every
 tier regardless.
 
@@ -132,7 +147,7 @@ The API runs on the same pods that serve tiles, so it refuses work that could ti
 
 - **Size.** A request may touch at most `max_tiles_per_request` cache keys, counted across every
   tile matrix set, zoom and layer it covers. A purge of a map with two layers counts three keys per
-  tile: the whole-map tile and each layer's. A larger request gets `422` and touches nothing.
+  tile: the whole-map tile and each layer's. A seed naming one layer counts two. A larger request gets `422` and touches nothing.
   Narrow it, or use the [`shigola cache`](./cache-seeding-and-purging.md) CLI, which has no such limit.
 - **Concurrency.** At most `max_concurrent_requests` run at once. Another request gets `429` with a
   `Retry-After` header and touches nothing.
@@ -157,7 +172,7 @@ A request refused before any tile is touched (`400`, `401`, `422`, `429`) gets o
 | `200` | Every tile was purged. |
 | `400` | The request was malformed or its body was over 1 MiB, or named a map, layer, tile or tile matrix set that does not exist. `error` says which. Nothing was purged. |
 | `401` | A token is configured and the request did not send it. Nothing was purged. |
-| `422` | The request covers more than `max_tiles_per_request`, or is a seed naming layers. Nothing was touched. |
+| `422` | The request covers more than `max_tiles_per_request`, or is a seed naming layers of a map that does not serve layer collections. Nothing was touched. |
 | `429` | `max_concurrent_requests` are already running. Retry after `Retry-After` seconds. Nothing was purged. |
 | `500` | Some tiles could not be purged, usually because a cache backend failed. Every tile was still attempted: `failed` counts the ones that failed and `error` gives the first failure. Purging the same area again is safe. |
 | `503` | The request timed out. The body holds the counts so far. Purging the same area again is safe. |
